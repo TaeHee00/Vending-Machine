@@ -39,7 +39,14 @@ class Cash:
 
     def total_money(self):
         # TODO 가지고 있는 지폐를 금액으로 환산하여 값을 리턴
-        return 0
+        total = 0
+        total += self.__Cash[5000] * 5000
+        total += self.__Cash[1000] * 1000
+        total += self.__Cash[500] * 500
+        total += self.__Cash[100] * 100
+        return total
+
+
 class User:
 
     def __init__(self):
