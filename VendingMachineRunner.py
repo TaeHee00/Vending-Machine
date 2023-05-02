@@ -6,6 +6,31 @@ from tkmacosx import Button
 # 데이터 관리를 손쉽게 하기 위해 json라이브러리 사용
 import json
 
+
+class User:
+
+    def __init__(self):
+        self.__wallet = {
+            "cash": {
+                5000: 0,
+                1000: 0,
+                500: 0,
+                100: 0
+            },
+            "card": {
+
+            }
+        }
+
+        self.__bag = dict()
+
+    def get_cash(self):
+        return self.__wallet["cash"]
+
+    def get_card(self):
+        return self.__wallet["card"]
+
+
 vm_window = Tk()
 vm_window.title("자판기")
 # 창의 초기 생성위치 설정
