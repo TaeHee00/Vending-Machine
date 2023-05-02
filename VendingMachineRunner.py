@@ -124,14 +124,14 @@ user_card_tuple = tuple([
     f"IBK카드: {6200000}원"
 ])
 
-amount_increase_combo = Combobox(vm_window, width=15)
+amount_increase_combo = Combobox(vm_window, width=15, state='readonly')
 amount_increase_combo['value'] = user_cash_tuple
 amount_increase_combo.current(0)
 amount_increase_combo.grid(row=101, column=abs(row_limit - 2))
 amount_increase_btn = Button(text="현금 투입", focusthickness=0, activebackground='gray', width=160)
 amount_increase_btn.grid(row=102, column=abs(row_limit - 2))
 
-cash_increase_combo = Combobox(vm_window, width=15)
+cash_increase_combo = Combobox(vm_window, width=15, state='readonly')
 cash_increase_combo['value'] = user_card_tuple
 cash_increase_combo.current(0)
 cash_increase_combo.grid(row=101, column=abs(row_limit - 1))
