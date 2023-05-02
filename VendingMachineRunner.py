@@ -39,8 +39,11 @@ with open("drink_list.json", "r") as file:
         btn_list[-1].grid(row=row_cnt + 2, column=column_cnt, padx=15)
         column_cnt += 1
         if column_cnt % row_limit == 0:
+            Label(text=" ").grid(row=row_cnt + 3, column=column_cnt)
+            Label(text=" ").grid(row=row_cnt + 4, column=column_cnt)
+            Label(text=" ").grid(row=row_cnt + 5, column=column_cnt)
             column_cnt = 0
-            row_cnt += 3
+            row_cnt += 6
 
 vm_window.mainloop()
 
