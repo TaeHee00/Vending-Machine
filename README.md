@@ -1,6 +1,5 @@
 # Vending-Machine
 
----
 ![vending-machine.png](images/vending-machine.png)
 
 ## Vending Machine Project
