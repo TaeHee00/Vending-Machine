@@ -18,6 +18,10 @@ row_limit = 5
 # Canvas 내부에 들어갈 임시 이미지 크기
 imgSize = 64
 img = ImageTk.PhotoImage(file="images/drink.png")
+img_cola = ImageTk.PhotoImage(file="images/cola.png")
+img_water = ImageTk.PhotoImage(file="images/water.png")
+img_cider = ImageTk.PhotoImage(file="images/cider.png")
+img_lemon = ImageTk.PhotoImage(file="images/lemon.png")
 
 # 음료가 추가될 경우 계속하여 객체를 만들어주어야 하기 때문에 관리의 편의성을 위해서
 # 리스트 내부에 객체를 저장하여 사용
@@ -37,8 +41,16 @@ with open("drink_list.json", "r") as file:
         canvas_list.append(Canvas(width=imgSize, height=imgSize, highlightthickness=0))
         # Canvas가 이미지 배치를 image의 중앙을 기준으로 배치함
         # imgSize / 2로 정렬
-        canvas_list[-1].create_image(imgSize/2, imgSize/2, image=img)
-
+        if drink == '물':
+            canvas_list[-1].create_image(imgSize / 2, imgSize / 2, image=img_water)
+        elif '콜라' in drink:
+            canvas_list[-1].create_image(imgSize / 2, imgSize / 2, image=img_cola)
+        elif '사이다' in drink:
+            canvas_list[-1].create_image(imgSize / 2, imgSize / 2, image=img_cider)
+        elif '레몬' in drink or '망고' in drink or '립톤' in drink or '게토레이' in drink:
+            canvas_list[-1].create_image(imgSize / 2, imgSize / 2, image=img_lemon)
+        else:
+            canvas_list[-1].create_image(imgSize/2, imgSize/2, image=img)
         # 음료 재고에 따라 구매가능, 구매불가 판별
         if drink_list[drink]['재고'] > 0:
             btn_list.append(Button(text="●    구매가능", fg='green', focusthickness=0, activebackground='gray'))
@@ -84,16 +96,16 @@ machine_amount_label.grid(row=99, column=abs(row_limit - 2), columnspan=3)
 
 Label(text=" ").grid(row=100, column=column_cnt)
 user_cash_tuple = tuple([f"5000원: {user_wallet['cash'][5000]}개"])
-user_card_tuple = tuple([f"농협카드: {12031}원"])
+user_card_tuple = tuple([f"농협카드: {1203100}원"])
 
-amount_increase_combo = Combobox(vm_window)
+amount_increase_combo = Combobox(vm_window, width=11)
 amount_increase_combo['value'] = user_cash_tuple
 amount_increase_combo.current(0)
 amount_increase_combo.grid(row=101, column=abs(row_limit - 2))
 amount_increase_btn = Button(text="현금 투입", focusthickness=0, activebackground='gray')
 amount_increase_btn.grid(row=102, column=abs(row_limit - 2))
 
-cash_increase_combo = Combobox(vm_window)
+cash_increase_combo = Combobox(vm_window, width=11)
 cash_increase_combo['value'] = user_card_tuple
 cash_increase_combo.current(0)
 cash_increase_combo.grid(row=101, column=abs(row_limit - 1))
