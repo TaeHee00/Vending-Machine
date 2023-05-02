@@ -1,4 +1,5 @@
 from tkinter import *
+from tkinter.ttk import *
 # Pillow 패키지 내부의 PIL라이브러리를 사용하여 이미지 사용
 from PIL import ImageTk
 from tkmacosx import Button
@@ -9,7 +10,7 @@ vm_window = Tk()
 vm_window.title("자판기")
 # 창의 초기 생성위치 설정
 vm_window.config(padx=30, pady=20)
-vm_window.geometry("+500+100")
+vm_window.geometry("+500+0")
 
 # 가로 줄에 진열할 상품의 개수
 row_limit = 5
@@ -60,13 +61,44 @@ with open("drink_list.json", "r") as file:
             column_cnt = 0
             row_cnt += 6
 
-user_balance = 0
-machine_balance = 0
+# 자판기 사용 유저의 지갑
+# cash: 현금 저장용
+# card: 카드 저장용
+user_wallet = {
+    "cash": {
+        5000: 0,
+        1000: 0,
+        500: 0,
+        100: 0
+    },
+    "card": {
+
+    }
+}
+machine_amount = 0
 
 # 자판기에 투입된 금액 표시
-machine_balance_label = Label(text=f"투입된 금액:\t{machine_balance}원", font="Helvetica 16 bold")
-# 가로로 진열할 음료의 개수가 3보다 적어도 오류가 발생하지 않도록 절대값을 사용
-machine_balance_label.grid(row=99, column=abs(row_limit - 2), columnspan=3)
+machine_amount_label = Label(text=f"투입된 금액:\t{machine_amount}원", font="Helvetica 16 bold")
+# 가로로 진열할 음료의 개수가 2보다 적어도 오류가 발생하지 않도록 절대값을 사용
+machine_amount_label.grid(row=99, column=abs(row_limit - 2), columnspan=3)
+
+Label(text=" ").grid(row=100, column=column_cnt)
+user_cash_tuple = tuple([f"5000원: {user_wallet['cash'][5000]}개"])
+user_card_tuple = tuple([f"농협카드: {12031}원"])
+
+amount_increase_combo = Combobox(vm_window)
+amount_increase_combo['value'] = user_cash_tuple
+amount_increase_combo.current(0)
+amount_increase_combo.grid(row=101, column=abs(row_limit - 2))
+amount_increase_btn = Button(text="현금 투입", focusthickness=0, activebackground='gray')
+amount_increase_btn.grid(row=102, column=abs(row_limit - 2))
+
+cash_increase_combo = Combobox(vm_window)
+cash_increase_combo['value'] = user_card_tuple
+cash_increase_combo.current(0)
+cash_increase_combo.grid(row=101, column=abs(row_limit - 1))
+amount_increase_btn = Button(text="카드 투입", focusthickness=0, activebackground='gray')
+amount_increase_btn.grid(row=102, column=abs(row_limit - 1))
 
 vm_window.mainloop()
 
