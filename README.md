@@ -1,7 +1,7 @@
 # Vending-Machine
 
 ---
-![vending_machine.jpeg](images/vending_machine.jpeg)
+![vending-machine.png](images/vending-machine.png)
 
 ## Vending Machine Project
 
