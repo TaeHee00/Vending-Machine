@@ -21,7 +21,12 @@ img = ImageTk.PhotoImage(file="images/drink.png")
 img_cola = ImageTk.PhotoImage(file="images/cola.png")
 img_water = ImageTk.PhotoImage(file="images/water.png")
 img_cider = ImageTk.PhotoImage(file="images/cider.png")
+img_mongo = ImageTk.PhotoImage(file="images/mongo.png")
+img_coffee = ImageTk.PhotoImage(file="images/coffee.png")
 img_lemon = ImageTk.PhotoImage(file="images/lemon.png")
+img_choco = ImageTk.PhotoImage(file="images/choco.png")
+img_apple = ImageTk.PhotoImage(file="images/apple.png")
+img_energy_drink = ImageTk.PhotoImage(file="images/energy-drink.png")
 
 # 음료가 추가될 경우 계속하여 객체를 만들어주어야 하기 때문에 관리의 편의성을 위해서
 # 리스트 내부에 객체를 저장하여 사용
@@ -45,10 +50,20 @@ with open("drink_list.json", "r") as file:
             canvas_list[-1].create_image(imgSize / 2, imgSize / 2, image=img_water)
         elif '콜라' in drink:
             canvas_list[-1].create_image(imgSize / 2, imgSize / 2, image=img_cola)
-        elif '사이다' in drink:
+        elif '사이다' in drink or '트레비' in drink:
             canvas_list[-1].create_image(imgSize / 2, imgSize / 2, image=img_cider)
-        elif '레몬' in drink or '망고' in drink or '립톤' in drink or '게토레이' in drink:
+        elif '망고' in drink or '립톤' in drink:
+            canvas_list[-1].create_image(imgSize / 2, imgSize / 2, image=img_mongo)
+        elif '핫식스' in drink:
+            canvas_list[-1].create_image(imgSize / 2, imgSize / 2, image=img_energy_drink)
+        elif '레몬' in drink:
             canvas_list[-1].create_image(imgSize / 2, imgSize / 2, image=img_lemon)
+        elif '가나' in drink:
+            canvas_list[-1].create_image(imgSize / 2, imgSize / 2, image=img_choco)
+        elif '사과' in drink or '게토레이' in drink or '마운틴듀오' in drink or '코코 포도' in drink:
+            canvas_list[-1].create_image(imgSize / 2, imgSize / 2, image=img_apple)
+        elif '콘트라베이스' in drink or '레쓰비' in drink:
+            canvas_list[-1].create_image(imgSize / 2, imgSize / 2, image=img_coffee)
         else:
             canvas_list[-1].create_image(imgSize/2, imgSize/2, image=img)
         # 음료 재고에 따라 구매가능, 구매불가 판별
