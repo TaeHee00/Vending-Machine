@@ -65,13 +65,13 @@ with open("drink_list.json", "r") as file:
         elif '콘트라베이스' in drink or '레쓰비' in drink:
             canvas_list[-1].create_image(imgSize / 2, imgSize / 2, image=img_coffee)
         else:
-            canvas_list[-1].create_image(imgSize/2, imgSize/2, image=img)
+            canvas_list[-1].create_image(imgSize / 2, imgSize / 2, image=img)
         # 음료 재고에 따라 구매가능, 구매불가 판별
         if drink_list[drink]['재고'] > 0:
-            btn_list.append(Button(text="●    구매가능", fg='green', focusthickness=0, activebackground='gray'))
+            btn_list.append(Button(text="●        구매가능", fg='green', focusthickness=0, activebackground='gray'))
             btn_list[-1]['state'] = 'normal'
         else:
-            btn_list.append(Button(text="○    구매불가", disabledforeground='red', bg='gray'))
+            btn_list.append(Button(text="○        구매불가", disabledforeground='red', bg='gray'))
             btn_list[-1]['state'] = 'disabled'
 
         # 객체 생성
@@ -110,25 +110,35 @@ machine_amount_label = Label(text=f"투입된 금액:\t{machine_amount}원", fon
 machine_amount_label.grid(row=99, column=abs(row_limit - 2), columnspan=3)
 
 Label(text=" ").grid(row=100, column=column_cnt)
-user_cash_tuple = tuple([f"5000원: {user_wallet['cash'][5000]}개"])
-user_card_tuple = tuple([f"농협카드: {1203100}원"])
+user_cash_tuple = tuple([
+    f"5000원: {user_wallet['cash'][5000]}개",
+    f"1000원: {user_wallet['cash'][1000]}개",
+    f"500원: {user_wallet['cash'][500]}개",
+    f"100원: {user_wallet['cash'][100]}개"
+])
+# TODO 이후 User Class의 Wallte Class의 Card Class에서 받아올것.
+# 임시 데이터
+user_card_tuple = tuple([
+    f"농협카드: {125000}원",
+    f"현대카드: {900000}원",
+    f"IBK카드: {6200000}원"
+])
 
-amount_increase_combo = Combobox(vm_window, width=11)
+amount_increase_combo = Combobox(vm_window, width=15)
 amount_increase_combo['value'] = user_cash_tuple
 amount_increase_combo.current(0)
 amount_increase_combo.grid(row=101, column=abs(row_limit - 2))
-amount_increase_btn = Button(text="현금 투입", focusthickness=0, activebackground='gray')
+amount_increase_btn = Button(text="현금 투입", focusthickness=0, activebackground='gray', width=160)
 amount_increase_btn.grid(row=102, column=abs(row_limit - 2))
 
-cash_increase_combo = Combobox(vm_window, width=11)
+cash_increase_combo = Combobox(vm_window, width=15)
 cash_increase_combo['value'] = user_card_tuple
 cash_increase_combo.current(0)
 cash_increase_combo.grid(row=101, column=abs(row_limit - 1))
-amount_increase_btn = Button(text="카드 투입", focusthickness=0, activebackground='gray')
+amount_increase_btn = Button(text="카드 투입", focusthickness=0, activebackground='gray', width=160)
 amount_increase_btn.grid(row=102, column=abs(row_limit - 1))
 
 vm_window.mainloop()
-
 
 # try:
 #     with open("drink_list.json", "r") as drink_list_file:
