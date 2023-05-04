@@ -47,28 +47,16 @@ class Cash:
         return total
 
 
-class User:
-
+class Card:
     def __init__(self):
-        self.__wallet = {
-            "cash": {
-                5000: 0,
-                1000: 0,
-                500: 0,
-                100: 0
-            },
-            "card": {
+        self.__card_list = dict()
 
-            }
+    def add_card(self):
+        new_card = {
+            "카드명": "",
+            "잔액": 0
         }
-
-        self.__bag = dict()
-
-    def get_cash(self):
-        return self.__wallet["cash"]
-
-    def get_card(self):
-        return self.__wallet["card"]
+        # TODO Management System에서 등록가능 카드 목록 만들기
 
 
 vm_window = Tk()
