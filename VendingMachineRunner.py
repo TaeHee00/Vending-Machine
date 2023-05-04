@@ -14,7 +14,7 @@ vm_window.config(padx=30, pady=20)
 vm_window.geometry("+500+0")
 
 # 가로 줄에 진열할 상품의 개수
-row_limit = 5
+row_limit = 6
 
 # Canvas 내부에 들어갈 임시 이미지 크기
 imgSize = 64
