@@ -5,9 +5,10 @@ from PIL import ImageTk
 from tkmacosx import Button
 # 데이터 관리를 손쉽게 하기 위해 json라이브러리 사용
 import json
-
+import Manager
 
 vm_window = Tk()
+# manager_window = Manager.Manager()
 vm_window.title("자판기")
 # 창의 초기 생성위치 설정
 vm_window.config(padx=30, pady=20)
@@ -94,7 +95,7 @@ with open("drink_list.json", "r") as file:
 # card: 카드 저장용
 user_wallet = {
     "cash": {
-        5000: 0,
+        5000: 15,
         1000: 0,
         500: 0,
         100: 0
@@ -120,7 +121,7 @@ user_cash_tuple = tuple([
 # TODO 이후 User Class의 Wallte Class의 Card Class에서 받아올것.
 # 임시 데이터
 user_card_tuple = tuple([
-    f"농협카드: {125000}원",
+    f"농협카드: {75000}원",
     f"현대카드: {900000}원",
     f"IBK카드: {6200000}원"
 ])
