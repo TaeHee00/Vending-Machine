@@ -33,7 +33,7 @@ class LoginPage(Frame):
 
         Label(text="").grid(row=4, column=0)
 
-        self.login_btn = Button(text="Login", width=30)
+        self.login_btn = Button(text="Login", width=30, command=self.login_check)
         self.login_btn.grid(row=5, column=0, columnspan=5)
         Label(text="").grid(row=6, column=0)
 
@@ -42,13 +42,14 @@ class LoginPage(Frame):
             messagebox.showerror("입력 오류!", "아이디를 입력해주세요!")
         elif self.pw_input.get() == "":
             messagebox.showerror("입력 오류!", "비밀번호를 입력해주세요!")
-        elif self.id_input.get() == "manager" and self.pw_input == "manager":
+        elif self.id_input.get() == "manager" and self.pw_input.get() == "manager":
             # TODO 총 음료 판매 개수 및 수익 재고 경고 목록 띄우기
             # TODO 재고 경고 선택 가능하게 만들기
             messagebox.showinfo("환영합니다!", "어서오세요 매니저님!")
             return 0
         else:
             messagebox.showerror("로그인 오류!", "일치하는 정보가 없습니다!")
+            print(self.id_input.get(), self.pw_input.get())
 
         return 1
 
