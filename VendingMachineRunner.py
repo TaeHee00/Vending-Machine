@@ -5,7 +5,7 @@ from PIL import ImageTk
 from tkmacosx import Button
 # 데이터 관리를 손쉽게 하기 위해 json라이브러리 사용
 import json
-import Manager
+import ManagerLogin
 
 vm_window = Tk()
 # manager_window = Manager.Manager()
