@@ -1,7 +1,7 @@
 from tkinter import *
 
 
-class SampleApp:
+class Manager:
     window = Tk()
     Label(text="안녕").grid(row=0, column=0)
     window.mainloop()
