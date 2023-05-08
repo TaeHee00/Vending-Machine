@@ -35,6 +35,8 @@ class Drink:
     canvas_list = list()
     label_list = list()
     stock_list = list()
+    global state_list
+    state_list = list()
 
     # drink_list.json 파일 내부 음료 목록을 불러와서 객체 생성
     with open("drink_list.json", "r") as file:
@@ -75,21 +77,26 @@ class Drink:
                                       width=10, state='readonly', increment=1))
             # 기본값을 원래 있던 재고를 불러와서 적용
             stock_list[-1].set(drink_list[drink]['재고'])
+            state_list.append(Button(window, text="●        판매중", fg='green', focusthickness=0, activebackground='gray'))
 
             # 객체 생성
             canvas_list[-1].grid(row=row_cnt, column=column_cnt)
             label_list[-1].grid(row=row_cnt + 1, column=column_cnt)
             stock_list[-1].grid(row=row_cnt + 2, column=column_cnt, padx=15)
+            state_list[-1].grid(row=row_cnt + 3, column=column_cnt)
 
             column_cnt += 1
-            Label(text=" ").grid(row=row_cnt + 3, column=column_cnt)
             Label(text=" ").grid(row=row_cnt + 4, column=column_cnt)
             Label(text=" ").grid(row=row_cnt + 5, column=column_cnt)
+            Label(text=" ").grid(row=row_cnt + 6, column=column_cnt)
             if column_cnt % row_limit == 0:
                 # 음료간의 간격 조정을 위해 빈 객체 생성, 배치
                 column_cnt = 0
                 row_cnt += 6
+    # def state_change():
+    #     state_list
 
+        
     Label(text="음료 재고 관리중...", font="Helvetica 25 bold", foreground="red").grid(row=99, column=1, rowspan=3)
     # 자판기 사용 유저의 지갑
     # cash: 현금 저장용

@@ -45,6 +45,7 @@ def login_check(*temp):
         # 로그인 성공시 import 하여 객체 생성으로 변경
         from Manager import ManagementMenu
         ManagementMenu.ManagementMenu()
+        from Manager import Drink
 
     else:
         showerror("로그인 오류!", "일치하는 정보가 없습니다!")

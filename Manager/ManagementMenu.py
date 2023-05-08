@@ -1,7 +1,14 @@
 from tkinter import *
 
 
+def drink_page():
+    window.destroy()
+    from Manager import Drink
+    # Drink.Drink()
+
+
 class ManagementMenu:
+    global window
     window = Tk()
     window.title("Management Menu")
     window.config(padx=15, pady=15)
@@ -11,7 +18,8 @@ class ManagementMenu:
     # 음료수 재고 관리 이동 버튼
     # TODO User Interface와 동일한 화면 구성에서 구매 버튼 대신 재고 추가 버튼 생성
     # TODO 재고관리 마무리할 경우 마지막 재고 추가에 따른 음료 구매 금액 청구 (판매 금액의 50%)
-    drink_management = Button(text="음료 재고 관리")
+
+    drink_management = Button(text="음료 재고 관리", command=drink_page)
     drink_management.grid(row=0, column=0, padx=2)
 
     # 현금 재고 관리 이동 버튼
