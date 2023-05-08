@@ -5,10 +5,9 @@ from PIL import ImageTk
 from tkmacosx import Button
 # 데이터 관리를 손쉽게 하기 위해 json라이브러리 사용
 import json
-from User import Drink
+from User import UserDrinkContent
 
 vm_window = Tk()
-# manager_window = Manager.Manager()
 vm_window.title("자판기")
 # 창의 초기 생성위치 설정
 vm_window.config(padx=30, pady=20)
@@ -44,7 +43,7 @@ with open("./Manager/drink_list.json", "r") as file:
     row_cnt = 0
     idx = 0
     for drink in drink_list:
-        drink_content.append(Drink.Drink(vm_window, drink, drink_list[drink]['재고'], drink_list[drink]['상태'], idx))
+        drink_content.append(UserDrinkContent.UserDrinkContent(vm_window, drink, drink_list[drink]['재고'], drink_list[drink]['상태'], idx))
 
         if drink_content[idx].label == '물':
             drink_content[idx].canvas.create_image(imgSize / 2, imgSize / 2, image=img_water)
