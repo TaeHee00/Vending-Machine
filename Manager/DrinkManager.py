@@ -44,13 +44,7 @@ class DrinkManager:
         row_cnt = 0
         idx = 0
         for drink in drink_list:
-            drink_content.append(Drink.Drink(window, drink, drink_list[drink]['재고'], idx))
-
-            # drink_content["label_list"].append(Label(text=drink, font="Helvetica 12 bold"))
-            # drink_content["canvas_list"].append(Canvas(width=imgSize, height=imgSize, highlightthickness=0))
-            # Canvas가 이미지 배치를 image의 중앙을 기준으로 배치함
-            # imgSize / 2로 정렬
-            # 객체 접근 후 Label이 아래와 같을 경우
+            drink_content.append(Drink.Drink(window, drink, drink_list[drink]['재고'], drink_list[drink]['상태'], idx))
 
             if drink_content[idx].label == '물':
                 drink_content[idx].canvas.create_image(imgSize / 2, imgSize / 2, image=img_water)
@@ -72,15 +66,6 @@ class DrinkManager:
                 drink_content[idx].canvas.create_image(imgSize / 2, imgSize / 2, image=img_coffee)
             else:
                 drink_content[idx].canvas.create_image(imgSize / 2, imgSize / 2, image=img)
-
-            # 음료 재고 개수 설정
-            # 재고 개수 0 ~ 30 범위에서 설정 가능, 입력하지 못하도록 readonly 속성 부여
-            # drink_content[idx].append(Spinbox(window, from_=0, to=30, validate='none',
-            #                                            width=10, state='readonly', increment=1))
-            # 기본값을 원래 있던 재고를 불러와서 적용
-            # drink_content[idx].set_stock_box(drink_list[drink]['재고'])
-            # drink_content["state_list"].append(Button(text="●        판매중", fg='green', focusthickness=0,
-            #                                           activebackground='gray'))
 
             # 객체 생성
             drink_content[idx].canvas.grid(row=row_cnt, column=column_cnt)
@@ -135,7 +120,6 @@ class DrinkManager:
         f"IBK카드: {6200000}원"
     ])
 
-    # set_up = Button(text="설정")
     amount_increase_combo = Combobox(window, width=15, state='readonly')
     amount_increase_combo['value'] = user_cash_tuple
     amount_increase_combo.current(0)
