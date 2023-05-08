@@ -3,8 +3,8 @@ from tkinter import *
 
 def drink_page():
     window.destroy()
-    from Manager import Drink
-    # Drink.Drink()
+    from Manager import DrinkManager
+    DrinkManager.DrinkManager()
 
 
 class ManagementMenu:
