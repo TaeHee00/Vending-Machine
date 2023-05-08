@@ -123,7 +123,7 @@ class DrinkManager:
         stock_buy_btn = Button(text="추가 재고 구매", focusthickness=0, activebackground='gray', width=160)
         stock_buy_btn.grid(row=102, column=abs(row_limit - 3))
 
-        state_set_btn = Button(text="판매 상태 설정", focusthickness=0, activebackground='gray', width=160)
+        state_set_btn = Button(text="판매 상태 설정", focusthickness=0, activebackground='gray', width=160, command=self.state_setup)
         state_set_btn.grid(row=102, column=abs(row_limit - 2))
 
         back_btn = Button(text="나가기", focusthickness=0, activebackground='gray', width=160, command=self.back_page)
@@ -138,11 +138,21 @@ class DrinkManager:
         with open("drink_list.json", "r") as file:
             drink_data = json.load(file)
 
+            # 진열대에 있는 모든 음료를 가져온다.
             for drink in self.drink_content:
+
+                # 변경된 정보와 관리 데이터 연동
                 if drink.state == "판매중":
                     drink_data[drink.label_text]['상태'] = "판매중"
+                    drink.state_btn['state'] = 'normal'
 
-                    pass
                 elif drink.state == "판매불가":
                     drink_data[drink.label_text]['상태'] = "판매불가"
-                    pass
+                    # 관리 데이터의 재고가 0개 초과 일 경우 버튼을 클릭 가능하게 설정
+                    if drink_data[drink.label_text]['재고'] > 0:
+                        drink.state_btn['state'] = 'normal'
+                    else:
+                        drink.state_btn['state'] = 'disabled'
+
+        with open("drink_list.json", 'w') as file:
+            json.dump(drink_data, file, indent=4, ensure_ascii=False)
