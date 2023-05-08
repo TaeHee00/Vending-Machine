@@ -28,7 +28,9 @@ Label(text="").grid(row=4, column=0)
 
 
 # 로그인 함수
-def login_check():
+# 엔터로 로그인 함수 실행 시 event인자가 들어오는데 이경우 에러가 발생하기 때문에
+# *temp <- 가변인자를 사용하여 처리
+def login_check(*temp):
     if id_input.get() == "":
         showerror("입력 오류!", "아이디를 입력해주세요!")
     elif pw_input.get() == "":
@@ -41,8 +43,8 @@ def login_check():
         login_window.destroy()
         # 상단에 import할 경우 코드를 읽으면서 먼저 창을 생성해버리는 현상 발생
         # 로그인 성공시 import 하여 객체 생성으로 변경
-        from Manager import Manager
-        Manager()
+        from Manager import ManagementMenu
+        ManagementMenu.ManagementMenu()
 
     else:
         showerror("로그인 오류!", "일치하는 정보가 없습니다!")
@@ -51,5 +53,7 @@ def login_check():
 login_btn = Button(text="Login", width=30, command=login_check)
 login_btn.grid(row=5, column=0, columnspan=5)
 Label(text="").grid(row=6, column=0)
+# 엔터로 로그인 함수 실행 기능
+login_window.bind("<Return>", login_check)
 
 login_window.mainloop()

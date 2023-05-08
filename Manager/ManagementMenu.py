@@ -1,9 +1,9 @@
 from tkinter import *
 
 
-class Manager:
+class ManagementMenu:
     window = Tk()
-    window.title("Management System")
+    window.title("Management Menu")
     window.config(padx=15, pady=15)
     window.geometry("+450+300")
     window.resizable(False, False)

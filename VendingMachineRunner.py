@@ -5,7 +5,6 @@ from PIL import ImageTk
 from tkmacosx import Button
 # 데이터 관리를 손쉽게 하기 위해 json라이브러리 사용
 import json
-import ManagerLogin
 
 vm_window = Tk()
 # manager_window = Manager.Manager()
@@ -13,6 +12,7 @@ vm_window.title("자판기")
 # 창의 초기 생성위치 설정
 vm_window.config(padx=30, pady=20)
 vm_window.geometry("+500+0")
+vm_window.resizable(False, False)
 
 # 가로 줄에 진열할 상품의 개수
 row_limit = 6
@@ -37,7 +37,7 @@ label_list = list()
 btn_list = list()
 
 # drink_list.json 파일 내부 음료 목록을 불러와서 객체 생성
-with open("drink_list.json", "r") as file:
+with open("./Manager/drink_list.json", "r") as file:
     drink_list = json.load(file)
 
     # 음료 객체의 자리 배치에 사용하는 변수
