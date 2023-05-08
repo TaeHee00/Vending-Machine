@@ -3,9 +3,11 @@ from tkinter.ttk import *
 # Pillow 패키지 내부의 PIL라이브러리를 사용하여 이미지 사용
 from PIL import ImageTk
 from tkmacosx import Button
+from tkinter.messagebox import *
 # 데이터 관리를 손쉽게 하기 위해 json라이브러리 사용
 import json
 import ManagerDrinkContent
+import copy
 
 
 class DrinkManager:
@@ -137,7 +139,7 @@ class DrinkManager:
     def state_setup(self):
         with open("drink_list.json", "r") as file:
             drink_data = json.load(file)
-
+            old_drink_data = copy.deepcopy(drink_data)
             # 진열대에 있는 모든 음료를 가져온다.
             for drink in self.drink_content:
 
@@ -156,3 +158,13 @@ class DrinkManager:
 
         with open("drink_list.json", 'w') as file:
             json.dump(drink_data, file, indent=4, ensure_ascii=False)
+
+        change_state = ""
+        for drink in drink_data:
+            if drink_data[drink]['상태'] != old_drink_data[drink]['상태']:
+                change_state += f"[ {drink} ]\n{old_drink_data[drink]['상태']}   ->   {drink_data[drink]['상태']}\n\n"
+
+        if change_state == "":
+            showinfo("설정 정보", "변경된 판매 상태가 없습니다.")
+        else:
+            showinfo("설정 정보", f"\n{change_state}판매 상태가 성공적으로 변경되었습니다!")
