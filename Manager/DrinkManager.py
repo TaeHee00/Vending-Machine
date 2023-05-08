@@ -16,6 +16,10 @@ class DrinkManager:
         self.window.config(padx=15, pady=15)
         self.window.geometry("+400+0")
         self.window.resizable(False, False)
+        # 음료가 추가될 경우 계속하여 객체를 만들어주어야 하기 때문에 관리의 편의성을 위해서
+        # 리스트 내부에 객체를 저장하여 사용
+        self.drink_content = list()
+
 
         # 가로 줄에 진열할 상품의 개수
         row_limit = 6
@@ -33,10 +37,6 @@ class DrinkManager:
         img_apple = ImageTk.PhotoImage(file="../images/apple.png")
         img_energy_drink = ImageTk.PhotoImage(file="../images/energy-drink.png")
 
-        # 음료가 추가될 경우 계속하여 객체를 만들어주어야 하기 때문에 관리의 편의성을 위해서
-        # 리스트 내부에 객체를 저장하여 사용
-        drink_content = list()
-
         # drink_list.json 파일 내부 음료 목록을 불러와서 객체 생성
         with open("drink_list.json", "r") as file:
             drink_list = json.load(file)
@@ -46,34 +46,34 @@ class DrinkManager:
             row_cnt = 0
             idx = 0
             for drink in drink_list:
-                drink_content.append(ManagerDrinkContent.ManagerDrinkContent(self.window, drink, drink_list[drink]['재고'], drink_list[drink]['상태'], idx))
+                self.drink_content.append(ManagerDrinkContent.ManagerDrinkContent(self.window, drink, drink_list[drink]['재고'], drink_list[drink]['상태'], idx))
 
-                if drink_content[idx].label == '물':
-                    drink_content[idx].canvas.create_image(imgSize / 2, imgSize / 2, image=img_water)
+                if self.drink_content[idx].label == '물':
+                    self.drink_content[idx].canvas.create_image(imgSize / 2, imgSize / 2, image=img_water)
                 elif '콜라' in drink:
-                    drink_content[idx].canvas.create_image(imgSize / 2, imgSize / 2, image=img_cola)
+                    self.drink_content[idx].canvas.create_image(imgSize / 2, imgSize / 2, image=img_cola)
                 elif '사이다' in drink or '트레비' in drink:
-                    drink_content[idx].canvas.create_image(imgSize / 2, imgSize / 2, image=img_cider)
+                    self.drink_content[idx].canvas.create_image(imgSize / 2, imgSize / 2, image=img_cider)
                 elif '망고' in drink or '립톤' in drink:
-                    drink_content[idx].canvas.create_image(imgSize / 2, imgSize / 2, image=img_mongo)
+                    self.drink_content[idx].canvas.create_image(imgSize / 2, imgSize / 2, image=img_mongo)
                 elif '핫식스' in drink:
-                    drink_content[idx].canvas.create_image(imgSize / 2, imgSize / 2, image=img_energy_drink)
+                    self.drink_content[idx].canvas.create_image(imgSize / 2, imgSize / 2, image=img_energy_drink)
                 elif '레몬' in drink:
-                    drink_content[idx].canvas.create_image(imgSize / 2, imgSize / 2, image=img_lemon)
+                    self.drink_content[idx].canvas.create_image(imgSize / 2, imgSize / 2, image=img_lemon)
                 elif '가나' in drink:
-                    drink_content[idx].canvas.create_image(imgSize / 2, imgSize / 2, image=img_choco)
+                    self.drink_content[idx].canvas.create_image(imgSize / 2, imgSize / 2, image=img_choco)
                 elif '사과' in drink or '게토레이' in drink or '마운틴듀오' in drink or '코코 포도' in drink:
-                    drink_content[idx].canvas.create_image(imgSize / 2, imgSize / 2, image=img_apple)
+                    self.drink_content[idx].canvas.create_image(imgSize / 2, imgSize / 2, image=img_apple)
                 elif '콘트라베이스' in drink or '레쓰비' in drink:
-                    drink_content[idx].canvas.create_image(imgSize / 2, imgSize / 2, image=img_coffee)
+                    self.drink_content[idx].canvas.create_image(imgSize / 2, imgSize / 2, image=img_coffee)
                 else:
-                    drink_content[idx].canvas.create_image(imgSize / 2, imgSize / 2, image=img)
+                    self.drink_content[idx].canvas.create_image(imgSize / 2, imgSize / 2, image=img)
 
                 # 객체 생성
-                drink_content[idx].canvas.grid(row=row_cnt, column=column_cnt)
-                drink_content[idx].label.grid(row=row_cnt + 1, column=column_cnt)
-                drink_content[idx].stock_box.grid(row=row_cnt + 2, column=column_cnt, padx=15)
-                drink_content[idx].state_btn.grid(row=row_cnt + 3, column=column_cnt)
+                self.drink_content[idx].canvas.grid(row=row_cnt, column=column_cnt)
+                self.drink_content[idx].label.grid(row=row_cnt + 1, column=column_cnt)
+                self.drink_content[idx].stock_box.grid(row=row_cnt + 2, column=column_cnt, padx=15)
+                self.drink_content[idx].state_btn.grid(row=row_cnt + 3, column=column_cnt)
 
                 column_cnt += 1
                 Label(text=" ").grid(row=row_cnt + 4, column=column_cnt)
@@ -105,7 +105,7 @@ class DrinkManager:
         # 추가할 재고의 총 가격 (각 음료 개당 판매 금액의 50%)
         total_price_label = Label(text=f"재고 추가 금액:\t{total_price}원", font="Helvetica 16 bold")
         # 가로로 진열할 음료의 개수가 2보다 적어도 오류가 발생하지 않도록 절대값을 사용
-        total_price_label.grid(row=99, column=abs(row_limit - 2), columnspan=3)
+        total_price_label.grid(row=99, column=abs(row_limit - 3), columnspan=3)
 
         Label(text=" ").grid(row=100, column=column_cnt)
         user_cash_tuple = tuple([
@@ -123,7 +123,10 @@ class DrinkManager:
         ])
 
         stock_buy_btn = Button(text="추가 재고 구매", focusthickness=0, activebackground='gray', width=160)
-        stock_buy_btn.grid(row=102, column=abs(row_limit - 2))
+        stock_buy_btn.grid(row=102, column=abs(row_limit - 3))
+
+        state_set_btn = Button(text="판매 상태 설정", focusthickness=0, activebackground='gray', width=160)
+        state_set_btn.grid(row=102, column=abs(row_limit - 2))
 
         back_btn = Button(text="나가기", focusthickness=0, activebackground='gray', width=160, command=self.back_page)
         back_btn.grid(row=102, column=abs(row_limit - 1))
@@ -132,3 +135,6 @@ class DrinkManager:
 
     def back_page(self):
         self.window.destroy()
+
+    def state_setup(self):
+        pass
