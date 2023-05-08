@@ -20,10 +20,8 @@ class DrinkManager:
         # 리스트 내부에 객체를 저장하여 사용
         self.drink_content = list()
 
-
         # 가로 줄에 진열할 상품의 개수
         row_limit = 6
-
         # Canvas 내부에 들어갈 임시 이미지 크기
         imgSize = 64
         img = ImageTk.PhotoImage(file="../images/drink.png")
@@ -137,4 +135,14 @@ class DrinkManager:
         self.window.destroy()
 
     def state_setup(self):
-        pass
+        with open("drink_list.json", "r") as file:
+            drink_data = json.load(file)
+
+            for drink in self.drink_content:
+                if drink.state == "판매중":
+                    drink_data[drink.label_text]['상태'] = "판매중"
+
+                    pass
+                elif drink.state == "판매불가":
+                    drink_data[drink.label_text]['상태'] = "판매불가"
+                    pass

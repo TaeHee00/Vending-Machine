@@ -33,16 +33,23 @@ class ManagerDrinkContent:
         # TODO 재고가 없을 경우 판매불가로 고정하여 바꾸지 못하도록 설정
         # TODO 재고 추가할 경우 판매 가능으로 변경 가능
         with open("./drink_list.json", "r") as file:
-            drink_list = json.load(file)
+            drink_data = json.load(file)
             if state == "판매불가":
                 self.state_btn.config(text="○        판매불가", fg='red', activebackground='gray', disabledforeground='red', bg='gray')
             elif state == "판매중":
                 self.state_btn.config(text="●          판매중", fg='green', activebackground='gray')
                 self.state_btn['state'] = 'normal'
 
-            if drink_list[self.label_text]['재고'] <= 0:
+            if drink_data[self.label_text]['재고'] <= 0:
                 self.state_btn.config(text="○        판매불가", fg='red', activebackground='gray', disabledforeground='red', bg='gray')
+                # 재고가 없을 경우 강제 상태 변경
+                drink_data[self.label_text]['상태'] = "판매불가"
+                # 재고가 없을 경우 판매 상태를 변경하지 못하도록 버튼 상태를 disabled
                 self.state_btn['state'] = 'disabled'
+
+        # 데이터 업데이트
+        with open("drink_list.json", 'w') as file:
+            json.dump(drink_data, file, indent=4, ensure_ascii=False)
 
     def set_stock_box(self, text):
         # TODO 유효성 검사
