@@ -5,6 +5,7 @@ from PIL import ImageTk
 from tkmacosx import Button
 # 데이터 관리를 손쉽게 하기 위해 json라이브러리 사용
 import json
+from User import Drink
 
 vm_window = Tk()
 # manager_window = Manager.Manager()
@@ -32,13 +33,7 @@ img_energy_drink = ImageTk.PhotoImage(file="images/energy-drink.png")
 
 # 음료가 추가될 경우 계속하여 객체를 만들어주어야 하기 때문에 관리의 편의성을 위해서
 # 리스트 내부에 객체를 저장하여 사용
-drink_content = {
-    "canvas_list": list(),
-    "label_list": list(),
-    "stock_list": list(),
-    "btn_list": list(),
-    "id": 0
-}
+drink_content = list()
 
 # drink_list.json 파일 내부 음료 목록을 불러와서 객체 생성
 with open("./Manager/drink_list.json", "r") as file:
@@ -49,42 +44,33 @@ with open("./Manager/drink_list.json", "r") as file:
     row_cnt = 0
     idx = 0
     for drink in drink_list:
-        drink_content["label_list"].append(Label(text=drink, font="Helvetica 12 bold"))
-        drink_content["canvas_list"].append(Canvas(width=imgSize, height=imgSize, highlightthickness=0))
-        # Canvas가 이미지 배치를 image의 중앙을 기준으로 배치함
-        # imgSize / 2로 정렬
-        if drink == '물':
-            drink_content["canvas_list"][-1].create_image(imgSize / 2, imgSize / 2, image=img_water)
+        drink_content.append(Drink.Drink(vm_window, drink, drink_list[drink]['재고'], drink_list[drink]['상태'], idx))
+
+        if drink_content[idx].label == '물':
+            drink_content[idx].canvas.create_image(imgSize / 2, imgSize / 2, image=img_water)
         elif '콜라' in drink:
-            drink_content["canvas_list"][-1].create_image(imgSize / 2, imgSize / 2, image=img_cola)
+            drink_content[idx].canvas.create_image(imgSize / 2, imgSize / 2, image=img_cola)
         elif '사이다' in drink or '트레비' in drink:
-            drink_content["canvas_list"][-1].create_image(imgSize / 2, imgSize / 2, image=img_cider)
+            drink_content[idx].canvas.create_image(imgSize / 2, imgSize / 2, image=img_cider)
         elif '망고' in drink or '립톤' in drink:
-            drink_content["canvas_list"][-1].create_image(imgSize / 2, imgSize / 2, image=img_mongo)
+            drink_content[idx].canvas.create_image(imgSize / 2, imgSize / 2, image=img_mongo)
         elif '핫식스' in drink:
-            drink_content["canvas_list"][-1].create_image(imgSize / 2, imgSize / 2, image=img_energy_drink)
+            drink_content[idx].canvas.create_image(imgSize / 2, imgSize / 2, image=img_energy_drink)
         elif '레몬' in drink:
-            drink_content["canvas_list"][-1].create_image(imgSize / 2, imgSize / 2, image=img_lemon)
+            drink_content[idx].canvas.create_image(imgSize / 2, imgSize / 2, image=img_lemon)
         elif '가나' in drink:
-            drink_content["canvas_list"][-1].create_image(imgSize / 2, imgSize / 2, image=img_choco)
+            drink_content[idx].canvas.create_image(imgSize / 2, imgSize / 2, image=img_choco)
         elif '사과' in drink or '게토레이' in drink or '마운틴듀오' in drink or '코코 포도' in drink:
-            drink_content["canvas_list"][-1].create_image(imgSize / 2, imgSize / 2, image=img_apple)
+            drink_content[idx].canvas.create_image(imgSize / 2, imgSize / 2, image=img_apple)
         elif '콘트라베이스' in drink or '레쓰비' in drink:
-            drink_content["canvas_list"][-1].create_image(imgSize / 2, imgSize / 2, image=img_coffee)
+            drink_content[idx].canvas.create_image(imgSize / 2, imgSize / 2, image=img_coffee)
         else:
-            drink_content["canvas_list"][-1].create_image(imgSize / 2, imgSize / 2, image=img)
-        # 음료 재고에 따라 구매가능, 구매불가 판별
-        if drink_list[drink]['재고'] > 0:
-            drink_content["btn_list"].append(Button(text="●        구매가능", fg='green', focusthickness=0, activebackground='gray'))
-            drink_content["btn_list"][-1]['state'] = 'normal'
-        else:
-            drink_content["btn_list"].append(Button(text="○        구매불가", disabledforeground='red', bg='gray'))
-            drink_content["btn_list"][-1]['state'] = 'disabled'
+            drink_content[idx].canvas.create_image(imgSize / 2, imgSize / 2, image=img)
 
         # 객체 생성
-        drink_content["canvas_list"][-1].grid(row=row_cnt, column=column_cnt)
-        drink_content["label_list"][-1].grid(row=row_cnt + 1, column=column_cnt)
-        drink_content["btn_list"][-1].grid(row=row_cnt + 2, column=column_cnt, padx=15)
+        drink_content[idx].canvas.grid(row=row_cnt, column=column_cnt)
+        drink_content[idx].label.grid(row=row_cnt + 1, column=column_cnt)
+        drink_content[idx].state_btn.grid(row=row_cnt + 2, column=column_cnt, padx=15)
 
         column_cnt += 1
         Label(text=" ").grid(row=row_cnt + 3, column=column_cnt)
@@ -94,8 +80,6 @@ with open("./Manager/drink_list.json", "r") as file:
             # 음료간의 간격 조정을 위해 빈 객체 생성, 배치
             column_cnt = 0
             row_cnt += 6
-
-        drink_content["id"] = idx
         idx += 1
 
 # 자판기 사용 유저의 지갑
