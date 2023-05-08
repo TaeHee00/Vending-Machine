@@ -32,11 +32,16 @@ class Drink:
 
     # 음료가 추가될 경우 계속하여 객체를 만들어주어야 하기 때문에 관리의 편의성을 위해서
     # 리스트 내부에 객체를 저장하여 사용
-    canvas_list = list()
-    label_list = list()
-    stock_list = list()
-    global state_list
-    state_list = list()
+    drink_content = {
+        "canvas_list": list(),
+        "label_list": list(),
+        "stock_list": list(),
+        "state_list": list(),
+        "id": 0
+    }
+
+    def state_change(self):
+        pass
 
     # drink_list.json 파일 내부 음료 목록을 불러와서 객체 생성
     with open("drink_list.json", "r") as file:
@@ -45,45 +50,46 @@ class Drink:
         # 음료 객체의 자리 배치에 사용하는 변수
         column_cnt = 0
         row_cnt = 0
+        idx = 0
         for drink in drink_list:
-            label_list.append(Label(text=drink, font="Helvetica 12 bold"))
-            canvas_list.append(Canvas(width=imgSize, height=imgSize, highlightthickness=0))
+            drink_content["label_list"].append(Label(text=drink, font="Helvetica 12 bold"))
+            drink_content["canvas_list"].append(Canvas(width=imgSize, height=imgSize, highlightthickness=0))
             # Canvas가 이미지 배치를 image의 중앙을 기준으로 배치함
             # imgSize / 2로 정렬
             if drink == '물':
-                canvas_list[-1].create_image(imgSize / 2, imgSize / 2, image=img_water)
+                drink_content["canvas_list"][-1].create_image(imgSize / 2, imgSize / 2, image=img_water)
             elif '콜라' in drink:
-                canvas_list[-1].create_image(imgSize / 2, imgSize / 2, image=img_cola)
+                drink_content["canvas_list"][-1].create_image(imgSize / 2, imgSize / 2, image=img_cola)
             elif '사이다' in drink or '트레비' in drink:
-                canvas_list[-1].create_image(imgSize / 2, imgSize / 2, image=img_cider)
+                drink_content["canvas_list"][-1].create_image(imgSize / 2, imgSize / 2, image=img_cider)
             elif '망고' in drink or '립톤' in drink:
-                canvas_list[-1].create_image(imgSize / 2, imgSize / 2, image=img_mongo)
+                drink_content["canvas_list"][-1].create_image(imgSize / 2, imgSize / 2, image=img_mongo)
             elif '핫식스' in drink:
-                canvas_list[-1].create_image(imgSize / 2, imgSize / 2, image=img_energy_drink)
+                drink_content["canvas_list"][-1].create_image(imgSize / 2, imgSize / 2, image=img_energy_drink)
             elif '레몬' in drink:
-                canvas_list[-1].create_image(imgSize / 2, imgSize / 2, image=img_lemon)
+                drink_content["canvas_list"][-1].create_image(imgSize / 2, imgSize / 2, image=img_lemon)
             elif '가나' in drink:
-                canvas_list[-1].create_image(imgSize / 2, imgSize / 2, image=img_choco)
+                drink_content["canvas_list"][-1].create_image(imgSize / 2, imgSize / 2, image=img_choco)
             elif '사과' in drink or '게토레이' in drink or '마운틴듀오' in drink or '코코 포도' in drink:
-                canvas_list[-1].create_image(imgSize / 2, imgSize / 2, image=img_apple)
+                drink_content["canvas_list"][-1].create_image(imgSize / 2, imgSize / 2, image=img_apple)
             elif '콘트라베이스' in drink or '레쓰비' in drink:
-                canvas_list[-1].create_image(imgSize / 2, imgSize / 2, image=img_coffee)
+                drink_content["canvas_list"][-1].create_image(imgSize / 2, imgSize / 2, image=img_coffee)
             else:
-                canvas_list[-1].create_image(imgSize / 2, imgSize / 2, image=img)
+                drink_content["canvas_list"][-1].create_image(imgSize / 2, imgSize / 2, image=img)
 
             # 음료 재고 개수 설정
             # 재고 개수 0 ~ 30 범위에서 설정 가능, 입력하지 못하도록 readonly 속성 부여
-            stock_list.append(Spinbox(window, from_=0, to=30, validate='none',
+            drink_content["stock_list"].append(Spinbox(window, from_=0, to=30, validate='none',
                                       width=10, state='readonly', increment=1))
             # 기본값을 원래 있던 재고를 불러와서 적용
-            stock_list[-1].set(drink_list[drink]['재고'])
-            state_list.append(Button(window, text="●        판매중", fg='green', focusthickness=0, activebackground='gray'))
+            drink_content["stock_list"][-1].set(drink_list[drink]['재고'])
+            drink_content["state_list"].append(Button(text="●        판매중", fg='green', focusthickness=0, activebackground='gray'))
 
             # 객체 생성
-            canvas_list[-1].grid(row=row_cnt, column=column_cnt)
-            label_list[-1].grid(row=row_cnt + 1, column=column_cnt)
-            stock_list[-1].grid(row=row_cnt + 2, column=column_cnt, padx=15)
-            state_list[-1].grid(row=row_cnt + 3, column=column_cnt)
+            drink_content["canvas_list"][-1].grid(row=row_cnt, column=column_cnt)
+            drink_content["label_list"][-1].grid(row=row_cnt + 1, column=column_cnt)
+            drink_content["stock_list"][-1].grid(row=row_cnt + 2, column=column_cnt, padx=15)
+            drink_content["state_list"][-1].grid(row=row_cnt + 3, column=column_cnt)
 
             column_cnt += 1
             Label(text=" ").grid(row=row_cnt + 4, column=column_cnt)
@@ -93,10 +99,10 @@ class Drink:
                 # 음료간의 간격 조정을 위해 빈 객체 생성, 배치
                 column_cnt = 0
                 row_cnt += 6
-    # def state_change():
-    #     state_list
 
-        
+            drink_content["id"] = idx
+            idx += 1
+
     Label(text="음료 재고 관리중...", font="Helvetica 25 bold", foreground="red").grid(row=99, column=1, rowspan=3)
     # 자판기 사용 유저의 지갑
     # cash: 현금 저장용
@@ -134,6 +140,7 @@ class Drink:
         f"IBK카드: {6200000}원"
     ])
 
+    # set_up = Button(text="설정")
     amount_increase_combo = Combobox(window, width=15, state='readonly')
     amount_increase_combo['value'] = user_cash_tuple
     amount_increase_combo.current(0)
