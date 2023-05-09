@@ -72,6 +72,8 @@ class DrinkManager:
                 # 객체 생성
                 self.drink_content[idx].canvas.grid(row=row_cnt, column=column_cnt)
                 self.drink_content[idx].label.grid(row=row_cnt + 1, column=column_cnt)
+                # TODO Label -> Entry Box 변경하여 설정한 금액을 업데이트 하도록 변경
+                # TODO 금액 설정 버튼 생성 후 버튼 클릭시 적용하도록 설정
                 self.drink_content[idx].price_label.grid(row=row_cnt + 2, column=column_cnt)
                 self.drink_content[idx].stock_box.grid(row=row_cnt + 3, column=column_cnt, padx=15)
                 self.drink_content[idx].state_btn.grid(row=row_cnt + 4, column=column_cnt)

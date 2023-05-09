@@ -8,7 +8,14 @@ import json
 import UserDrinkContent
 import User
 
+# TODO 카드 구매기능 구현
+# TODO 구매시 User inventory에 저장하도록 구현
+# TODO 구매시 금액 차감후 실시간 정보 변경(카드 정보 수정 및 기타 금액 출력부분 Refrash)
 
+# TODO 화폐 구매기능 구현
+# TODO 구매시 잔액 계산 후 나머지돈 Return
+# TODO 나머지돈을 화폐 재고에 맞게 Return
+# TODO 화폐 재고가 부족할 경우에도 구매 불가능하도록 설정
 vm_window = Tk()
 vm_window.title("자판기")
 # 창의 초기 생성위치 설정
