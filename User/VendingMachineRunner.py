@@ -125,8 +125,14 @@ cash_increase_combo['value'] = user_card_tuple
 cash_increase_combo.current(0)
 cash_increase_combo.grid(row=101, column=abs(row_limit - 1))
 amount_increase_btn = Button(text="카드 투입", focusthickness=0, activebackground='gray', width=160,
-                             command=lambda: user.card_injection(cash_increase_combo.get()))
+                             command=lambda: [user.card_injection(cash_increase_combo.get()), card_injection_event()])
 amount_increase_btn.grid(row=102, column=abs(row_limit - 1))
+
+
+def card_injection_event():
+    amount_increase_btn['text'] = "카드 투입됨"
+    amount_increase_btn['fg'] = "green"
+
 
 vm_window.mainloop()
 
