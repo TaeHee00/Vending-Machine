@@ -45,7 +45,7 @@ with open("../Manager/drink_list.json", "r") as file:
     row_cnt = 0
     idx = 0
     for drink in drink_list:
-        drink_content.append(UserDrinkContent.UserDrinkContent(vm_window, drink, drink_list[drink]['재고'], drink_list[drink]['상태'], idx))
+        drink_content.append(UserDrinkContent.UserDrinkContent(vm_window, drink, drink_list[drink]['재고'], drink_list[drink]['상태'], drink_list[drink]['가격'], idx))
 
         if drink_content[idx].label == '물':
             drink_content[idx].canvas.create_image(imgSize / 2, imgSize / 2, image=img_water)
@@ -71,12 +71,13 @@ with open("../Manager/drink_list.json", "r") as file:
         # 객체 생성
         drink_content[idx].canvas.grid(row=row_cnt, column=column_cnt)
         drink_content[idx].label.grid(row=row_cnt + 1, column=column_cnt)
-        drink_content[idx].state_btn.grid(row=row_cnt + 2, column=column_cnt, padx=15)
+        drink_content[idx].price_label.grid(row=row_cnt + 2, column=column_cnt)
+        drink_content[idx].state_btn.grid(row=row_cnt + 3, column=column_cnt, padx=15)
 
         column_cnt += 1
-        Label(text=" ").grid(row=row_cnt + 3, column=column_cnt)
         Label(text=" ").grid(row=row_cnt + 4, column=column_cnt)
         Label(text=" ").grid(row=row_cnt + 5, column=column_cnt)
+        Label(text=" ").grid(row=row_cnt + 6, column=column_cnt)
         if column_cnt % row_limit == 0:
             # 음료간의 간격 조정을 위해 빈 객체 생성, 배치
             column_cnt = 0
@@ -148,6 +149,7 @@ def card_injection_event():
         user.card_injection(cash_increase_combo.get())
 
         for _drink in drink_content:
+            # TODO 조건 재확인 필요
             if drink_list[_drink.label_text]['재고'] <= 0 or drink_list[_drink.label_text]['가격'] > user.wallet['Card'].get_balance(cash_increase_combo.get()):
                 _drink.state_btn['text'] = "○        구매불가"
                 _drink.state_btn['fg'] = "red"

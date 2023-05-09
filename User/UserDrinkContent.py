@@ -6,7 +6,7 @@ class UserDrinkContent:
 
     # 생성자
     # (생성할 Frame, 음료명, 현재 재고, 판매상태, 고유인덱스)
-    def __init__(self, window, label, stock, state, content_id):
+    def __init__(self, window, label, stock, state, price, content_id):
         # 처음 시작시 화폐, 카드 투입 전이기 때문에 구매 불가
         self.state = "판매불가"
         # self.state = state
@@ -21,6 +21,9 @@ class UserDrinkContent:
         self.stock_box = Spinbox(window, textvariable=self.stock_box_text, from_=0, to=30, validate='none', width=11, state='readonly', increment=1)
         # StringVar 값 초기화
         self.stock_box_text.set(stock)
+        # 음료당 가격
+        self.drink_price = price
+        self.price_label = Label(window, text=f"{price}원", font="Helvetica 12 bold")
         # 판매 상태값 초기화
         self.state_init(self.state)
         # Content 고유 ID
