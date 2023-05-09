@@ -14,6 +14,7 @@ class Card:
         # TODO Management System에서 등록가능 카드 목록 만들기
 
     def get_balance(self, card_name):
+        card_name = card_name.replace(":", "").split()[0]
         with open("user_wallet.json", "r") as file:
             self.Card = json.load(file)['Card']
         return self.Card[card_name]

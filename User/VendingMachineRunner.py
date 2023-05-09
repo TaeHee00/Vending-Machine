@@ -146,12 +146,27 @@ def card_injection_event():
         amount_increase_btn['text'] = f"{cash_increase_combo.get().replace(':', '').split()[0]} 투입됨"
         amount_increase_btn['fg'] = "green"
         user.card_injection(cash_increase_combo.get())
+
+        for _drink in drink_content:
+            if drink_list[_drink.label_text]['재고'] <= 0 or drink_list[_drink.label_text]['가격'] > user.wallet['Card'].get_balance(cash_increase_combo.get()):
+                _drink.state_btn['text'] = "○        구매불가"
+                _drink.state_btn['fg'] = "red"
+                _drink.state_btn['state'] = "disabled"
+                # print(_drink.state, drink_list[_drink.label_text]['재고'], drink_list[_drink.label_text]['가격'], user.wallet['Card'].get_balance(cash_increase_combo.get()))
+            else:
+                _drink.state_btn['text'] = "●        구매가능"
+                _drink.state_btn['fg'] = "green"
+                _drink.state_btn['state'] = "normal"
     else:
         # 카드 제거
         # TODO 카드 총 사용 내역 기능 추가 예정
         amount_increase_btn['text'] = "카드 투입"
         amount_increase_btn['fg'] = "black"
         user.card_return(cash_increase_combo.get())
+
+        for _drink in drink_content:
+            _drink.state_btn['text'] = "○        구매불가"
+            _drink.state_btn['state'] = "disabled"
 
 
 vm_window.mainloop()

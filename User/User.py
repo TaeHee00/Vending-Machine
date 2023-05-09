@@ -28,7 +28,7 @@ class User:
     def card_injection(self, choice):
         card_name = choice.replace(":", "").split()[0]
         # 선택한 카드의 잔액
-        card_balance = self.wallet['Card'].get_balance(card_name)
+        card_balance = self.wallet['Card'].get_balance(choice)
         # 결제시스템에 카드 정보 등록
         PayManager.card_injection(card_name, card_balance)
 

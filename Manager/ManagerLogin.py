@@ -1,7 +1,6 @@
 from tkinter import *
 from tkinter.messagebox import *
 
-
 login_window = Tk()
 login_window.title("Management System")
 # 창의 초기 생성위치 설정
