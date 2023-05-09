@@ -8,6 +8,8 @@ import json
 import UserDrinkContent
 import User
 
+
+# TODO 처음 자판기 실행시 manager_wallte['Temp_Card'] 내용 초기화
 vm_window = Tk()
 vm_window.title("자판기")
 # 창의 초기 생성위치 설정
@@ -108,6 +110,9 @@ with open("user_wallet.json", 'r') as file:
         card_list.append(f"{card}: {card_data[card]}원")
     user_card_tuple = tuple(card_list)
 
+
+# TODO 화폐, 카드 투입 전 구매 버튼 비활성화
+
 # 현금 결제를 위한 Drop-down 옵션
 # 자판기와 동일한 동작을 위해 화폐는 하나씩 투입하도록 설정
 amount_increase_combo = Combobox(vm_window, width=15, state='readonly')
@@ -125,13 +130,27 @@ cash_increase_combo['value'] = user_card_tuple
 cash_increase_combo.current(0)
 cash_increase_combo.grid(row=101, column=abs(row_limit - 1))
 amount_increase_btn = Button(text="카드 투입", focusthickness=0, activebackground='gray', width=160,
-                             command=lambda: [user.card_injection(cash_increase_combo.get()), card_injection_event()])
+                             command=lambda: card_injection_event())
 amount_increase_btn.grid(row=102, column=abs(row_limit - 1))
 
 
+# TODO 카드 삽입,제거시 투입된 금액 Label 변경
+# TODO 카드 삽입시 잔액에 따라 구매 가능한 음료만 판매 상태 변경
+# TODO 구매시 카드 잔액 실시간 업데이트
+# TODO 구매시 user_bag에 음료명: 개수 추가
+# TODO Manager 통계에서 판매 수익 및 판매 음료 추가
 def card_injection_event():
-    amount_increase_btn['text'] = "카드 투입됨"
-    amount_increase_btn['fg'] = "green"
+    # 카드 삽입
+    if amount_increase_btn['text'] == "카드 투입":
+        amount_increase_btn['text'] = f"{cash_increase_combo.get().replace(':', '').split()[0]} 투입됨"
+        amount_increase_btn['fg'] = "green"
+        user.card_injection(cash_increase_combo.get())
+    else:
+        # 카드 제거
+        # TODO 카드 총 사용 내역 기능 추가 예정
+        amount_increase_btn['text'] = "카드 투입"
+        amount_increase_btn['fg'] = "black"
+        user.card_return(cash_increase_combo.get())
 
 
 vm_window.mainloop()

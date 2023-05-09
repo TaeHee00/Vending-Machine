@@ -7,7 +7,9 @@ class UserDrinkContent:
     # 생성자
     # (생성할 Frame, 음료명, 현재 재고, 판매상태, 고유인덱스)
     def __init__(self, window, label, stock, state, content_id):
-        self.state = state
+        # 처음 시작시 화폐, 카드 투입 전이기 때문에 구매 불가
+        self.state = "판매불가"
+        # self.state = state
         self.imgSize = 64
         self.canvas = Canvas(window, width=self.imgSize, height=self.imgSize, highlightthickness=0)
         self.state_btn = Button(window, text="●          판매중", width=9, fg='green', activebackground='gray')
@@ -20,7 +22,7 @@ class UserDrinkContent:
         # StringVar 값 초기화
         self.stock_box_text.set(stock)
         # 판매 상태값 초기화
-        self.state_init(state)
+        self.state_init(self.state)
         # Content 고유 ID
         self.id = content_id
 

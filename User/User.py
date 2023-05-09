@@ -32,7 +32,10 @@ class User:
         # 결제시스템에 카드 정보 등록
         PayManager.card_injection(card_name, card_balance)
 
-
     # TODO 카드 반환 기능
-    def card_return(self):
-        pass
+    # 카드 반환 이벤트가 발생할 경우
+    # manager_wallte에서 Temp_Card를 초기화
+    def card_return(self, choice):
+        # 이후 통계에 사용될 변수
+        card_name = choice.replace(":", "").split()[0]
+        self.wallet['Card'].return_card()
