@@ -85,7 +85,7 @@ with open("../Manager/drink_list.json", "r") as file:
 # 자판기 사용 유저의 지갑
 # cash: 현금 저장용
 # card: 카드 저장용
-user_wallet = User.User()
+user = User.User()
 machine_amount = 0
 
 # 자판기에 투입된 금액 표시
@@ -95,20 +95,18 @@ machine_amount_label.grid(row=99, column=abs(row_limit - 2), columnspan=3)
 
 Label(text=" ").grid(row=100, column=column_cnt)
 user_cash_tuple = tuple([
-    f"5000원: {user_wallet.wallet['Cash'].Cash['5000']}개",
-    f"1000원: {user_wallet.wallet['Cash'].Cash['1000']}개",
-    f"500원: {user_wallet.wallet['Cash'].Cash['500']}개",
-    f"100원: {user_wallet.wallet['Cash'].Cash['100']}개"
+    f"5000원: {user.wallet['Cash'].Cash['5000']}개",
+    f"1000원: {user.wallet['Cash'].Cash['1000']}개",
+    f"500원: {user.wallet['Cash'].Cash['500']}개",
+    f"100원: {user.wallet['Cash'].Cash['100']}개"
 ])
 # TODO 이후 User Class의 Wallte Class의 Card Class에서 받아올것.
 # 임시 데이터
 
 with open("user_wallet.json", 'r') as file:
     card_data = json.load(file)['Card']
-    print(card_data)
     card_list = list()
     for card in card_data:
-        print(card)
         card_list.append(f"{card}: {card_data[card]}원")
     user_card_tuple = tuple(card_list)
 
@@ -118,7 +116,8 @@ amount_increase_combo = Combobox(vm_window, width=15, state='readonly')
 amount_increase_combo['value'] = user_cash_tuple
 amount_increase_combo.current(0)
 amount_increase_combo.grid(row=101, column=abs(row_limit - 2))
-amount_increase_btn = Button(text="현금 투입", focusthickness=0, activebackground='gray', width=160)
+amount_increase_btn = Button(text="현금 투입", focusthickness=0, activebackground='gray', width=160,
+                             command=lambda: user.cash_injection(amount_increase_combo.get()))
 amount_increase_btn.grid(row=102, column=abs(row_limit - 2))
 
 # 카드 결제를 위한 Drop-down 옵션
@@ -127,7 +126,8 @@ cash_increase_combo = Combobox(vm_window, width=15, state='readonly')
 cash_increase_combo['value'] = user_card_tuple
 cash_increase_combo.current(0)
 cash_increase_combo.grid(row=101, column=abs(row_limit - 1))
-amount_increase_btn = Button(text="카드 투입", focusthickness=0, activebackground='gray', width=160)
+amount_increase_btn = Button(text="카드 투입", focusthickness=0, activebackground='gray', width=160,
+                             command=lambda: user.card_injection(cash_increase_combo.get()))
 amount_increase_btn.grid(row=102, column=abs(row_limit - 1))
 
 vm_window.mainloop()
