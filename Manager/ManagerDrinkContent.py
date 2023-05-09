@@ -7,7 +7,7 @@ class ManagerDrinkContent:
     # TODO 가격 수정 기능 추가
     # 생성자
     # (생성할 Frame, 음료명, 현재 재고, 판매상태, 고유인덱스)
-    def __init__(self, window, label, stock, state, content_id):
+    def __init__(self, window, label, stock, state, price, content_id):
         self.state = state
         self.imgSize = 64
         self.canvas = Canvas(window, width=self.imgSize, height=self.imgSize, highlightthickness=0)
@@ -20,6 +20,9 @@ class ManagerDrinkContent:
         self.stock_box = Spinbox(window, textvariable=self.stock_box_text, from_=0, to=30, validate='none', width=11, state='readonly', increment=1)
         # StringVar 값 초기화
         self.state_init(state)
+        # 음료당 가격
+        self.drink_price = price
+        self.price_label = Label(window, text=f"{price}원", font="Helvetica 12 bold")
         # 판매 상태값 초기화
         self.stock_box_text.set(stock)
         # Content 고유 ID

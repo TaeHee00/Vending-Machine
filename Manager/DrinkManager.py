@@ -46,7 +46,7 @@ class DrinkManager:
             row_cnt = 0
             idx = 0
             for drink in drink_list:
-                self.drink_content.append(ManagerDrinkContent.ManagerDrinkContent(self.window, drink, drink_list[drink]['재고'], drink_list[drink]['상태'], idx))
+                self.drink_content.append(ManagerDrinkContent.ManagerDrinkContent(self.window, drink, drink_list[drink]['재고'], drink_list[drink]['상태'], drink_list[drink]['가격'], idx))
 
                 if self.drink_content[idx].label == '물':
                     self.drink_content[idx].canvas.create_image(imgSize / 2, imgSize / 2, image=img_water)
@@ -72,13 +72,14 @@ class DrinkManager:
                 # 객체 생성
                 self.drink_content[idx].canvas.grid(row=row_cnt, column=column_cnt)
                 self.drink_content[idx].label.grid(row=row_cnt + 1, column=column_cnt)
-                self.drink_content[idx].stock_box.grid(row=row_cnt + 2, column=column_cnt, padx=15)
-                self.drink_content[idx].state_btn.grid(row=row_cnt + 3, column=column_cnt)
+                self.drink_content[idx].price_label.grid(row=row_cnt + 2, column=column_cnt)
+                self.drink_content[idx].stock_box.grid(row=row_cnt + 3, column=column_cnt, padx=15)
+                self.drink_content[idx].state_btn.grid(row=row_cnt + 4, column=column_cnt)
 
                 column_cnt += 1
-                Label(text=" ").grid(row=row_cnt + 4, column=column_cnt)
                 Label(text=" ").grid(row=row_cnt + 5, column=column_cnt)
                 Label(text=" ").grid(row=row_cnt + 6, column=column_cnt)
+                Label(text=" ").grid(row=row_cnt + 7, column=column_cnt)
                 if column_cnt % row_limit == 0:
                     # 음료간의 간격 조정을 위해 빈 객체 생성, 배치
                     column_cnt = 0
