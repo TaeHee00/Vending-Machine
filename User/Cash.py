@@ -6,7 +6,7 @@ class Cash:
 
     def __init__(self):
         with open("user_wallet.json", "r") as file:
-            self.Cash = json.load(file)
+            self.Cash = json.load(file)['Cash']
 
     def set_cash(self, money_type, how_much):
         if how_much >= 0:

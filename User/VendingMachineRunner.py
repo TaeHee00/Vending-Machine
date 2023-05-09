@@ -5,7 +5,8 @@ from PIL import ImageTk
 from tkmacosx import Button
 # 데이터 관리를 손쉽게 하기 위해 json라이브러리 사용
 import json
-from User import UserDrinkContent
+import UserDrinkContent
+import User
 
 vm_window = Tk()
 vm_window.title("자판기")
@@ -19,23 +20,23 @@ row_limit = 6
 
 # Canvas 내부에 들어갈 임시 이미지 크기
 imgSize = 64
-img = ImageTk.PhotoImage(file="images/drink.png")
-img_cola = ImageTk.PhotoImage(file="images/cola.png")
-img_water = ImageTk.PhotoImage(file="images/water.png")
-img_cider = ImageTk.PhotoImage(file="images/cider.png")
-img_mongo = ImageTk.PhotoImage(file="images/mongo.png")
-img_coffee = ImageTk.PhotoImage(file="images/coffee.png")
-img_lemon = ImageTk.PhotoImage(file="images/lemon.png")
-img_choco = ImageTk.PhotoImage(file="images/choco.png")
-img_apple = ImageTk.PhotoImage(file="images/apple.png")
-img_energy_drink = ImageTk.PhotoImage(file="images/energy-drink.png")
+img = ImageTk.PhotoImage(file="../images/drink.png")
+img_cola = ImageTk.PhotoImage(file="../images/cola.png")
+img_water = ImageTk.PhotoImage(file="../images/water.png")
+img_cider = ImageTk.PhotoImage(file="../images/cider.png")
+img_mongo = ImageTk.PhotoImage(file="../images/mongo.png")
+img_coffee = ImageTk.PhotoImage(file="../images/coffee.png")
+img_lemon = ImageTk.PhotoImage(file="../images/lemon.png")
+img_choco = ImageTk.PhotoImage(file="../images/choco.png")
+img_apple = ImageTk.PhotoImage(file="../images/apple.png")
+img_energy_drink = ImageTk.PhotoImage(file="../images/energy-drink.png")
 
 # 음료가 추가될 경우 계속하여 객체를 만들어주어야 하기 때문에 관리의 편의성을 위해서
 # 리스트 내부에 객체를 저장하여 사용
 drink_content = list()
 
 # drink_list.json 파일 내부 음료 목록을 불러와서 객체 생성
-with open("./Manager/drink_list.json", "r") as file:
+with open("../Manager/drink_list.json", "r") as file:
     drink_list = json.load(file)
 
     # 음료 객체의 자리 배치에 사용하는 변수
@@ -84,17 +85,7 @@ with open("./Manager/drink_list.json", "r") as file:
 # 자판기 사용 유저의 지갑
 # cash: 현금 저장용
 # card: 카드 저장용
-user_wallet = {
-    "cash": {
-        5000: 15,
-        1000: 0,
-        500: 0,
-        100: 0
-    },
-    "card": {
-
-    }
-}
+user_wallet = User.User()
 machine_amount = 0
 
 # 자판기에 투입된 금액 표시
@@ -104,18 +95,22 @@ machine_amount_label.grid(row=99, column=abs(row_limit - 2), columnspan=3)
 
 Label(text=" ").grid(row=100, column=column_cnt)
 user_cash_tuple = tuple([
-    f"5000원: {user_wallet['cash'][5000]}개",
-    f"1000원: {user_wallet['cash'][1000]}개",
-    f"500원: {user_wallet['cash'][500]}개",
-    f"100원: {user_wallet['cash'][100]}개"
+    f"5000원: {user_wallet.wallet['Cash'].Cash['5000']}개",
+    f"1000원: {user_wallet.wallet['Cash'].Cash['1000']}개",
+    f"500원: {user_wallet.wallet['Cash'].Cash['500']}개",
+    f"100원: {user_wallet.wallet['Cash'].Cash['100']}개"
 ])
 # TODO 이후 User Class의 Wallte Class의 Card Class에서 받아올것.
 # 임시 데이터
-user_card_tuple = tuple([
-    f"농협카드: {75000}원",
-    f"현대카드: {900000}원",
-    f"IBK카드: {6200000}원"
-])
+
+with open("user_wallet.json", 'r') as file:
+    card_data = json.load(file)['Card']
+    print(card_data)
+    card_list = list()
+    for card in card_data:
+        print(card)
+        card_list.append(f"{card}: {card_data[card]}원")
+    user_card_tuple = tuple(card_list)
 
 # 현금 결제를 위한 Drop-down 옵션
 # 자판기와 동일한 동작을 위해 화폐는 하나씩 투입하도록 설정

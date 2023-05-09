@@ -38,7 +38,7 @@ class UserDrinkContent:
 
     # 구매시 재고 수정 이후 판매 상태 수정 함수 (초기화 & 데이터 파일 수정)
     def state_init(self, state):
-        with open("./Manager/drink_list.json", "r") as file:
+        with open("../Manager/drink_list.json", "r") as file:
             drink_list = json.load(file)
             if state == "판매불가" or drink_list[self.label_text]['재고'] <= 0:
                 self.state_btn.config(text="○        구매불가", fg='red', activebackground='gray', disabledforeground='red', bg='gray')

@@ -1,6 +1,10 @@
+import json
+
+
 class Card:
     def __init__(self):
-        self.card_list = dict()
+        with open("user_wallet.json", "r") as file:
+            self.Card = json.load(file)['Card']
 
     def add_card(self, card_name, balance):
         new_card = {
@@ -8,3 +12,5 @@ class Card:
         }
         self.card_list[card_name] = new_card
         # TODO Management System에서 등록가능 카드 목록 만들기
+
+    # def

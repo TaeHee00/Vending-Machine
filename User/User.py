@@ -1,14 +1,15 @@
-import Cash
+import json
 import Card
+import Cash
 
 
 class User:
 
     def __init__(self):
         self.wallet = {
-            "cash": Cash.Cash(),
-            "card": Card.Card()
+            "Cash": Cash.Cash(),
+            "Card": Card.Card()
         }
 
-        self.bag = dict()
-
+        with open("user_bag.json", "r") as file:
+            self.bag = json.load(file)['bag']
