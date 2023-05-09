@@ -9,7 +9,6 @@ import UserDrinkContent
 import User
 
 
-# TODO 처음 자판기 실행시 manager_wallte['Temp_Card'] 내용 초기화
 vm_window = Tk()
 vm_window.title("자판기")
 # 창의 초기 생성위치 설정
@@ -88,6 +87,8 @@ with open("../Manager/drink_list.json", "r") as file:
 # cash: 현금 저장용
 # card: 카드 저장용
 user = User.User()
+# 자판기 실행시 manager_wallte['Temp_Card'] 내용 초기화
+user.init_card()
 machine_amount = 0
 
 # 자판기에 투입된 금액 표시

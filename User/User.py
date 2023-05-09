@@ -39,3 +39,6 @@ class User:
         # 이후 통계에 사용될 변수
         card_name = choice.replace(":", "").split()[0]
         self.wallet['Card'].return_card()
+
+    def init_card(self):
+        self.wallet['Card'].return_card()
