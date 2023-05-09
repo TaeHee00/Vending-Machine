@@ -3,7 +3,8 @@ import json
 
 
 class ManagerDrinkContent:
-
+    # TODO Interface에서 음료당 가격 보여주는 기능 추가
+    # TODO 가격 수정 기능 추가
     # 생성자
     # (생성할 Frame, 음료명, 현재 재고, 판매상태, 고유인덱스)
     def __init__(self, window, label, stock, state, content_id):

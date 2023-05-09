@@ -113,10 +113,10 @@ with open("user_wallet.json", 'r') as file:
     user_card_tuple = tuple(card_list)
 
 
-# TODO 화폐, 카드 투입 전 구매 버튼 비활성화
 
 # 현금 결제를 위한 Drop-down 옵션
 # 자판기와 동일한 동작을 위해 화폐는 하나씩 투입하도록 설정
+# TODO 화폐 투입 전 구매 버튼 비활성화
 amount_increase_combo = Combobox(vm_window, width=15, state='readonly')
 amount_increase_combo['value'] = user_cash_tuple
 amount_increase_combo.current(0)
@@ -125,8 +125,10 @@ amount_increase_btn = Button(text="현금 투입", focusthickness=0, activebackg
                              command=lambda: user.cash_injection(amount_increase_combo.get()))
 amount_increase_btn.grid(row=102, column=abs(row_limit - 2))
 
+
 # 카드 결제를 위한 Drop-down 옵션
 # 카드를 투입 후 반환 전까지 카드의 잔액을 사용하여 결제
+# 카드 투입 전 구매 버튼 비활성화
 cash_increase_combo = Combobox(vm_window, width=15, state='readonly')
 cash_increase_combo['value'] = user_card_tuple
 cash_increase_combo.current(0)
@@ -136,8 +138,8 @@ amount_increase_btn = Button(text="카드 투입", focusthickness=0, activebackg
 amount_increase_btn.grid(row=102, column=abs(row_limit - 1))
 
 
-# TODO 카드 삽입,제거시 투입된 금액 Label 변경
-# TODO 카드 삽입시 잔액에 따라 구매 가능한 음료만 판매 상태 변경
+# 카드 삽입시 잔액에 따라 구매 가능한 음료만 판매 상태 변경
+# 카드 삽입,제거시 투입된 금액 Label 변경
 # TODO 구매시 카드 잔액 실시간 업데이트
 # TODO 구매시 user_bag에 음료명: 개수 추가
 # TODO Manager 통계에서 판매 수익 및 판매 음료 추가
@@ -147,6 +149,8 @@ def card_injection_event():
         amount_increase_btn['text'] = f"{cash_increase_combo.get().replace(':', '').split()[0]} 투입됨"
         amount_increase_btn['fg'] = "green"
         user.card_injection(cash_increase_combo.get())
+
+        machine_amount_label['text'] = f"카드 잔액:\t{user.wallet['Card'].get_balance(cash_increase_combo.get())}원"
 
         for _drink in drink_content:
             # TODO 조건 재확인 필요
@@ -159,6 +163,7 @@ def card_injection_event():
                 _drink.state_btn['text'] = "●        구매가능"
                 _drink.state_btn['fg'] = "green"
                 _drink.state_btn['state'] = "normal"
+
     else:
         # 카드 제거
         # TODO 카드 총 사용 내역 기능 추가 예정
@@ -169,6 +174,8 @@ def card_injection_event():
         for _drink in drink_content:
             _drink.state_btn['text'] = "○        구매불가"
             _drink.state_btn['state'] = "disabled"
+
+        machine_amount_label['text'] = f"투입된 금액:\t{machine_amount}원"
 
 
 vm_window.mainloop()
