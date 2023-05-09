@@ -27,8 +27,7 @@ class UserDrinkContent:
     def __int__(self):
         return self.id
 
-    # Content 하단에 판매 상태 변경 버튼 클릭 이벤트 함수
-    # 판매중 <--> 판매불가 토글 설정
+    # 구매시 재고 수정 이후 판매 상태 수정 함수
     def state_change(self, state):
         if state == "판매중":
             self.state = "판매불가"
@@ -37,9 +36,7 @@ class UserDrinkContent:
             self.state = "판매중"
             self.state_btn.config(text="●        구매가능", fg='green', activebackground='gray')
 
-    # 초기 판매 상태 설정 함수
-    # 재고 부족에 따른 판매 가능 옵션을 배제하기 위해 사용
-    # 재고가 없을 경우 판매불가 상태 고정 + 판매중으로 변경 불가능
+    # 구매시 재고 수정 이후 판매 상태 수정 함수 (초기화 & 데이터 파일 수정)
     def state_init(self, state):
         with open("./Manager/drink_list.json", "r") as file:
             drink_list = json.load(file)
