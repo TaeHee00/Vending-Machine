@@ -117,6 +117,8 @@ user_card_tuple = tuple([
     f"IBK카드: {6200000}원"
 ])
 
+# 현금 결제를 위한 Drop-down 옵션
+# 자판기와 동일한 동작을 위해 화폐는 하나씩 투입하도록 설정
 amount_increase_combo = Combobox(vm_window, width=15, state='readonly')
 amount_increase_combo['value'] = user_cash_tuple
 amount_increase_combo.current(0)
@@ -124,6 +126,8 @@ amount_increase_combo.grid(row=101, column=abs(row_limit - 2))
 amount_increase_btn = Button(text="현금 투입", focusthickness=0, activebackground='gray', width=160)
 amount_increase_btn.grid(row=102, column=abs(row_limit - 2))
 
+# 카드 결제를 위한 Drop-down 옵션
+# 카드를 투입 후 반환 전까지 카드의 잔액을 사용하여 결제
 cash_increase_combo = Combobox(vm_window, width=15, state='readonly')
 cash_increase_combo['value'] = user_card_tuple
 cash_increase_combo.current(0)
