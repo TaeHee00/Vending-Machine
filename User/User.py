@@ -1,6 +1,7 @@
 import json
 import Card
 import Cash
+from Manager import PayManager
 
 
 class User:
@@ -26,7 +27,11 @@ class User:
     # TODO 카드 투입 기능
     def card_injection(self, choice):
         card_name = choice.replace(":", "").split()[0]
-        print(card_name)
+        # 선택한 카드의 잔액
+        card_balance = self.wallet['Card'].get_balance(card_name)
+        # 결제시스템에 카드 정보 등록
+        PayManager.card_injection(card_name, card_balance)
+
 
     # TODO 카드 반환 기능
     def card_return(self):

@@ -100,8 +100,6 @@ user_cash_tuple = tuple([
     f"500원: {user.wallet['Cash'].Cash['500']}개",
     f"100원: {user.wallet['Cash'].Cash['100']}개"
 ])
-# TODO 이후 User Class의 Wallte Class의 Card Class에서 받아올것.
-# 임시 데이터
 
 with open("user_wallet.json", 'r') as file:
     card_data = json.load(file)['Card']
