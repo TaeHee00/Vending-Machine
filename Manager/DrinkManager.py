@@ -155,10 +155,11 @@ class DrinkManager:
                         drink.state_btn['state'] = 'normal'
                     else:
                         drink.state_btn['state'] = 'disabled'
-
+        # 관리 데이터 정보 업데이트
         with open("drink_list.json", 'w') as file:
             json.dump(drink_data, file, indent=4, ensure_ascii=False)
 
+        # 변경된 내용 검색
         change_state = ""
         for drink in drink_data:
             if drink_data[drink]['상태'] != old_drink_data[drink]['상태']:
