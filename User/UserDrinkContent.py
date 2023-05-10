@@ -2,6 +2,7 @@ from tkinter import *
 import json
 
 
+# TODO 구매 가능 상태 텍스트 설정호
 class UserDrinkContent:
 
     # 생성자
