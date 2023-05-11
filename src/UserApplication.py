@@ -66,9 +66,9 @@ class UserApplication:
             drinkDto = VM_DrinkDto.VM_DrinkDto(
                 window=self.window,
                 label=drink_list[drink.getDrinkSeq() - 1].getDrinkName(),
-                stock=0,
-                state="점검중",
-                price=1000,
+                stock=drink.getAmount(),
+                state=drink.getState(),
+                price=drink_list[drink.getDrinkSeq() - 1].getDrinkPrice(),
                 content_id=drink.getDrinkSeq()
             )
             self.drink_content.append(drinkDto)

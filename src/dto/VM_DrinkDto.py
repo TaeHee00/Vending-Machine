@@ -25,10 +25,10 @@ class VM_DrinkDto:
         # 음료당 가격
         self.drink_price = price
         self.price_label = Label(window, text=f"{price}원", font="Helvetica 12 bold")
-        # 판매 상태값 초기화
-        self.state_init(self.state)
         # Content 고유 ID
         self.id = content_id
+        # 판매 상태값 초기화
+        self.state_init(state, stock)
 
     def __int__(self):
         return self.id
@@ -43,15 +43,14 @@ class VM_DrinkDto:
             self.state_btn.config(text="●        구매가능", fg='green', activebackground='gray')
 
     # 구매시 재고 수정 이후 판매 상태 수정 함수 (초기화 & 데이터 파일 수정)
-    def state_init(self, state):
-        with open("../Manager/drink_list.json", "r") as file:
-            drink_list = json.load(file)
-            if state == "판매불가" or drink_list[self.label_text]['재고'] <= 0:
-                self.state_btn.config(text="○        구매불가", fg='red', activebackground='gray', disabledforeground='red', bg='gray')
-                self.state_btn['state'] = 'disabled'
-            elif state == "판매중":
-                self.state_btn.config(text="●        구매가능", fg='green', activebackground='gray')
-                self.state_btn['state'] = 'normal'
+    def state_init(self, state, amount):
+        if state == "판매불가" or amount <= 0:
+            self.state_btn.config(text="○        구매불가", fg='red', activebackground='gray', disabledforeground='red',
+                                  bg='gray')
+            self.state_btn['state'] = 'disabled'
+        elif state == "판매중":
+            self.state_btn.config(text="●        구매가능", fg='green', activebackground='gray')
+            self.state_btn['state'] = 'normal'
 
     # 재고 수정 함수
     def set_stock_box(self, text):
