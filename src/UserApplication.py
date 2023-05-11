@@ -166,7 +166,9 @@ class UserApplication:
         # TODO 구매시 카드 잔액 실시간 업데이트
         # TODO 구매시 user_bag에 음료명: 개수 추가
         # TODO Manager 통계에서 판매 수익 및 판매 음료 추가
-        def card_injection_event(self):
+
+        # TODO 05-12 04:19 CHECK POINT
+        def card_injection_event():
             # 카드 삽입
             if amount_increase_btn['text'] == "카드 투입":
                 amount_increase_btn['text'] = f"{cash_increase_combo.get().replace(':', '').split()[0]} 투입됨"
