@@ -4,9 +4,11 @@ import sys
 
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 from repository.Repository import Repository
+# from repository.CardRepository import CardRepository
+# from repository.CashRepositroy import CashRepository
 
 
-class CardRepository(Repository):
+class UserWallteRepository(Repository):
 
     def __init__(self):
         super().__init__()
