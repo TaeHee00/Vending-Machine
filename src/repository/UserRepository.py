@@ -1,5 +1,9 @@
 import pymysql
-from Repository import Repository
+import os
+import sys
+
+sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
+from repository.Repository import Repository
 
 
 # TODO dao에서 객체로 변경
