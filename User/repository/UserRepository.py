@@ -1,41 +1,26 @@
 import pymysql
+from Repository import Repository
 
 
-class UserRepository:
+class UserRepository(Repository):
 
     def __init__(self):
-        self.db = pymysql.Connect(
-            host='localhost',
-            user='root',
-            password='Skdlxmfhem3323!',
-            database='vending_machine',
-            charset="utf8"
-        )
-        self.cursor = self.db.cursor()
-        self.query = ""
-        self.result = None
-        # query = "INSERT INTO LOGIN_DATA (USER_CODE, ID, PW) VALUES (%s, %s, %s)"
-        # data = ('3', 'member_id', 'member_pw')
-        #
-        # cursor.execute(query, data)
-        # db.commit()
+        super().__init__()
 
-    def find(self, table):
-        self.query = f"SELECT * FROM {table}"
+    def find(self):
+        self.query = "SELECT * FROM user"
         self.cursor.execute(self.query)
         self.result = self.cursor.fetchall()
         return self.result
 
+    # TODO 회원가입 기능
     def create(self):
         pass
 
+    # TODO 유저 정보 수정
     def update(self):
         pass
 
+    # TODO 유저 정보 삭제
     def delete(self):
         pass
-
-
-ur = UserRepository()
-
-print(ur.find('user'))
