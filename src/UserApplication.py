@@ -10,7 +10,7 @@ import User
 
 import sys, os
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
-from dto import DrinkDto
+from dto import VM_DrinkDto
 
 
 # TODO 카드 구매기능 구현
@@ -44,26 +44,28 @@ class UserApplication:
         self.idx = 0
 
         # Canvas 내부에 들어갈 임시 이미지 크기
-        img_size = 64
-        img = ImageTk.PhotoImage(file="../images/drink.png")
-        img_cola = ImageTk.PhotoImage(file="../images/cola.png")
-        img_water = ImageTk.PhotoImage(file="../images/water.png")
-        img_cider = ImageTk.PhotoImage(file="../images/cider.png")
-        img_mongo = ImageTk.PhotoImage(file="../images/mongo.png")
-        img_coffee = ImageTk.PhotoImage(file="../images/coffee.png")
-        img_lemon = ImageTk.PhotoImage(file="../images/lemon.png")
-        img_choco = ImageTk.PhotoImage(file="../images/choco.png")
-        img_apple = ImageTk.PhotoImage(file="../images/apple.png")
-        img_energy_drink = ImageTk.PhotoImage(file="../images/energy-drink.png")
+        self.img_size = 64
+        self.img = ImageTk.PhotoImage(file=r"/Users/mac/Vending-Machine/images/drink.png")
+        self.img_cola = ImageTk.PhotoImage(file=r"/Users/mac/Vending-Machine/images/cola.png")
+        self.img_water = ImageTk.PhotoImage(file=r"/Users/mac/Vending-Machine/images/water.png")
+        self.img_cider = ImageTk.PhotoImage(file=r"/Users/mac/Vending-Machine/images/cider.png")
+        self.img_mongo = ImageTk.PhotoImage(file=r"/Users/mac/Vending-Machine/images/mongo.png")
+        self.img_coffee = ImageTk.PhotoImage(file=r"/Users/mac/Vending-Machine/images/coffee.png")
+        self.img_lemon = ImageTk.PhotoImage(file=r"/Users/mac/Vending-Machine/images/lemon.png")
+        self.img_choco = ImageTk.PhotoImage(file=r"/Users/mac/Vending-Machine/images/choco.png")
+        self.img_apple = ImageTk.PhotoImage(file=r"/Users/mac/Vending-Machine/images/apple.png")
+        self.img_energy_drink = ImageTk.PhotoImage(file=r"/Users/mac/Vending-Machine/images/energy-drink.png")
 
 
         # drink_list.json 파일 내부 음료 목록을 불러와서 객체 생성
+        vm_drink_list = self.drinkController.vmDrinkList()
         drink_list = self.drinkController.drinkList()
 
-        for drink in drink_list:
-            drinkDto = DrinkDto.DrinkDto(
+
+        for drink in vm_drink_list:
+            drinkDto = VM_DrinkDto.VM_DrinkDto(
                 window=self.window,
-                label=drink.getDrinkName(),
+                label=drink_list[drink.getDrinkSeq() - 1].getDrinkName(),
                 stock=0,
                 state="점검중",
                 price=1000,
@@ -71,29 +73,30 @@ class UserApplication:
             )
             self.drink_content.append(drinkDto)
 
-            if self.drink_content[self.idx].label == '물':
-                self.drink_content[self.idx].canvas.create_image(img_size / 2, img_size / 2, image=img_water)
-            elif '콜라' in drink:
-                self.drink_content[self.idx].canvas.create_image(img_size / 2, img_size / 2, image=img_cola)
-            elif '사이다' in drink or '트레비' in drink:
-                self.drink_content[self.idx].canvas.create_image(img_size / 2, img_size / 2, image=img_cider)
-            elif '망고' in drink or '립톤' in drink:
-                self.drink_content[self.idx].canvas.create_image(img_size / 2, img_size / 2, image=img_mongo)
-            elif '핫식스' in drink:
-                self.drink_content[self.idx].canvas.create_image(img_size / 2, img_size / 2, image=img_energy_drink)
-            elif '레몬' in drink:
-                self.drink_content[self.idx].canvas.create_image(img_size / 2, img_size / 2, image=img_lemon)
-            elif '가나' in drink:
-                self.drink_content[self.idx].canvas.create_image(img_size / 2, img_size / 2, image=img_choco)
-            elif '사과' in drink or '게토레이' in drink or '마운틴듀오' in drink or '코코 포도' in drink:
-                self.drink_content[self.idx].canvas.create_image(img_size / 2, img_size / 2, image=img_apple)
-            elif '콘트라베이스' in drink or '레쓰비' in drink:
-                self.drink_content[self.idx].canvas.create_image(img_size / 2, img_size / 2, image=img_coffee)
+            if drinkDto.label_text == '물':
+                self.drink_content[self.idx].canvas.create_image(self.img_size / 2, self.img_size / 2, image=self.img_water)
+            elif '콜라' in drinkDto.label_text:
+                self.drink_content[self.idx].canvas.create_image(self.img_size / 2, self.img_size / 2, image=self.img_cola)
+            elif '사이다' in drinkDto.label_text or '트레비' in drinkDto.label_text:
+                self.drink_content[self.idx].canvas.create_image(self.img_size / 2, self.img_size / 2, image=self.img_cider)
+            elif '망고' in drinkDto.label_text or '립톤' in drinkDto.label_text:
+                self.drink_content[self.idx].canvas.create_image(self.img_size / 2, self.img_size / 2, image=self.img_mongo)
+            elif '핫식스' in drinkDto.label_text:
+                self.drink_content[self.idx].canvas.create_image(self.img_size / 2, self.img_size / 2, image=self.img_energy_drink)
+            elif '레몬' in drinkDto.label_text:
+                self.drink_content[self.idx].canvas.create_image(self.img_size / 2, self.img_size / 2, image=self.img_lemon)
+            elif '가나' in drinkDto.label_text:
+                self.drink_content[self.idx].canvas.create_image(self.img_size / 2, self.img_size / 2, image=self.img_choco)
+            elif '사과' in drinkDto.label_text or '게토레이' in drinkDto.label_text or '마운틴듀오' in drinkDto.label_text or '코코 포도' in drinkDto.label_text:
+                self.drink_content[self.idx].canvas.create_image(self.img_size / 2, self.img_size / 2, image=self.img_apple)
+            elif '콘트라베이스' in drinkDto.label_text or '레쓰비' in drinkDto.label_text:
+                self.drink_content[self.idx].canvas.create_image(self.img_size / 2, self.img_size / 2, image=self.img_coffee)
             else:
-                self.drink_content[self.idx].canvas.create_image(img_size / 2, img_size / 2, image=img)
+                self.drink_content[self.idx].canvas.create_image(self.img_size / 2, self.img_size / 2, image=self.img)
 
             # 객체 생성
             self.drink_content[self.idx].canvas.grid(row=self.row_cnt, column=self.column_cnt)
+            # self.drink_content[self.idx].canvas.update()
             self.drink_content[self.idx].label.grid(row=self.row_cnt + 1, column=self.column_cnt)
             self.drink_content[self.idx].price_label.grid(row=self.row_cnt + 2, column=self.column_cnt)
             self.drink_content[self.idx].state_btn.grid(row=self.row_cnt + 3, column=self.column_cnt, padx=15)
@@ -119,9 +122,9 @@ class UserApplication:
         # 자판기에 투입된 금액 표시
         machine_amount_label = Label(text=f"투입된 금액:\t{machine_amount}원", font="Helvetica 16 bold")
         # 가로로 진열할 음료의 개수가 2보다 적어도 오류가 발생하지 않도록 절대값을 사용
-        machine_amount_label.grid(row=99, column=abs(row_limit - 2), columnspan=3)
+        machine_amount_label.grid(row=99, column=abs(self.row_limit - 2), columnspan=3)
 
-        Label(text=" ").grid(row=100, column=column_cnt)
+        Label(text=" ").grid(row=100, column=self.column_cnt)
         user_cash_tuple = tuple([
             f"5000원: {user.wallet['Cash'].Cash['5000']}개",
             f"1000원: {user.wallet['Cash'].Cash['1000']}개",
@@ -139,24 +142,24 @@ class UserApplication:
         # 현금 결제를 위한 Drop-down 옵션
         # 자판기와 동일한 동작을 위해 화폐는 하나씩 투입하도록 설정
         # TODO 화폐 투입 전 구매 버튼 비활성화
-        amount_increase_combo = Combobox(vm_window, width=15, state='readonly')
+        amount_increase_combo = Combobox(self.window, width=15, state='readonly')
         amount_increase_combo['value'] = user_cash_tuple
         amount_increase_combo.current(0)
-        amount_increase_combo.grid(row=101, column=abs(row_limit - 2))
+        amount_increase_combo.grid(row=101, column=abs(self.row_limit - 2))
         amount_increase_btn = Button(text="현금 투입", focusthickness=0, activebackground='gray', width=160,
                                      command=lambda: user.cash_injection(amount_increase_combo.get()))
-        amount_increase_btn.grid(row=102, column=abs(row_limit - 2))
+        amount_increase_btn.grid(row=102, column=abs(self.row_limit - 2))
 
         # 카드 결제를 위한 Drop-down 옵션
         # 카드를 투입 후 반환 전까지 카드의 잔액을 사용하여 결제
         # 카드 투입 전 구매 버튼 비활성화
-        cash_increase_combo = Combobox(vm_window, width=15, state='readonly')
+        cash_increase_combo = Combobox(self.window, width=15, state='readonly')
         cash_increase_combo['value'] = user_card_tuple
         cash_increase_combo.current(0)
-        cash_increase_combo.grid(row=101, column=abs(row_limit - 1))
+        cash_increase_combo.grid(row=101, column=abs(self.row_limit - 1))
         amount_increase_btn = Button(text="카드 투입", focusthickness=0, activebackground='gray', width=160,
                                      command=lambda: card_injection_event())
-        amount_increase_btn.grid(row=102, column=abs(row_limit - 1))
+        amount_increase_btn.grid(row=102, column=abs(self.row_limit - 1))
 
         # 카드 삽입시 잔액에 따라 구매 가능한 음료만 판매 상태 변경
         # 카드 삽입,제거시 투입된 금액 Label 변경
@@ -227,3 +230,6 @@ class UserApplication:
         #
         #         with open("drink_list.json", "w") as drink_list_file:
         #             json.dump(data, drink_list_file, indent=4, ensure_ascii=False)
+
+ua = UserApplication()
+ua.window.mainloop()

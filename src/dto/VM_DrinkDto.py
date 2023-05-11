@@ -3,7 +3,7 @@ import json
 
 
 # TODO 구매 가능 상태 텍스트 설정호
-class DrinkDto:
+class VM_DrinkDto:
 
     # 생성자
     # (생성할 Frame, 음료명, 현재 재고, 판매상태, 고유인덱스)
