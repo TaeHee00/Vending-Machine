@@ -2,6 +2,7 @@ import pymysql
 from Repository import Repository
 
 
+# TODO dao에서 객체로 변경
 class UserRepository(Repository):
 
     def __init__(self):

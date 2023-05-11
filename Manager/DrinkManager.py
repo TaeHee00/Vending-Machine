@@ -117,7 +117,7 @@ class DrinkManager:
             f"500원: {user_wallet['cash'][500]}개",
             f"100원: {user_wallet['cash'][100]}개"
         ])
-        # TODO 이후 User Class의 Wallte Class의 Card Class에서 받아올것.
+        # TODO 이후 src Class의 Wallte Class의 Card Class에서 받아올것.
         # 임시 데이터
         user_card_tuple = tuple([
             f"농협카드: {75000}원",

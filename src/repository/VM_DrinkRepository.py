@@ -1,14 +1,18 @@
-import pymysql
-from Repository import Repository
+# from Repository import Repository
+import os
+import sys
+
+sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
+from repository.Repository import Repository
 
 
-class DrinkRepository(Repository):
+class VM_DrinkRepository(Repository):
 
     def __init__(self):
         super().__init__()
 
     def find(self):
-        self.query = "SELECT * FROM drink"
+        self.query = "SELECT * FROM vm_drink"
         self.cursor.execute(self.query)
         self.result = self.cursor.fetchall()
         return self.result

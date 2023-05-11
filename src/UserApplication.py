@@ -5,21 +5,26 @@ from PIL import ImageTk
 from tkmacosx import Button
 # 데이터 관리를 손쉽게 하기 위해 json라이브러리 사용
 import json
-# import UserDrinkContent
+from controller import DrinkController
 import User
+
+import sys, os
+sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
+from dto import DrinkDto
 
 
 # TODO 카드 구매기능 구현
-# TODO 구매시 User inventory에 저장하도록 구현
+# TODO 구매시 src inventory에 저장하도록 구현
 # TODO 구매시 금액 차감후 실시간 정보 변경(카드 정보 수정 및 기타 금액 출력부분 Refrash)
 
 # TODO 화폐 구매기능 구현
 # TODO 구매시 잔액 계산 후 나머지돈 Return
 # TODO 나머지돈을 화폐 재고에 맞게 Return
 # TODO 화폐 재고가 부족할 경우에도 구매 불가능하도록 설정
-class UserController:
+class UserApplication:
 
     def __init__(self):
+        self.drinkController = DrinkController.DrinkController()
         self.window = Tk()
         self.window.title("자판기")
         # 창의 초기 생성위치 설정
@@ -51,51 +56,57 @@ class UserController:
         img_apple = ImageTk.PhotoImage(file="../images/apple.png")
         img_energy_drink = ImageTk.PhotoImage(file="../images/energy-drink.png")
 
+
         # drink_list.json 파일 내부 음료 목록을 불러와서 객체 생성
-        with open("../Manager/drink_list.json", "r") as file:
-            drink_list = json.load(file)
+        drink_list = self.drinkController.drinkList()
 
-            for drink in drink_list:
-                self.drink_content.append(
-                    UserDrinkContent.UserDrinkContent(self.window, drink, drink_list[drink]['재고'], drink_list[drink]['상태'],
-                                                      drink_list[drink]['가격'], self.idx))
+        for drink in drink_list:
+            drinkDto = DrinkDto.DrinkDto(
+                window=self.window,
+                label=drink.getDrinkName(),
+                stock=0,
+                state="점검중",
+                price=1000,
+                content_id=drink.getDrinkSeq()
+            )
+            self.drink_content.append(drinkDto)
 
-                if self.drink_content[self.idx].label == '물':
-                    self.drink_content[self.idx].canvas.create_image(img_size / 2, img_size / 2, image=img_water)
-                elif '콜라' in drink:
-                    self.drink_content[self.idx].canvas.create_image(img_size / 2, img_size / 2, image=img_cola)
-                elif '사이다' in drink or '트레비' in drink:
-                    self.drink_content[self.idx].canvas.create_image(img_size / 2, img_size / 2, image=img_cider)
-                elif '망고' in drink or '립톤' in drink:
-                    self.drink_content[self.idx].canvas.create_image(img_size / 2, img_size / 2, image=img_mongo)
-                elif '핫식스' in drink:
-                    self.drink_content[self.idx].canvas.create_image(img_size / 2, img_size / 2, image=img_energy_drink)
-                elif '레몬' in drink:
-                    self.drink_content[self.idx].canvas.create_image(img_size / 2, img_size / 2, image=img_lemon)
-                elif '가나' in drink:
-                    self.drink_content[self.idx].canvas.create_image(img_size / 2, img_size / 2, image=img_choco)
-                elif '사과' in drink or '게토레이' in drink or '마운틴듀오' in drink or '코코 포도' in drink:
-                    self.drink_content[self.idx].canvas.create_image(img_size / 2, img_size / 2, image=img_apple)
-                elif '콘트라베이스' in drink or '레쓰비' in drink:
-                    self.drink_content[self.idx].canvas.create_image(img_size / 2, img_size / 2, image=img_coffee)
-                else:
-                    self.drink_content[self.idx].canvas.create_image(img_size / 2, img_size / 2, image=img)
+            if self.drink_content[self.idx].label == '물':
+                self.drink_content[self.idx].canvas.create_image(img_size / 2, img_size / 2, image=img_water)
+            elif '콜라' in drink:
+                self.drink_content[self.idx].canvas.create_image(img_size / 2, img_size / 2, image=img_cola)
+            elif '사이다' in drink or '트레비' in drink:
+                self.drink_content[self.idx].canvas.create_image(img_size / 2, img_size / 2, image=img_cider)
+            elif '망고' in drink or '립톤' in drink:
+                self.drink_content[self.idx].canvas.create_image(img_size / 2, img_size / 2, image=img_mongo)
+            elif '핫식스' in drink:
+                self.drink_content[self.idx].canvas.create_image(img_size / 2, img_size / 2, image=img_energy_drink)
+            elif '레몬' in drink:
+                self.drink_content[self.idx].canvas.create_image(img_size / 2, img_size / 2, image=img_lemon)
+            elif '가나' in drink:
+                self.drink_content[self.idx].canvas.create_image(img_size / 2, img_size / 2, image=img_choco)
+            elif '사과' in drink or '게토레이' in drink or '마운틴듀오' in drink or '코코 포도' in drink:
+                self.drink_content[self.idx].canvas.create_image(img_size / 2, img_size / 2, image=img_apple)
+            elif '콘트라베이스' in drink or '레쓰비' in drink:
+                self.drink_content[self.idx].canvas.create_image(img_size / 2, img_size / 2, image=img_coffee)
+            else:
+                self.drink_content[self.idx].canvas.create_image(img_size / 2, img_size / 2, image=img)
 
-                # 객체 생성
-                self.drink_content[self.idx].canvas.grid(row=self.row_cnt, column=self.column_cnt)
-                self.drink_content[self.idx].label.grid(row=self.row_cnt + 1, column=self.column_cnt)
-                self.drink_content[self.idx].price_label.grid(row=self.row_cnt + 2, column=self.column_cnt)
-                self.drink_content[self.idx].state_btn.grid(row=self.row_cnt + 3, column=self.column_cnt, padx=15)
+            # 객체 생성
+            self.drink_content[self.idx].canvas.grid(row=self.row_cnt, column=self.column_cnt)
+            self.drink_content[self.idx].label.grid(row=self.row_cnt + 1, column=self.column_cnt)
+            self.drink_content[self.idx].price_label.grid(row=self.row_cnt + 2, column=self.column_cnt)
+            self.drink_content[self.idx].state_btn.grid(row=self.row_cnt + 3, column=self.column_cnt, padx=15)
 
-                self.column_cnt += 1
-                Label(text=" ").grid(row=self.row_cnt + 4, column=self.column_cnt)
-                Label(text=" ").grid(row=self.row_cnt + 5, column=self.column_cnt)
-                Label(text=" ").grid(row=self.row_cnt + 6, column=self.column_cnt)
-                if self.column_cnt % self.row_limit == 0:
-                    # 음료간의 간격 조정을 위해 빈 객체 생성, 배치
-                    self.column_cnt = 0
-                    self.row_cnt += 6
-                self.idx += 1
+            self.column_cnt += 1
+            Label(text=" ").grid(row=self.row_cnt + 4, column=self.column_cnt)
+            Label(text=" ").grid(row=self.row_cnt + 5, column=self.column_cnt)
+            Label(text=" ").grid(row=self.row_cnt + 6, column=self.column_cnt)
+            if self.column_cnt % self.row_limit == 0:
+                # 음료간의 간격 조정을 위해 빈 객체 생성, 배치
+                self.column_cnt = 0
+                self.row_cnt += 6
+            self.idx += 1
 
         # 자판기 사용 유저의 지갑
         # cash: 현금 저장용
