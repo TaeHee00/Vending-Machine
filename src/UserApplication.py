@@ -6,6 +6,7 @@ from tkmacosx import Button
 # 데이터 관리를 손쉽게 하기 위해 json라이브러리 사용
 import json
 from controller import DrinkController
+from controller import UserController
 import User
 
 import sys, os
@@ -114,9 +115,12 @@ class UserApplication:
         # 자판기 사용 유저의 지갑
         # cash: 현금 저장용
         # card: 카드 저장용
-        user = User.User()
+        # TODO 유저 지갑 데이터베이스 연동
+        userController = UserController.UserController()
+        user_card = userController.cardList()
+        user_cash = userController.cashList()
         # 자판기 실행시 manager_wallte['Temp_Card'] 내용 초기화
-        user.init_card()
+        # user.init_card()
         machine_amount = 0
 
         # 자판기에 투입된 금액 표시
@@ -125,19 +129,15 @@ class UserApplication:
         machine_amount_label.grid(row=99, column=abs(self.row_limit - 2), columnspan=3)
 
         Label(text=" ").grid(row=100, column=self.column_cnt)
-        user_cash_tuple = tuple([
-            f"5000원: {user.wallet['Cash'].Cash['5000']}개",
-            f"1000원: {user.wallet['Cash'].Cash['1000']}개",
-            f"500원: {user.wallet['Cash'].Cash['500']}개",
-            f"100원: {user.wallet['Cash'].Cash['100']}개"
-        ])
+        cash_list = list()
+        for cash in user_cash:
+            cash_list.append(f"{cash.getCashName()}원: {cash.getCashAmount()}개")
+        user_cash_tuple = tuple(cash_list)
 
-        with open("user_wallet.json", 'r') as file:
-            card_data = json.load(file)['Card']
-            card_list = list()
-            for card in card_data:
-                card_list.append(f"{card}: {card_data[card]}원")
-            user_card_tuple = tuple(card_list)
+        card_list = list()
+        for card in user_card:
+            card_list.append(f"{card.getCardName()}: {card.getCardAmount()}원")
+        user_card_tuple = tuple(card_list)
 
         # 현금 결제를 위한 Drop-down 옵션
         # 자판기와 동일한 동작을 위해 화폐는 하나씩 투입하도록 설정
