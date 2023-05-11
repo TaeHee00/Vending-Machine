@@ -12,7 +12,7 @@ class CardRepository(Repository):
         super().__init__()
 
     def find(self):
-        self.query = "SELECT * FROM user_wallte"
+        self.query = "SELECT * FROM card"
         self.cursor.execute(self.query)
         self.result = self.cursor.fetchall()
         return self.result
