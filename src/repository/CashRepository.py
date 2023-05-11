@@ -5,13 +5,13 @@ sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 from repository.Repository import Repository
 
 
-class CardRepository(Repository):
+class CashRepository(Repository):
 
     def __init__(self):
         super().__init__()
 
     def find(self):
-        self.query = "SELECT * FROM card"
+        self.query = "SELECT * FROM cash"
         self.cursor.execute(self.query)
         self.result = self.cursor.fetchall()
         return self.result
