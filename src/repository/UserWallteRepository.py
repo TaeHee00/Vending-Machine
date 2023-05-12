@@ -19,6 +19,20 @@ class UserWallteRepository(Repository):
         self.result = self.cursor.fetchall()
         return self.result
 
+    def findUserCash(self, user_seq):
+        self.query = "SELECT * FROM user_wallte WHERE user_wallte.user_seq = (%s) AND user_wallte.flag = 'cash'"
+        data = (user_seq)
+        self.cursor.execute(self.query, data)
+        self.result = self.cursor.fetchall()
+        return self.result
+
+    def findUserCard(self, user_seq):
+        self.query = "SELECT * FROM user_wallte WHERE user_wallte.user_seq = (%s) AND user_wallte.flag = 'card'"
+        data = (user_seq)
+        self.cursor.execute(self.query, data)
+        self.result = self.cursor.fetchall()
+        return self.result
+
     # TODO 회원가입 기능
     def create(self):
         pass
@@ -30,3 +44,7 @@ class UserWallteRepository(Repository):
     # TODO 유저 정보 삭제
     def delete(self):
         pass
+
+#
+# uwr = UserWallteRepository()
+# print(uwr.findUserCash("1"))

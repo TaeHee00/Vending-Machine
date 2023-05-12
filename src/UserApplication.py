@@ -26,7 +26,11 @@ from dto import VM_DrinkDto
 # TODO 화폐 재고가 부족할 경우에도 구매 불가능하도록 설정
 class UserApplication:
 
-    def __init__(self, user_id):
+    def __init__(self, user_seq, user_id, user_name):
+        self.user_seq = user_seq
+        self.user_id = user_id
+        self.user_name = user_name
+
         self.drinkController = DrinkController.DrinkController()
         self.window = Tk()
         self.window.title("자판기")
@@ -126,10 +130,10 @@ class UserApplication:
         # card: 카드 저장용
         # TODO 유저 지갑 데이터베이스 연동
         userController = UserController.UserController()
-        user_card = userController.cardList()
-        user_cash = userController.cashList()
+
+        user_card = userController.userCardList(self.user_seq)
+        user_cash = userController.userCashList(self.user_seq)
         # 자판기 실행시 manager_wallte['Temp_Card'] 내용 초기화
-        # user.init_card()
         machine_amount = 0
 
         # 자판기에 투입된 금액 표시
@@ -181,7 +185,6 @@ class UserApplication:
             if amount_increase_btn['text'] == "카드 투입":
                 amount_increase_btn['text'] = f"{cash_increase_combo.get().replace(':', '').split()[0]} 투입됨"
                 amount_increase_btn['fg'] = "green"
-                # user.card_injection(cash_increase_combo.get())
 
                 machine_amount_label['text'] = f"카드 잔액:\t{card.getCardAmount()}원"
 
@@ -192,7 +195,6 @@ class UserApplication:
                         _drink.state_btn['fg'] = "red"
                         _drink.state_btn['disabledforeground'] = "red"
                         _drink.state_btn['state'] = "disabled"
-                        # print(_drink.state, drink_list[_drink.label_text]['재고'], drink_list[_drink.label_text]['가격'], user.wallet['Card'].get_balance(cash_increase_combo.get()))
                     else:
                         _drink.state_btn['text'] = "●        구매가능"
                         _drink.state_btn['fg'] = "green"

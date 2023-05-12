@@ -61,3 +61,29 @@ class UserService:
         res = self.userRepository.find()
         return res
 
+    def userCashList(self, user_seq):
+        user_wallte_cash_data = self.userWallteRepository.findUserCash(user_seq)
+
+        user_cash_list = list()
+        for wallte_cash in user_wallte_cash_data:
+            cash_data = self.cashRepository.findUserCash(wallte_cash[1])[0]
+            # TODO dao -> dto
+            cash_dao = CashDao.CashDao(cash_data[0], cash_data[1], cash_data[2])
+            user_cash_list.append(cash_dao)
+
+        return user_cash_list
+
+    def userCardList(self, user_seq):
+        user_wallte_card_data = self.userWallteRepository.findUserCard(user_seq)
+
+        user_card_list = list()
+        for wallte_card in user_wallte_card_data:
+            card_data = self.cardRepository.findUserCard(wallte_card[2])[0]
+            # TODO dao -> dto
+            card_dao = CardDao.CardDao(card_data[0], card_data[1], card_data[2])
+            user_card_list.append(card_dao)
+
+        return user_card_list
+
+# us = UserService()
+# print(us.userCardList(1))
