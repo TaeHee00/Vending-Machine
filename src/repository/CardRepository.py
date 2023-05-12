@@ -16,6 +16,10 @@ class CardRepository(Repository):
         self.result = self.cursor.fetchall()
         return self.result
 
+    def findCreateCard(self):
+        card_list = self.find()
+        return card_list[-1]
+
     # TODO 회원가입 기능
     def create(self):
         pass

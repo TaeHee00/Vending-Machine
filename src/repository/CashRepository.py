@@ -16,6 +16,10 @@ class CashRepository(Repository):
         self.result = self.cursor.fetchall()
         return self.result
 
+    def findCreateCash(self):
+        cash_list = self.find()
+        return (cash_list[-4], cash_list[-3], cash_list[-2], cash_list[-1])
+
     # TODO 회원가입 기능
     def create(self):
         pass
