@@ -31,6 +31,14 @@ class UserApplication:
         self.user_id = user_id
         self.user_name = user_name
 
+        self.machine_amount = 0
+        self.temp_cash_cnt = {
+            '5000': 0,
+            '1000': 0,
+            '500': 0,
+            '100': 1
+        }
+
         self.drinkController = DrinkController.DrinkController()
         self.window = Tk()
         self.window.title("자판기")
@@ -52,16 +60,16 @@ class UserApplication:
 
         # Canvas 내부에 들어갈 임시 이미지 크기
         self.img_size = 64
-        self.img = ImageTk.PhotoImage(file=r"/Users/mac/Vending-Machine/images/drink.png")
-        self.img_cola = ImageTk.PhotoImage(file=r"/Users/mac/Vending-Machine/images/cola.png")
-        self.img_water = ImageTk.PhotoImage(file=r"/Users/mac/Vending-Machine/images/water.png")
-        self.img_cider = ImageTk.PhotoImage(file=r"/Users/mac/Vending-Machine/images/cider.png")
-        self.img_mongo = ImageTk.PhotoImage(file=r"/Users/mac/Vending-Machine/images/mongo.png")
-        self.img_coffee = ImageTk.PhotoImage(file=r"/Users/mac/Vending-Machine/images/coffee.png")
-        self.img_lemon = ImageTk.PhotoImage(file=r"/Users/mac/Vending-Machine/images/lemon.png")
-        self.img_choco = ImageTk.PhotoImage(file=r"/Users/mac/Vending-Machine/images/choco.png")
-        self.img_apple = ImageTk.PhotoImage(file=r"/Users/mac/Vending-Machine/images/apple.png")
-        self.img_energy_drink = ImageTk.PhotoImage(file=r"/Users/mac/Vending-Machine/images/energy-drink.png")
+        self.img = ImageTk.PhotoImage(file=r"../images/drink.png")
+        self.img_cola = ImageTk.PhotoImage(file=r"../images/cola.png")
+        self.img_water = ImageTk.PhotoImage(file=r"../images/water.png")
+        self.img_cider = ImageTk.PhotoImage(file=r"../images/cider.png")
+        self.img_mongo = ImageTk.PhotoImage(file=r"../images/mongo.png")
+        self.img_coffee = ImageTk.PhotoImage(file=r"../images/coffee.png")
+        self.img_lemon = ImageTk.PhotoImage(file=r"../images/lemon.png")
+        self.img_choco = ImageTk.PhotoImage(file=r"../images/choco.png")
+        self.img_apple = ImageTk.PhotoImage(file=r"../images/apple.png")
+        self.img_energy_drink = ImageTk.PhotoImage(file=r"../images/energy-drink.png")
 
         # drink_list.json 파일 내부 음료 목록을 불러와서 객체 생성
         vm_drink_list = self.drinkController.vmDrinkList()
@@ -128,16 +136,15 @@ class UserApplication:
         # 자판기 사용 유저의 지갑
         # cash: 현금 저장용
         # card: 카드 저장용
-        # TODO 유저 지갑 데이터베이스 연동
+        # 유저 지갑 데이터베이스 연동
         userController = UserController.UserController()
 
         user_card = userController.userCardList(self.user_seq)
         user_cash = userController.userCashList(self.user_seq)
         # 자판기 실행시 manager_wallte['Temp_Card'] 내용 초기화
-        machine_amount = 0
 
         # 자판기에 투입된 금액 표시
-        machine_amount_label = Label(text=f"투입된 금액:\t{machine_amount}원", font="Helvetica 16 bold")
+        machine_amount_label = Label(text=f"투입된 금액:\t{self.machine_amount}원", font="Helvetica 16 bold")
         # 가로로 진열할 음료의 개수가 2보다 적어도 오류가 발생하지 않도록 절대값을 사용
         machine_amount_label.grid(row=99, column=abs(self.row_limit - 2), columnspan=3)
 
@@ -152,15 +159,20 @@ class UserApplication:
             card_list.append(f"{card.getCardName()}: {card.getCardAmount()}원")
         user_card_tuple = tuple(card_list)
 
+        # TODO 현금반환 기능 추가
+        # TODO 현금 반환시 구매버튼 모두 비활성화
+        amount_return_btn = Button(text="현금 반환", focusthickness=0, activebackground='gray', width=160)
+        amount_return_btn.grid(row=102, column=abs(self.row_limit - 3))
+
         # 현금 결제를 위한 Drop-down 옵션
         # 자판기와 동일한 동작을 위해 화폐는 하나씩 투입하도록 설정
-        # TODO 화폐 투입 전 구매 버튼 비활성화
+        # 화폐 투입 전 구매 버튼 비활성화
         amount_increase_combo = Combobox(self.window, width=15, state='readonly')
         amount_increase_combo['value'] = user_cash_tuple
         amount_increase_combo.current(0)
         amount_increase_combo.grid(row=101, column=abs(self.row_limit - 2))
         amount_increase_btn = Button(text="현금 투입", focusthickness=0, activebackground='gray', width=160,
-                                     command=lambda: user.cash_injection(amount_increase_combo.get()))
+                                     command=lambda: cash_injection_event())
         amount_increase_btn.grid(row=102, column=abs(self.row_limit - 2))
 
         # 카드 결제를 위한 Drop-down 옵션
@@ -174,19 +186,30 @@ class UserApplication:
                                      command=lambda: card_injection_event())
         amount_increase_btn.grid(row=102, column=abs(self.row_limit - 1))
 
+        def cash_injection_event():
+            # TODO DB 연결 후 실시간 데이터 받아오기
+            select_cash = amount_increase_combo.get().replace("원:", "").replace("개", "").split()
+            # 선택한 지폐(화폐)가 1개 이상인지 확인
+            if int(select_cash[1]) > 0:
+                print("1개 이상입니다.")
+            else:
+                print("개수가 부족합니다.")
+
+
         # 카드 삽입시 잔액에 따라 구매 가능한 음료만 판매 상태 변경
         # 카드 삽입,제거시 투입된 금액 Label 변경
         # TODO 구매시 카드 잔액 실시간 업데이트
         # TODO 구매시 user_bag에 음료명: 개수 추가
         # TODO Manager 통계에서 판매 수익 및 판매 음료 추가
-
         def card_injection_event():
             # 카드 삽입
             if amount_increase_btn['text'] == "카드 투입":
                 amount_increase_btn['text'] = f"{cash_increase_combo.get().replace(':', '').split()[0]} 투입됨"
                 amount_increase_btn['fg'] = "green"
 
+                # TODO 카드잔액 코드 수정
                 machine_amount_label['text'] = f"카드 잔액:\t{card.getCardAmount()}원"
+
 
                 for _drink in self.drink_content:
                     # TODO 판매 상태 세분화 ("재고 부족", "잔액 부족")
@@ -211,7 +234,7 @@ class UserApplication:
                     _drink.state_btn['disabledforeground'] = "red"
                     _drink.state_btn['state'] = "disabled"
 
-                machine_amount_label['text'] = f"투입된 금액:\t{machine_amount}원"
+                machine_amount_label['text'] = f"투입된 금액:\t{self.machine_amount}원"
 
 
 login_window = Tk()
