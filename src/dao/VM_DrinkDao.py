@@ -10,7 +10,7 @@ class VM_DrinkDao:
         return self.seq
 
     def getDrinkUserPrice(self):
-        return self.drink_price
+        return self.drink_user_price
 
     def getAmount(self):
         return self.amount

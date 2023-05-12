@@ -27,6 +27,7 @@ class VM_DrinkDto:
         self.price_label = Label(window, text=f"{price}원", font="Helvetica 12 bold")
         # Content 고유 ID
         self.id = content_id
+        self.stock = stock
         # 판매 상태값 초기화
         self.state_init(state, stock)
 
