@@ -57,3 +57,7 @@ class UserService:
             self.userRepository.save(userDao)
             return "성공"
 
+    def userList(self):
+        res = self.userRepository.find()
+        return res
+

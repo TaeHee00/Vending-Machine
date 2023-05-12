@@ -23,8 +23,12 @@ class UserController:
         res = self.userService.userRegister(userDao)
         return res
 
+    def userList(self):
+        res = self.userService.userList()
+        return res
 
-# for drink in dc.drinkList():
-#     print(drink, d)
+
+# # for drink in dc.drinkList():
+# #     print(drink, d)
 # uc = UserController()
-# print(uc.cardList()[0].getCardName())
+# print(uc.userList())

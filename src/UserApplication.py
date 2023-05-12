@@ -26,7 +26,7 @@ from dto import VM_DrinkDto
 # TODO 화폐 재고가 부족할 경우에도 구매 불가능하도록 설정
 class UserApplication:
 
-    def __init__(self):
+    def __init__(self, user_id):
         self.drinkController = DrinkController.DrinkController()
         self.window = Tk()
         self.window.title("자판기")
@@ -241,27 +241,46 @@ Label(text="").grid(row=4, column=0)
 # 엔터로 로그인 함수 실행 시 event인자가 들어오는데 이경우 에러가 발생하기 때문에
 # *temp <- 가변인자를 사용하여 처리
 def login_check(*temp):
+    userController = UserController.UserController()
+    user_list = userController.userList()
+
     if id_input.get() == "":
         showerror("입력 오류!", "아이디를 입력해주세요!")
     elif pw_input.get() == "":
         showerror("입력 오류!", "비밀번호를 입력해주세요!")
-    elif id_input.get() == "manager" and pw_input.get() == "manager":
-        # TODO 총 음료 판매 개수 및 수익 재고 경고 목록 띄우기
-        # TODO 재고 경고 선택 가능하게 만들기
-        showinfo("환영합니다!", "어서오세요 매니저님!")
-        # 원래 있던 창을 파괴 후 새로운 창 생성
-        login_window.destroy()
-        ua = UserApplication()
-        ua.window.mainloop()
-
+    # TODO 데이터 가져와서 계정 확인 후 로그인
+    # TODO 총 음료 판매 개수 및 수익 재고 경고 목록 띄우기
+    # TODO 재고 경고 선택 가능하게 만들기
     else:
-        showerror("로그인 오류!", "일치하는 정보가 없습니다!")
+        # TODO 로그인 성공 & 실패
+        user_seq = ""
+        user_id = ""
+        user_name = ""
+        isLogin = False
+        for user in user_list:
+            # 로그인 성공
+            if id_input.get() == user[1] and pw_input.get() == user[2]:
+                user_seq = user[0]
+                user_id = user[1]
+                user_name = user[3]
+                # print(user_seq, user_id, user_name)
+                showinfo("환영합니다!", f"어서오세요 {user_name}님!")
+                # 원래 있던 창을 파괴 후 새로운 창 생성
+                login_window.destroy()
+                ua = UserApplication(user_seq, user_id, user_name)
+                ua.window.mainloop()
+                isLogin = True
+                break
+        if not isLogin:
+            # 로그인 실패
+            showerror("로그인 오류!", "등록되지 않은 아이디이거나 아이디 또는 비밀번호를 잘못 입력했습니다.")
+
 
 login_btn = Button(text="로그인", width=300, command=login_check, focusthickness=0)
 login_btn['activebackground'] = 'grey'
 
 
-# TODO UserRegisterApplication 연결하기 - 1st
+# UserRegisterApplication 연결하기
 def register_check():
     login_window.destroy()
     subprocess.Popen('python3 UserRegisterApplication.py', shell=True)
