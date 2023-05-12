@@ -10,6 +10,7 @@ from controller import DrinkController
 from controller import UserController
 
 import sys, os
+import subprocess
 
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 from dto import VM_DrinkDto
@@ -259,7 +260,13 @@ def login_check(*temp):
 login_btn = Button(text="로그인", width=300, command=login_check, focusthickness=0)
 login_btn['activebackground'] = 'grey'
 
+
 # TODO UserRegisterApplication 연결하기 - 1st
+def register_check():
+    login_window.destroy()
+    subprocess.Popen('python3 UserRegisterApplication.py', shell=True)
+
+
 register_btn = Button(text="회원가입", width=300, command=register_check, focusthickness=0)
 register_btn['activebackground'] = 'grey'
 login_btn.grid(row=5, column=0, columnspan=5)

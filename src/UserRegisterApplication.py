@@ -5,7 +5,7 @@ from tkmacosx import Button
 import sys
 import os
 
-sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
+# sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 from dao.UserDao import UserDao
 from controller import UserController
 
@@ -14,7 +14,6 @@ class UserRegisterApplication:
 
     def __init__(self):
         self.userController = UserController.UserController()
-
         self.window = Tk()
         self.window.title("User Register System")
         # 창의 초기 생성위치 설정
@@ -82,6 +81,5 @@ class UserRegisterApplication:
             elif res == "중복":
                 showerror("에러", "중복된 계정이 있습니다.\n 아이디를 변경해주세요.")
 
-
-ura = UserRegisterApplication()
-ura.window.mainloop()
+URA = UserRegisterApplication()
+URA.window.mainloop()
