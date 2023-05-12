@@ -1,5 +1,6 @@
 from tkinter import *
 from tkinter.ttk import *
+from tkinter.messagebox import *
 # Pillow 패키지 내부의 PIL라이브러리를 사용하여 이미지 사용
 from PIL import ImageTk
 from tkmacosx import Button
@@ -174,9 +175,6 @@ class UserApplication:
         # TODO 구매시 user_bag에 음료명: 개수 추가
         # TODO Manager 통계에서 판매 수익 및 판매 음료 추가
 
-        # TODO 05-12 04:19 CHECK POINT
-        # TODO 처음 실행시 모두 구매불가로 설정
-        # TODO 텍스트 색상 변경 안됌
         def card_injection_event():
             # 카드 삽입
             if amount_increase_btn['text'] == "카드 투입":
@@ -212,36 +210,61 @@ class UserApplication:
 
                 machine_amount_label['text'] = f"투입된 금액:\t{machine_amount}원"
 
-        # try:
-        #     with open("drink_list.json", "r") as drink_list_file:
-        #         data = json.load(drink_list_file)
-        #
-        # except FileNotFoundError:
-        #     with open("drink_list.json", "w") as drink_list_file:
-        #         data = {
-        #
-        #         }
-        #         json.dump(data, drink_list_file, indent=4)
-        #
-        # else:
-        #     while True:
-        #         drink_name = input("음료수 이름을 입력하세요: ")
-        #         if drink_name == "break":
-        #             break
-        #         drink_price = int(input("음료수 가격을 입력하세요: "))
-        #         drink_num = int(input("음료수 재고를 입력하세요: "))
-        #         new_data = {
-        #             drink_name: {
-        #                 "가격": drink_price,
-        #                 "재고": drink_num
-        #             }
-        #         }
-        #         data.update(new_data)
-        #         print("\n")
-        #
-        #         with open("drink_list.json", "w") as drink_list_file:
-        #             json.dump(data, drink_list_file, indent=4, ensure_ascii=False)
+
+login_window = Tk()
+login_window.title("User Login System")
+# 창의 초기 생성위치 설정
+login_window.geometry("+500+200")
+login_window.config(padx=30, pady=20)
+# 창 크기 조절 금지
+login_window.resizable(False, False)
+
+main_label = Label(text="Vending Machine", font=('Helvetica', 24, "bold"), padding=20)
+main_label.grid(row=0, column=0, columnspan=5)
+
+id_label = Label(text="ID")
+pw_label = Label(text="PASSWORD")
+id_label.grid(row=2, column=1)
+pw_label.grid(row=3, column=1)
+
+id_input = Entry()
+id_input.grid(row=2, column=2, columnspan=2)
+# Password 입력시 보이지 않도록 설정
+pw_input = Entry(show="*")
+pw_input.grid(row=3, column=2, columnspan=2)
+
+Label(text="").grid(row=4, column=0)
 
 
-ua = UserApplication()
-ua.window.mainloop()
+# 로그인 함수
+# 엔터로 로그인 함수 실행 시 event인자가 들어오는데 이경우 에러가 발생하기 때문에
+# *temp <- 가변인자를 사용하여 처리
+def login_check(*temp):
+    if id_input.get() == "":
+        showerror("입력 오류!", "아이디를 입력해주세요!")
+    elif pw_input.get() == "":
+        showerror("입력 오류!", "비밀번호를 입력해주세요!")
+    elif id_input.get() == "manager" and pw_input.get() == "manager":
+        # TODO 총 음료 판매 개수 및 수익 재고 경고 목록 띄우기
+        # TODO 재고 경고 선택 가능하게 만들기
+        showinfo("환영합니다!", "어서오세요 매니저님!")
+        # 원래 있던 창을 파괴 후 새로운 창 생성
+        login_window.destroy()
+        ua = UserApplication()
+        ua.window.mainloop()
+
+    else:
+        showerror("로그인 오류!", "일치하는 정보가 없습니다!")
+
+
+login_btn = Button(text="로그인", width=300, command=login_check, focusthickness=0)
+login_btn['activebackground'] = 'grey'
+register_btn = Button(text="회원가입", width=300, command=login_check, focusthickness=0)
+register_btn['activebackground'] = 'grey'
+login_btn.grid(row=5, column=0, columnspan=5)
+register_btn.grid(row=6, column=0, columnspan=5)
+Label(text="").grid(row=7, column=0)
+# 엔터로 로그인 함수 실행 기능
+login_window.bind("<Return>", login_check)
+
+login_window.mainloop()
