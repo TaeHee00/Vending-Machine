@@ -40,6 +40,7 @@ class UserApplication:
         }
 
         self.drinkController = DrinkController.DrinkController()
+        # self.userController = UserController.UserController()
         self.window = Tk()
         self.window.title("자판기")
         # 창의 초기 생성위치 설정
@@ -191,9 +192,13 @@ class UserApplication:
             select_cash = amount_increase_combo.get().replace("원:", "").replace("개", "").split()
             # 선택한 지폐(화폐)가 1개 이상인지 확인
             if int(select_cash[1]) > 0:
-                print("1개 이상입니다.")
-            else:
-                print("개수가 부족합니다.")
+                # TODO User Cash decrease
+                userController.userCashDecrease(self.user_seq, select_cash[0])
+                # TODO Interface Cash Increase & Update
+                # TODO temp_cash_cnt <- Cash Increase
+                # TODO Machine Cash Amount Increase
+                # TODO Injection_Amount Increase
+
 
 
         # 카드 삽입시 잔액에 따라 구매 가능한 음료만 판매 상태 변경
