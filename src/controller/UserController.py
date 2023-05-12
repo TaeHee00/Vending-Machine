@@ -19,6 +19,10 @@ class UserController:
         cash_list = self.userService.cashList()
         return cash_list
 
+    def userRegister(self, userDao):
+        res = self.userService.userRegister(userDao)
+        return res
+
 
 # for drink in dc.drinkList():
 #     print(drink, d)

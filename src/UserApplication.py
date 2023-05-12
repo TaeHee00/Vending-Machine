@@ -1,9 +1,9 @@
 from tkinter import *
 from tkinter.ttk import *
 from tkinter.messagebox import *
+from tkmacosx import Button
 # Pillow 패키지 내부의 PIL라이브러리를 사용하여 이미지 사용
 from PIL import ImageTk
-from tkmacosx import Button
 # 데이터 관리를 손쉽게 하기 위해 json라이브러리 사용
 import json
 from controller import DrinkController
@@ -256,10 +256,9 @@ def login_check(*temp):
     else:
         showerror("로그인 오류!", "일치하는 정보가 없습니다!")
 
-
 login_btn = Button(text="로그인", width=300, command=login_check, focusthickness=0)
 login_btn['activebackground'] = 'grey'
-register_btn = Button(text="회원가입", width=300, command=login_check, focusthickness=0)
+register_btn = Button(text="회원가입", width=300, command=register_check, focusthickness=0)
 register_btn['activebackground'] = 'grey'
 login_btn.grid(row=5, column=0, columnspan=5)
 register_btn.grid(row=6, column=0, columnspan=5)

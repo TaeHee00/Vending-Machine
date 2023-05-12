@@ -6,6 +6,7 @@ from repository import UserRepository
 from repository import UserWallteRepository
 from repository import CardRepository
 from repository import CashRepository
+from repository import UserRepository
 # from repository import UserBagRepository
 from dao import CardDao
 from dao import CashDao
@@ -17,6 +18,7 @@ class UserService:
         self.userWallteRepository = UserWallteRepository.UserWallteRepository()
         self.cashRepository = CashRepository.CashRepository()
         self.cardRepository = CardRepository.CardRepository()
+        self.userRepository = UserRepository.UserRepository()
 
     def cardList(self):
         card_list = list()
@@ -39,3 +41,19 @@ class UserService:
             cash_list.append(cash_dao)
 
         return cash_list
+
+    def userRegister(self, userDao):
+        # TODO 중복일 경우 회원가입 X
+        # TODO 중복이 아닐 경우 회원가입
+        res = self.userRepository.find()
+        isFind = False
+        for user in res:
+            if user[1] == userDao.getUserId():
+                isFind = True
+
+        if isFind:
+            return "중복"
+        else:
+            self.userRepository.save(userDao)
+            return "성공"
+
