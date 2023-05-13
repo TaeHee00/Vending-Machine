@@ -240,6 +240,17 @@ class UserApplication:
                         _drink.state_btn['fg'] = "green"
                         _drink.state_btn['state'] = "normal"
 
+        def cash_return_event():
+            # TODO 투입금액이 있는지 확인
+            # TODO VMController에 현금 반환 요청
+            # TODO 반환된 Cash를 UserController에 Cash Injection 요청
+            # TODO self.temp_cash_cnt 초기화
+            # TODO 투입 금액 label 초기화
+            # TODO cash ComboBox 객체 수정
+            # TODO ComboBox Update
+            # TODO 음료 구매 버튼 수정
+            pass
+
         # 카드 삽입시 잔액에 따라 구매 가능한 음료만 판매 상태 변경
         # 카드 삽입,제거시 투입된 금액 Label 변경
         # TODO 구매시 카드 잔액 실시간 업데이트
