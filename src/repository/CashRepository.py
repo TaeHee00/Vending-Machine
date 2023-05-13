@@ -16,7 +16,7 @@ class CashRepository(Repository):
         self.result = self.cursor.fetchall()
         return self.result
 
-    def findUserCash(self, cash_seq):
+    def findCash(self, cash_seq):
         self.query = "SELECT * FROM cash WHERE cash.cash_seq = (%s)"
         data = (cash_seq)
         self.cursor.execute(self.query, data)
@@ -29,6 +29,12 @@ class CashRepository(Repository):
 
     def decreaseUserCash(self, cash_seq):
         self.query = "UPDATE cash SET cash.amount = cash.amount - 1 WHERE cash.cash_seq = (%s)"
+        data = (str(cash_seq))
+        self.cursor.execute(self.query, data)
+        self.db.commit()
+
+    def increaseCash(self, cash_seq):
+        self.query = "UPDATE cash SET cash.amount = cash.amount + 1 WHERE cash.cash_seq = (%s)"
         data = (str(cash_seq))
         self.cursor.execute(self.query, data)
         self.db.commit()

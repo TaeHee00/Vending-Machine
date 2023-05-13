@@ -8,6 +8,7 @@ from PIL import ImageTk
 import json
 from controller import DrinkController
 from controller import UserController
+from controller import VMController
 
 import sys, os
 import subprocess
@@ -36,11 +37,12 @@ class UserApplication:
             '5000': 0,
             '1000': 0,
             '500': 0,
-            '100': 1
+            '100': 0
         }
 
         self.drinkController = DrinkController.DrinkController()
         # self.userController = UserController.UserController()
+        self.vmController = VMController.VMController()
         self.window = Tk()
         self.window.title("자판기")
         # 창의 초기 생성위치 설정
@@ -190,6 +192,7 @@ class UserApplication:
         def cash_injection_event():
             # TODO DB 연결 후 실시간 데이터 받아오기
             select_cash = amount_increase_combo.get().replace("원:", "").replace("개", "").split()
+            cash_name = select_cash[0]
             # 선택한 지폐(화폐)가 1개 이상인지 확인
             if int(select_cash[1]) > 0:
                 # TODO User Cash decrease
@@ -197,26 +200,34 @@ class UserApplication:
                 # TODO User Interface Cash decrease & Update
                 idx = 0
                 for user_cash in user_cash_list:
-                    if select_cash[0]+"원" in user_cash:
-                        user_cash_list[idx] = f"{select_cash[0]}원: {int(select_cash[1]) - 1}개"
+                    if select_cash[0] + "원" in user_cash:
+                        user_cash_list[idx] = f"{cash_name}원: {int(select_cash[1]) - 1}개"
                         break
                     idx += 1
             amount_increase_combo.config(values=user_cash_list)
             if "5000원" in amount_increase_combo.get():
                 amount_increase_combo.current(0)
+                self.machine_amount += 5000
             elif "1000원" in amount_increase_combo.get():
                 amount_increase_combo.current(1)
+                self.machine_amount += 1000
             elif "500원" in amount_increase_combo.get():
                 amount_increase_combo.current(2)
+                self.machine_amount += 500
             elif "100원" in amount_increase_combo.get():
                 amount_increase_combo.current(3)
+                self.machine_amount += 100
 
-                # TODO VM Interface Cash Increase & Update
-                # TODO temp_cash_cnt <- Cash Increase
-                # TODO Machine Cash Amount Increase
-                # TODO Injection_Amount Increase
+            # TODO temp_cash_cnt <- Cash Increase
+            self.temp_cash_cnt[select_cash[0]] += 1
 
-
+            # TODO VM Interface Cash Increase & Update
+            machine_amount_label.config(text=f"투입된 금액:\t{self.machine_amount}원", font="Helvetica 16 bold")
+            # TODO Machine Cash Amount Increase
+            self.vmController.managerCashInjection(cash_name)
+            # TODO Injection_Amount Increase
+            # TODO 구매가능 음료 체크
+            # TODO 구매가능 음료 상태 변경
 
         # 카드 삽입시 잔액에 따라 구매 가능한 음료만 판매 상태 변경
         # 카드 삽입,제거시 투입된 금액 Label 변경
@@ -231,7 +242,6 @@ class UserApplication:
 
                 # TODO 카드잔액 코드 수정
                 machine_amount_label['text'] = f"카드 잔액:\t{card.getCardAmount()}원"
-
 
                 for _drink in self.drink_content:
                     # TODO 판매 상태 세분화 ("재고 부족", "잔액 부족")
