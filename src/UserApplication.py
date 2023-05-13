@@ -28,6 +28,13 @@ from dto import VM_DrinkDto
 class UserApplication:
 
     def __init__(self, user_seq, user_id, user_name):
+        with open("flag.json", "r") as file:
+            flag_data = json.load(file)
+
+        with open("flag.json", "w") as file:
+            flag_data['flag'] = ''
+            json.dump(flag_data, file, indent=4)
+
         self.user_seq = user_seq
         self.user_id = user_id
         self.user_name = user_name
@@ -200,6 +207,13 @@ class UserApplication:
         amount_increase_btn.grid(row=102, column=abs(self.row_limit - 1))
 
         def cash_injection_event():
+            # 결제 할 수단을 cash로 변경
+            with open("flag.json", "r") as file:
+                flag_data = json.load(file)
+
+            with open("flag.json", "w") as file:
+                flag_data['flag'] = 'cash'
+                json.dump(flag_data, file, indent=4)
             # DB 연결 후 실시간 데이터 받아오기
             select_cash = amount_increase_combo.get().replace("원:", "").replace("개", "").split()
             cash_name = select_cash[0]
@@ -254,6 +268,13 @@ class UserApplication:
                         _drink.state_btn['state'] = "normal"
 
         def cash_return_event():
+            # 결제 flag 초기화
+            with open("flag.json", "r") as file:
+                flag_data = json.load(file)
+
+            with open("flag.json", "w") as file:
+                flag_data['flag'] = ''
+                json.dump(flag_data, file, indent=4)
             # 투입금액이 있는지 확인
             if self.machine_amount <= 0:
                 return
