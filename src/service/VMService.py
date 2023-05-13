@@ -1,5 +1,6 @@
 import os
 import sys
+import copy
 
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 from repository import UserRepository
@@ -35,5 +36,40 @@ class VMService:
                 self.cashRepository.increaseCash(cash_data[0])
                 break
 
+    def cashReturn(self, cash_dict):
+        wallte_cash_data = self.managerWallteRepository.findCash()
+        cash_seq_list = list()
+        cash_data = dict()
+
+        for cash in wallte_cash_data:
+            cash_seq_list.append(cash[1])
+
+        for cash in cash_seq_list:
+            data = self.cashRepository.findCash(cash)[0]
+            cash_data[data[1]] = data[0]
+
+        cash_list = copy.deepcopy(cash_dict)
+        del cash_list['total']
+        for cash in cash_list:
+            # 투입된 현금이 없으면 다음 현금으로 반환
+            if cash_list[cash] <= 0:
+                continue
+
+            cash_seq = cash_data[cash]
+            for _ in range(int(cash_list[cash])):
+                self.cashRepository.decreaseCash(cash_seq)
+
+        # user_wallte_cash_data = self.userWallteRepository.findUserCash(user_seq)
+        #
+        # user_cash_list = list()
+        # for wallte_cash in user_wallte_cash_data:
+        #     # 사용자 지갑의 들어있는 현금 고유 번호를 통해 현금의 정보를 가져온다.
+        #     cash_data = self.cashRepository.findCash(wallte_cash[1])[0]
+        #     # 현금의 이름이 선택한 현금과 같을때
+        #     if cash_data[1] == select_cash:
+        #         self.cashRepository.decreaseUserCash(wallte_cash[1])
+        #         # print(wallte_cash[1])
+        #         break
+#
 # vm = VMService()
-# vm.managerCashInjection('1000')
+# vm.cashReturn(123)

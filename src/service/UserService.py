@@ -1,5 +1,6 @@
 import os
 import sys
+import copy
 
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 from repository import UserRepository
@@ -94,9 +95,33 @@ class UserService:
             cash_data = self.cashRepository.findCash(wallte_cash[1])[0]
             # 현금의 이름이 선택한 현금과 같을때
             if cash_data[1] == select_cash:
-                self.cashRepository.decreaseUserCash(wallte_cash[1])
+                self.cashRepository.decreaseCash(wallte_cash[1])
                 # print(wallte_cash[1])
                 break
 
+    def cashReturn(self, user_seq, cash_dict):
+        wallte_cash_data = self.userWallteRepository.findUserCash(user_seq)
+
+        cash_seq_list = list()
+        cash_seq_data = dict()
+
+        for cash in wallte_cash_data:
+            cash_seq_list.append(cash[1])
+
+        for cash in cash_seq_list:
+            data = self.cashRepository.findCash(cash)[0]
+            cash_seq_data[data[1]] = data[0]
+
+        cash_list = copy.deepcopy(cash_dict)
+        del cash_list['total']
+        for cash in cash_list:
+            # 반환된 현금이 없으면 다음 현금으로
+            if cash_list[cash] <= 0:
+                continue
+
+            cash_seq = cash_seq_data[cash]
+            for _ in range(int(cash_list[cash])):
+                self.cashRepository.increaseCash(cash_seq)
+
 # us = UserService()
-# print(us.userCashDecrease(1, "5000"))
+# print(us.cashReturn(1, 0))

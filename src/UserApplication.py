@@ -42,7 +42,7 @@ class UserApplication:
         }
 
         self.drinkController = DrinkController.DrinkController()
-        # self.userController = UserController.UserController()
+        self.userController = UserController.UserController()
         self.vmController = VMController.VMController()
         self.window = Tk()
         self.window.title("자판기")
@@ -148,7 +148,7 @@ class UserApplication:
         # 자판기 실행시 manager_wallte['Temp_Card'] 내용 초기화
 
         # 자판기에 투입된 금액 표시
-        machine_amount_label = Label(text=f"투입된 금액:\t{self.machine_amount}원", font="Helvetica 16 bold")
+        machine_amount_label = Label(text=f"투입된 금액:\t{self.temp_cash_cnt['total']}원", font="Helvetica 16 bold")
         # 가로로 진열할 음료의 개수가 2보다 적어도 오류가 발생하지 않도록 절대값을 사용
         machine_amount_label.grid(row=99, column=abs(self.row_limit - 2), columnspan=3)
 
@@ -165,7 +165,8 @@ class UserApplication:
 
         # TODO 현금반환 기능 추가
         # TODO 현금 반환시 구매버튼 모두 비활성화
-        amount_return_btn = Button(text="현금 반환", focusthickness=0, activebackground='gray', width=160)
+        amount_return_btn = Button(text="현금 반환", focusthickness=0, activebackground='gray', width=160,
+                                   command=lambda: cash_return_event())
         amount_return_btn.grid(row=102, column=abs(self.row_limit - 3))
 
         # 현금 결제를 위한 Drop-down 옵션
@@ -191,14 +192,14 @@ class UserApplication:
         amount_increase_btn.grid(row=102, column=abs(self.row_limit - 1))
 
         def cash_injection_event():
-            # TODO DB 연결 후 실시간 데이터 받아오기
+            # DB 연결 후 실시간 데이터 받아오기
             select_cash = amount_increase_combo.get().replace("원:", "").replace("개", "").split()
             cash_name = select_cash[0]
             # 선택한 지폐(화폐)가 1개 이상인지 확인
             if int(select_cash[1]) > 0:
-                # TODO User Cash decrease
+                # User Cash decrease
                 userController.userCashDecrease(self.user_seq, select_cash[0])
-                # TODO User Interface Cash decrease & Update
+                # User Interface Cash decrease & Update
                 idx = 0
                 for user_cash in user_cash_list:
                     if select_cash[0] + "원" in user_cash:
@@ -209,21 +210,25 @@ class UserApplication:
                 if "5000원" in amount_increase_combo.get():
                     amount_increase_combo.current(0)
                     self.machine_amount += 5000
+                    self.temp_cash_cnt['total'] += 5000
                 elif "1000원" in amount_increase_combo.get():
                     amount_increase_combo.current(1)
                     self.machine_amount += 1000
+                    self.temp_cash_cnt['total'] += 1000
                 elif "500원" in amount_increase_combo.get():
                     amount_increase_combo.current(2)
                     self.machine_amount += 500
+                    self.temp_cash_cnt['total'] += 500
                 elif "100원" in amount_increase_combo.get():
                     amount_increase_combo.current(3)
                     self.machine_amount += 100
+                    self.temp_cash_cnt['total'] += 100
 
                 # temp_cash_cnt <- Cash Increase
                 self.temp_cash_cnt[select_cash[0]] += 1
 
                 # VM Interface Cash Increase & Update
-                machine_amount_label.config(text=f"투입된 금액:\t{self.machine_amount}원", font="Helvetica 16 bold")
+                machine_amount_label.config(text=f"투입된 금액:\t{self.temp_cash_cnt['total']}원", font="Helvetica 16 bold")
                 # Machine Cash Amount Increase
                 self.vmController.managerCashInjection(cash_name)
                 # 구매가능 음료 체크
@@ -241,15 +246,46 @@ class UserApplication:
                         _drink.state_btn['state'] = "normal"
 
         def cash_return_event():
-            # TODO 투입금액이 있는지 확인
-            # TODO VMController에 현금 반환 요청
-            # TODO 반환된 Cash를 UserController에 Cash Injection 요청
-            # TODO self.temp_cash_cnt 초기화
-            # TODO 투입 금액 label 초기화
-            # TODO cash ComboBox 객체 수정
-            # TODO ComboBox Update
-            # TODO 음료 구매 버튼 수정
-            pass
+            # 투입금액이 있는지 확인
+            if self.machine_amount <= 0:
+                return
+
+            # VMController에 현금 반환 요청
+            self.vmController.cashReturn(self.temp_cash_cnt)
+            # 반환된 Cash를 UserController에 Cash Injection 요청
+            self.userController.cashReturn(self.user_seq, self.temp_cash_cnt)
+            # cash ComboBox 객체 수정
+            select_cash = amount_increase_combo.get().replace("원:", "").replace("개", "").split()
+            select_cash_name = select_cash[0]
+            idx = 0
+            for _user_cash in user_cash_list:
+                combo_cash_data = _user_cash.replace("원:", "").replace("개", "").split()
+                combo_cash_name = combo_cash_data[0]
+                user_cash_list[idx] = f"{combo_cash_name}원: {int(combo_cash_data[1]) + int(self.temp_cash_cnt[combo_cash_name])}개"
+                idx += 1
+
+            # ComboBox Update
+            amount_increase_combo.config(values=user_cash_list)
+            if "5000" == select_cash_name:
+                amount_increase_combo.current(0)
+            elif "1000" == select_cash_name:
+                amount_increase_combo.current(1)
+            elif "500" == select_cash_name:
+                amount_increase_combo.current(2)
+            elif "100" == select_cash_name:
+                amount_increase_combo.current(3)
+            # self.temp_cash_cnt 초기화
+            for _cash in self.temp_cash_cnt:
+                self.temp_cash_cnt[_cash] = 0
+            # 투입 금액 label 초기화
+            machine_amount_label.config(text=f"투입된 금액:\t{self.temp_cash_cnt['total']}원")
+            # 음료 구매 버튼 수정
+            for _drink in self.drink_content:
+                # TODO 판매 상태 세분화 ("재고 부족", "잔액 부족")
+                _drink.state_btn['text'] = "○        구매불가"
+                _drink.state_btn['fg'] = "red"
+                _drink.state_btn['disabledforeground'] = "red"
+                _drink.state_btn['state'] = "disabled"
 
         # 카드 삽입시 잔액에 따라 구매 가능한 음료만 판매 상태 변경
         # 카드 삽입,제거시 투입된 금액 Label 변경
