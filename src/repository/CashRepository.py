@@ -27,7 +27,7 @@ class CashRepository(Repository):
         cash_list = self.find()
         return (cash_list[-4], cash_list[-3], cash_list[-2], cash_list[-1])
 
-    def decreaseUserCash(self, cash_seq):
+    def decreaseCash(self, cash_seq):
         self.query = "UPDATE cash SET cash.amount = cash.amount - 1 WHERE cash.cash_seq = (%s)"
         data = (str(cash_seq))
         self.cursor.execute(self.query, data)

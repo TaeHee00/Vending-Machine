@@ -14,6 +14,8 @@ class VMController:
     def managerCashInjection(self, cash_name):
         self.vmService.managerCashInjection(cash_name)
 
+    def cashReturn(self, cash_dict):
+        self.vmService.cashReturn(cash_dict)
 # # for drink in dc.drinkList():
 # #     print(drink, d)
 # uc = UserController()

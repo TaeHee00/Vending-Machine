@@ -38,6 +38,9 @@ class UserController:
     def userCashDecrease(self, user_seq, select_cash):
         self.userService.userCashDecrease(user_seq, select_cash)
 
+    def cashReturn(self, user_seq, cash_dict):
+        self.userService.cashReturn(user_seq, cash_dict)
+
 # # for drink in dc.drinkList():
 # #     print(drink, d)
 # uc = UserController()
