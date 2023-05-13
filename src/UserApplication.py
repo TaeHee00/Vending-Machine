@@ -37,7 +37,8 @@ class UserApplication:
             '5000': 0,
             '1000': 0,
             '500': 0,
-            '100': 0
+            '100': 0,
+            'total': 0
         }
 
         self.drinkController = DrinkController.DrinkController()
@@ -204,30 +205,40 @@ class UserApplication:
                         user_cash_list[idx] = f"{cash_name}원: {int(select_cash[1]) - 1}개"
                         break
                     idx += 1
-            amount_increase_combo.config(values=user_cash_list)
-            if "5000원" in amount_increase_combo.get():
-                amount_increase_combo.current(0)
-                self.machine_amount += 5000
-            elif "1000원" in amount_increase_combo.get():
-                amount_increase_combo.current(1)
-                self.machine_amount += 1000
-            elif "500원" in amount_increase_combo.get():
-                amount_increase_combo.current(2)
-                self.machine_amount += 500
-            elif "100원" in amount_increase_combo.get():
-                amount_increase_combo.current(3)
-                self.machine_amount += 100
+                amount_increase_combo.config(values=user_cash_list)
+                if "5000원" in amount_increase_combo.get():
+                    amount_increase_combo.current(0)
+                    self.machine_amount += 5000
+                elif "1000원" in amount_increase_combo.get():
+                    amount_increase_combo.current(1)
+                    self.machine_amount += 1000
+                elif "500원" in amount_increase_combo.get():
+                    amount_increase_combo.current(2)
+                    self.machine_amount += 500
+                elif "100원" in amount_increase_combo.get():
+                    amount_increase_combo.current(3)
+                    self.machine_amount += 100
 
-            # TODO temp_cash_cnt <- Cash Increase
-            self.temp_cash_cnt[select_cash[0]] += 1
+                # temp_cash_cnt <- Cash Increase
+                self.temp_cash_cnt[select_cash[0]] += 1
 
-            # TODO VM Interface Cash Increase & Update
-            machine_amount_label.config(text=f"투입된 금액:\t{self.machine_amount}원", font="Helvetica 16 bold")
-            # TODO Machine Cash Amount Increase
-            self.vmController.managerCashInjection(cash_name)
-            # TODO Injection_Amount Increase
-            # TODO 구매가능 음료 체크
-            # TODO 구매가능 음료 상태 변경
+                # VM Interface Cash Increase & Update
+                machine_amount_label.config(text=f"투입된 금액:\t{self.machine_amount}원", font="Helvetica 16 bold")
+                # Machine Cash Amount Increase
+                self.vmController.managerCashInjection(cash_name)
+                # 구매가능 음료 체크
+                # 구매가능 음료 상태 변경
+                for _drink in self.drink_content:
+                    # TODO 판매 상태 세분화 ("재고 부족", "잔액 부족")
+                    if _drink.stock <= 0 or _drink.drink_price > self.machine_amount:
+                        _drink.state_btn['text'] = "○        구매불가"
+                        _drink.state_btn['fg'] = "red"
+                        _drink.state_btn['disabledforeground'] = "red"
+                        _drink.state_btn['state'] = "disabled"
+                    else:
+                        _drink.state_btn['text'] = "●        구매가능"
+                        _drink.state_btn['fg'] = "green"
+                        _drink.state_btn['state'] = "normal"
 
         # 카드 삽입시 잔액에 따라 구매 가능한 음료만 판매 상태 변경
         # 카드 삽입,제거시 투입된 금액 Label 변경
