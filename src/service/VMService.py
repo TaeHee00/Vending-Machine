@@ -59,6 +59,27 @@ class VMService:
             for _ in range(int(cash_list[cash])):
                 self.cashRepository.decreaseCash(cash_seq)
 
+    def drink_buy(self, drink_name):
+        # TODO cash인지 card인지 확인
+
+        # TODO Card일 경우
+        # TODO Card 잔액 감소
+        # TODO Interface의 Card 잔액 수정
+        # TODO VM drink 재고 감소
+        # TODO User Bag에 추가
+        # TODO Manager_Bank에 잔액 추가
+
+        # TODO Cash일 경우
+        # TODO UserApplication -> self.temp_cash_cnt['total']을 음료수 가격 만큼 감소
+        # TODO UserApplication -> self.temp_cash_cnt 화폐 개수 수정
+        # TODO 화폐개수수정) 전부 개수 0으로 변경 후 그리디 알고리즘을 사용하여 가장 반환에 가장 적합한 화폐 선정
+        # TODO VM_Machine에 화폐가 부족할 경우 down-casting 하여 반환
+        # TODO VM_Machine에 화폐가 부족할 경우 알람 or Print문으로 경고
+        # TODO Interface의 Cash 투입 금액 수정
+        # TODO VM drink 재고 감소
+        # TODO User Bag에 추가
+        pass
+
         # user_wallte_cash_data = self.userWallteRepository.findUserCash(user_seq)
         #
         # user_cash_list = list()

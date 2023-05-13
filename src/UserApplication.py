@@ -125,6 +125,14 @@ class UserApplication:
             # self.drink_content[self.idx].canvas.update()
             self.drink_content[self.idx].label.grid(row=self.row_cnt + 1, column=self.column_cnt)
             self.drink_content[self.idx].price_label.grid(row=self.row_cnt + 2, column=self.column_cnt)
+            drink_name = self.drink_content[self.idx].label_text
+            drink_price = self.drink_content[self.idx].drink_price
+            # self.drink_content[self.idx].state_btn.config(
+            #     command=lambda: drink_buy_event(
+            #         drink_name,
+            #         drink_price
+            #     )
+            # )
             self.drink_content[self.idx].state_btn.grid(row=self.row_cnt + 3, column=self.column_cnt, padx=15)
 
             self.column_cnt += 1
@@ -163,8 +171,8 @@ class UserApplication:
             card_list.append(f"{card.getCardName()}: {card.getCardAmount()}원")
         user_card_list = list(card_list)
 
-        # TODO 현금반환 기능 추가
-        # TODO 현금 반환시 구매버튼 모두 비활성화
+        # 현금반환 기능 추가
+        # 현금 반환시 구매버튼 모두 비활성화
         amount_return_btn = Button(text="현금 반환", focusthickness=0, activebackground='gray', width=160,
                                    command=lambda: cash_return_event())
         amount_return_btn.grid(row=102, column=abs(self.row_limit - 3))
@@ -235,7 +243,7 @@ class UserApplication:
                 # 구매가능 음료 상태 변경
                 for _drink in self.drink_content:
                     # TODO 판매 상태 세분화 ("재고 부족", "잔액 부족")
-                    if _drink.stock <= 0 or _drink.drink_price > self.machine_amount:
+                    if _drink.stock <= 0 or _drink.drink_price > self.temp_cash_cnt['total']:
                         _drink.state_btn['text'] = "○        구매불가"
                         _drink.state_btn['fg'] = "red"
                         _drink.state_btn['disabledforeground'] = "red"

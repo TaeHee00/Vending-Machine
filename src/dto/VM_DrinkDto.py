@@ -1,6 +1,10 @@
 from tkinter import *
 import json
 
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
+from controller import VMController
 
 # TODO 구매 가능 상태 텍스트 설정호
 class VM_DrinkDto:
@@ -9,11 +13,13 @@ class VM_DrinkDto:
     # (생성할 Frame, 음료명, 현재 재고, 판매상태, 고유인덱스)
     def __init__(self, window, label, stock, state, price, content_id):
         # 처음 시작시 화폐, 카드 투입 전이기 때문에 구매 불가
+        self.vmController = VMController.VMController()
         self.state = "판매불가"
         # self.state = state
         self.imgSize = 64
         self.canvas = Canvas(window, width=self.imgSize, height=self.imgSize, highlightthickness=0)
-        self.state_btn = Button(window, text="●          판매중", width=9, fg='green', activebackground='gray')
+        self.state_btn = Button(window, text="●          판매중", width=9, fg='green', activebackground='gray',
+                                command=self.drink_buy_event)
         self.label = Label(window, text=label, font="Helvetica 12 bold")
         self.label_text = label
         # StringVar에 바로 값 초기화시 출력할 Frame이 설정되어있지 않아 오류 발생
@@ -33,6 +39,11 @@ class VM_DrinkDto:
 
     def __int__(self):
         return self.id
+
+    def drink_buy_event(self):
+        # TODO 구매 기능 추가
+        self.vmController.drink_buy(self.label)
+        pass
 
     # 구매시 재고 수정 이후 판매 상태 수정 함수
     def state_change(self, state):
