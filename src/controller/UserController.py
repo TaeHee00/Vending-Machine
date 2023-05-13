@@ -35,6 +35,8 @@ class UserController:
         res = self.userService.userList()
         return res
 
+    def userCashDecrease(self, user_seq, select_cash):
+        self.userService.userCashDecrease(user_seq, select_cash)
 
 # # for drink in dc.drinkList():
 # #     print(drink, d)

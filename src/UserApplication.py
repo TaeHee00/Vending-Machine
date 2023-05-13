@@ -8,6 +8,7 @@ from PIL import ImageTk
 import json
 from controller import DrinkController
 from controller import UserController
+from controller import VMController
 
 import sys, os
 import subprocess
@@ -36,10 +37,13 @@ class UserApplication:
             '5000': 0,
             '1000': 0,
             '500': 0,
-            '100': 1
+            '100': 0,
+            'total': 0
         }
 
         self.drinkController = DrinkController.DrinkController()
+        # self.userController = UserController.UserController()
+        self.vmController = VMController.VMController()
         self.window = Tk()
         self.window.title("자판기")
         # 창의 초기 생성위치 설정
@@ -152,12 +156,12 @@ class UserApplication:
         cash_list = list()
         for cash in user_cash:
             cash_list.append(f"{cash.getCashName()}원: {cash.getCashAmount()}개")
-        user_cash_tuple = tuple(cash_list)
+        user_cash_list = list(cash_list)
 
         card_list = list()
         for card in user_card:
             card_list.append(f"{card.getCardName()}: {card.getCardAmount()}원")
-        user_card_tuple = tuple(card_list)
+        user_card_list = list(card_list)
 
         # TODO 현금반환 기능 추가
         # TODO 현금 반환시 구매버튼 모두 비활성화
@@ -168,7 +172,7 @@ class UserApplication:
         # 자판기와 동일한 동작을 위해 화폐는 하나씩 투입하도록 설정
         # 화폐 투입 전 구매 버튼 비활성화
         amount_increase_combo = Combobox(self.window, width=15, state='readonly')
-        amount_increase_combo['value'] = user_cash_tuple
+        amount_increase_combo['value'] = user_cash_list
         amount_increase_combo.current(0)
         amount_increase_combo.grid(row=101, column=abs(self.row_limit - 2))
         amount_increase_btn = Button(text="현금 투입", focusthickness=0, activebackground='gray', width=160,
@@ -179,7 +183,7 @@ class UserApplication:
         # 카드를 투입 후 반환 전까지 카드의 잔액을 사용하여 결제
         # 카드 투입 전 구매 버튼 비활성화
         cash_increase_combo = Combobox(self.window, width=15, state='readonly')
-        cash_increase_combo['value'] = user_card_tuple
+        cash_increase_combo['value'] = user_card_list
         cash_increase_combo.current(0)
         cash_increase_combo.grid(row=101, column=abs(self.row_limit - 1))
         amount_increase_btn = Button(text="카드 투입", focusthickness=0, activebackground='gray', width=160,
@@ -189,12 +193,52 @@ class UserApplication:
         def cash_injection_event():
             # TODO DB 연결 후 실시간 데이터 받아오기
             select_cash = amount_increase_combo.get().replace("원:", "").replace("개", "").split()
+            cash_name = select_cash[0]
             # 선택한 지폐(화폐)가 1개 이상인지 확인
             if int(select_cash[1]) > 0:
-                print("1개 이상입니다.")
-            else:
-                print("개수가 부족합니다.")
+                # TODO User Cash decrease
+                userController.userCashDecrease(self.user_seq, select_cash[0])
+                # TODO User Interface Cash decrease & Update
+                idx = 0
+                for user_cash in user_cash_list:
+                    if select_cash[0] + "원" in user_cash:
+                        user_cash_list[idx] = f"{cash_name}원: {int(select_cash[1]) - 1}개"
+                        break
+                    idx += 1
+                amount_increase_combo.config(values=user_cash_list)
+                if "5000원" in amount_increase_combo.get():
+                    amount_increase_combo.current(0)
+                    self.machine_amount += 5000
+                elif "1000원" in amount_increase_combo.get():
+                    amount_increase_combo.current(1)
+                    self.machine_amount += 1000
+                elif "500원" in amount_increase_combo.get():
+                    amount_increase_combo.current(2)
+                    self.machine_amount += 500
+                elif "100원" in amount_increase_combo.get():
+                    amount_increase_combo.current(3)
+                    self.machine_amount += 100
 
+                # temp_cash_cnt <- Cash Increase
+                self.temp_cash_cnt[select_cash[0]] += 1
+
+                # VM Interface Cash Increase & Update
+                machine_amount_label.config(text=f"투입된 금액:\t{self.machine_amount}원", font="Helvetica 16 bold")
+                # Machine Cash Amount Increase
+                self.vmController.managerCashInjection(cash_name)
+                # 구매가능 음료 체크
+                # 구매가능 음료 상태 변경
+                for _drink in self.drink_content:
+                    # TODO 판매 상태 세분화 ("재고 부족", "잔액 부족")
+                    if _drink.stock <= 0 or _drink.drink_price > self.machine_amount:
+                        _drink.state_btn['text'] = "○        구매불가"
+                        _drink.state_btn['fg'] = "red"
+                        _drink.state_btn['disabledforeground'] = "red"
+                        _drink.state_btn['state'] = "disabled"
+                    else:
+                        _drink.state_btn['text'] = "●        구매가능"
+                        _drink.state_btn['fg'] = "green"
+                        _drink.state_btn['state'] = "normal"
 
         # 카드 삽입시 잔액에 따라 구매 가능한 음료만 판매 상태 변경
         # 카드 삽입,제거시 투입된 금액 Label 변경
@@ -209,7 +253,6 @@ class UserApplication:
 
                 # TODO 카드잔액 코드 수정
                 machine_amount_label['text'] = f"카드 잔액:\t{card.getCardAmount()}원"
-
 
                 for _drink in self.drink_content:
                     # TODO 판매 상태 세분화 ("재고 부족", "잔액 부족")

@@ -66,7 +66,7 @@ class UserService:
 
         user_cash_list = list()
         for wallte_cash in user_wallte_cash_data:
-            cash_data = self.cashRepository.findUserCash(wallte_cash[1])[0]
+            cash_data = self.cashRepository.findCash(wallte_cash[1])[0]
             # TODO dao -> dto
             cash_dao = CashDao.CashDao(cash_data[0], cash_data[1], cash_data[2])
             user_cash_list.append(cash_dao)
@@ -85,5 +85,18 @@ class UserService:
 
         return user_card_list
 
+    def userCashDecrease(self, user_seq, select_cash):
+        user_wallte_cash_data = self.userWallteRepository.findUserCash(user_seq)
+
+        user_cash_list = list()
+        for wallte_cash in user_wallte_cash_data:
+            # 사용자 지갑의 들어있는 현금 고유 번호를 통해 현금의 정보를 가져온다.
+            cash_data = self.cashRepository.findCash(wallte_cash[1])[0]
+            # 현금의 이름이 선택한 현금과 같을때
+            if cash_data[1] == select_cash:
+                self.cashRepository.decreaseUserCash(wallte_cash[1])
+                # print(wallte_cash[1])
+                break
+
 # us = UserService()
-# print(us.userCardList(1))
+# print(us.userCashDecrease(1, "5000"))
