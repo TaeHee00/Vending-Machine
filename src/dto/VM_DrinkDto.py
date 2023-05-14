@@ -18,8 +18,7 @@ class VM_DrinkDto:
         # self.state = state
         self.imgSize = 64
         self.canvas = Canvas(window, width=self.imgSize, height=self.imgSize, highlightthickness=0)
-        self.state_btn = Button(window, text="●          판매중", width=9, fg='green', activebackground='gray',
-                                command=self.drink_buy_event)
+        self.state_btn = Button(window, text="●          판매중", width=9, fg='green', activebackground='gray')
         self.label = Label(window, text=label, font="Helvetica 12 bold")
         self.label_text = label
         # StringVar에 바로 값 초기화시 출력할 Frame이 설정되어있지 않아 오류 발생
@@ -40,10 +39,14 @@ class VM_DrinkDto:
     def __int__(self):
         return self.id
 
-    def drink_buy_event(self):
+    def buy_flag(self):
+        self.drink_buy_event()
+
+    def drink_buy_event(self, drink_name, drink_price):
         # TODO 구매 기능 추가
-        self.vmController.drink_buy(self.label)
-        pass
+        print(drink_name, drink_price)
+        # self.vmController.drink_buy(self.label_text, self.drink_price)
+        # return self.drink_price
 
     # 구매시 재고 수정 이후 판매 상태 수정 함수
     def state_change(self, state):
