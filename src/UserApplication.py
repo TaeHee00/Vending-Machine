@@ -76,20 +76,7 @@ class UserApplication:
 
         # Canvas 내부에 들어갈 임시 이미지 크기
         self.img_size = 64
-        self.img = customtkinter.CTkImage(light_image=Image.open(r"../images/drink.png"),
-                               dark_image=Image.open(r"../images/drink.png"),
-                               size=(64, 64))
-        self.img_cola = customtkinter.CTkImage(light_image=Image.open(r"../images/cola.png"),
-                               dark_image=Image.open(r"../images/cola.png"),
-                               size=(64, 64))
-        self.img_water = ImageTk.PhotoImage(file=r"../images/water.png")
-        self.img_cider = ImageTk.PhotoImage(file=r"../images/cider.png")
-        self.img_mongo = ImageTk.PhotoImage(file=r"../images/mongo.png")
-        self.img_coffee = ImageTk.PhotoImage(file=r"../images/coffee.png")
-        self.img_lemon = ImageTk.PhotoImage(file=r"../images/lemon.png")
-        self.img_choco = ImageTk.PhotoImage(file=r"../images/choco.png")
-        self.img_apple = ImageTk.PhotoImage(file=r"../images/apple.png")
-        self.img_energy_drink = ImageTk.PhotoImage(file=r"../images/energy-drink.png")
+
 
         # drink_list.json 파일 내부 음료 목록을 불러와서 객체 생성
         vm_drink_list = self.drinkController.vmDrinkList()
@@ -106,36 +93,6 @@ class UserApplication:
             )
             drinkDto.state_btn['command'] = lambda i=drinkDto.label_text, j=drinkDto.drink_price, k=self.user_seq: [self.drink_buy_pay(i, j, k)]
             self.drink_content.append(drinkDto)
-
-            if drinkDto.label_text == '물':
-                self.drink_content[self.idx].canvas.create_image(self.img_size / 2, self.img_size / 2,
-                                                                 image=self.img_water)
-            elif '콜라' in drinkDto.label_text:
-                self.drink_content[self.idx].canvas.create_image(self.img_size / 2, self.img_size / 2,
-                                                                 image=self.img_cola)
-            elif '사이다' in drinkDto.label_text or '트레비' in drinkDto.label_text:
-                self.drink_content[self.idx].canvas.create_image(self.img_size / 2, self.img_size / 2,
-                                                                 image=self.img_cider)
-            elif '망고' in drinkDto.label_text or '립톤' in drinkDto.label_text:
-                self.drink_content[self.idx].canvas.create_image(self.img_size / 2, self.img_size / 2,
-                                                                 image=self.img_mongo)
-            elif '핫식스' in drinkDto.label_text:
-                self.drink_content[self.idx].canvas.create_image(self.img_size / 2, self.img_size / 2,
-                                                                 image=self.img_energy_drink)
-            elif '레몬' in drinkDto.label_text:
-                self.drink_content[self.idx].canvas.create_image(self.img_size / 2, self.img_size / 2,
-                                                                 image=self.img_lemon)
-            elif '가나' in drinkDto.label_text:
-                self.drink_content[self.idx].canvas.create_image(self.img_size / 2, self.img_size / 2,
-                                                                 image=self.img_choco)
-            elif '사과' in drinkDto.label_text or '게토레이' in drinkDto.label_text or '마운틴듀오' in drinkDto.label_text or '코코 포도' in drinkDto.label_text:
-                self.drink_content[self.idx].canvas.create_image(self.img_size / 2, self.img_size / 2,
-                                                                 image=self.img_apple)
-            elif '콘트라베이스' in drinkDto.label_text or '레쓰비' in drinkDto.label_text:
-                self.drink_content[self.idx].canvas.create_image(self.img_size / 2, self.img_size / 2,
-                                                                 image=self.img_coffee)
-            else:
-                self.drink_content[self.idx].canvas.create_image(self.img_size / 2, self.img_size / 2, image=self.img)
 
             # 객체 생성
             self.drink_content[self.idx].canvas.grid(row=self.row_cnt, column=self.column_cnt)

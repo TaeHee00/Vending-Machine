@@ -1,5 +1,8 @@
 from tkinter import *
+import customtkinter
 import json
+from PIL import ImageTk
+from PIL import Image
 
 import sys
 import os
@@ -19,7 +22,62 @@ class VM_DrinkDto:
         self.state = "판매불가"
         # self.state = state
         self.imgSize = 64
-        self.canvas = Canvas(window, width=self.imgSize, height=self.imgSize, highlightthickness=0)
+
+        img = customtkinter.CTkImage(light_image=Image.open(r"/Users/mac/Vending-Machine/images/drink.png"),
+                                     dark_image=Image.open(r"/Users/mac/Vending-Machine/images/drink.png"),
+                                     size=(64, 64))
+        img_cola = customtkinter.CTkImage(light_image=Image.open(r"/Users/mac/Vending-Machine/images/cola.png"),
+                                          dark_image=Image.open(r"/Users/mac/Vending-Machine/images/cola.png"),
+                                          size=(64, 64))
+        img_water = customtkinter.CTkImage(light_image=Image.open(r"/Users/mac/Vending-Machine/images/water.png"),
+                                           dark_image=Image.open(r"/Users/mac/Vending-Machine/images/water.png"),
+                                           size=(64, 64))
+        img_cider = customtkinter.CTkImage(light_image=Image.open(r"/Users/mac/Vending-Machine/images/cider.png"),
+                                           dark_image=Image.open(r"/Users/mac/Vending-Machine/images/cider.png"),
+                                           size=(64, 64))
+        img_mongo = customtkinter.CTkImage(light_image=Image.open(r"/Users/mac/Vending-Machine/images/mongo.png"),
+                                           dark_image=Image.open(r"/Users/mac/Vending-Machine/images/mongo.png"),
+                                           size=(64, 64))
+        img_coffee = customtkinter.CTkImage(light_image=Image.open(r"/Users/mac/Vending-Machine/images/coffee.png"),
+                                            dark_image=Image.open(r"/Users/mac/Vending-Machine/images/coffee.png"),
+                                            size=(64, 64))
+        img_lemon = customtkinter.CTkImage(light_image=Image.open(r"/Users/mac/Vending-Machine/images/lemon.png"),
+                                           dark_image=Image.open(r"/Users/mac/Vending-Machine/images/lemon.png"),
+                                           size=(64, 64))
+        img_choco = customtkinter.CTkImage(light_image=Image.open(r"/Users/mac/Vending-Machine/images/choco.png"),
+                                           dark_image=Image.open(r"/Users/mac/Vending-Machine/images/choco.png"),
+                                           size=(64, 64))
+        img_apple = customtkinter.CTkImage(light_image=Image.open(r"/Users/mac/Vending-Machine/images/apple.png"),
+                                           dark_image=Image.open(r"/Users/mac/Vending-Machine/images/apple.png"),
+                                           size=(64, 64))
+        img_energy_drink = customtkinter.CTkImage(
+            light_image=Image.open(r"/Users/mac/Vending-Machine/images/energy-drink.png"),
+            dark_image=Image.open(r"/Users/mac/Vending-Machine/images/energy-drink.png"),
+            size=(64, 64))
+
+        self.select_img = ""
+        if label == '물':
+            self.select_img = img_water
+        elif '콜라' in label:
+            self.select_img = img_cola
+        elif '사이다' in label or '트레비' in label:
+            self.select_img = img_cider
+        elif '망고' in label or '립톤' in label:
+            self.select_img = img_mongo
+        elif '핫식스' in label:
+            self.select_img = img_energy_drink
+        elif '레몬' in label:
+            self.select_img = img_lemon
+        elif '가나' in label:
+            self.select_img = img_choco
+        elif '사과' in label or '게토레이' in label or '마운틴듀오' in label or '코코 포도' in label:
+            self.select_img = img_apple
+        elif '콘트라베이스' in label or '레쓰비' in label:
+            self.select_img = img_coffee
+        else:
+            self.select_img = img
+
+        self.canvas = customtkinter.CTkLabel(window, image=self.select_img, text="")
         self.state_btn = Button(window, text="●          판매중", width=9, fg='green', activebackground='gray')
         self.label = Label(window, text=label, font="Helvetica 12 bold")
         self.label_text = label
