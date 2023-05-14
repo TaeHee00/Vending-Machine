@@ -13,3 +13,6 @@ class CardDao:
 
     def getCardAmount(self):
         return self.amount
+
+    def setCardAmount(self, amount):
+        self.amount = amount

@@ -27,6 +27,18 @@ class CardRepository(Repository):
         self.result = self.cursor.fetchall()
         return self.result
 
+    def decreaseCard(self, card_seq, price):
+        self.query = "UPDATE card SET card.amount = card.amount - (%s) WHERE card.card_seq = (%s)"
+        data = (price, card_seq)
+        self.cursor.execute(self.query, data)
+        self.db.commit()
+
+    def increaseCard(self, card_seq, price):
+        self.query = "UPDATE card SET card.amount = card.amount + (%s) WHERE card.card_seq = (%s)"
+        data = (str(price), str(card_seq))
+        self.cursor.execute(self.query, data)
+        self.db.commit()
+
     # TODO 회원가입 기능
     def create(self):
         pass
@@ -38,3 +50,6 @@ class CardRepository(Repository):
     # TODO 유저 정보 삭제
     def delete(self):
         pass
+
+# cr = CardRepository()
+# cr.increaseCard(1, 1000)

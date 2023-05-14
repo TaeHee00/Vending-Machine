@@ -17,9 +17,19 @@ class VMController:
     def cashReturn(self, cash_dict):
         self.vmService.cashReturn(cash_dict)
 
-    def drink_buy(self, drink_name, drink_price):
-        self.vmService.drink_buy(drink_name)
+    def drink_buy(self, drink_name, drink_price, user_seq):
+        self.vmService.drink_buy(drink_name, drink_price)
 
+    def drinkStockDecrease(self, drink_name):
+        drink_seq = self.vmService.drinkStockDecrease(drink_name)
+        return drink_seq
+
+    def cashIncrease(self, drink_price):
+        self.vmService.cashIncrease(drink_price)
+
+    def vmCashStock(self):
+        cash_stock = self.vmService.vmCashStock()
+        return cash_stock
 # # for drink in dc.drinkList():
 # #     print(drink, d)
 # uc = UserController()
