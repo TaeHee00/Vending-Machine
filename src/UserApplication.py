@@ -145,10 +145,18 @@ class UserApplication:
             self.card_list.append(f"{card.getCardName()}: {card.getCardAmount()}원")
         self.user_card_list = list(self.card_list)
 
+
+        self.btn_size = 11
         # 현금반환 기능 추가
         # 현금 반환시 구매버튼 모두 비활성화
-        self.amount_return_btn = Button(text="현금 반환", focusthickness=0, activebackground='gray', width=160)
-        self.amount_return_btn.grid(row=102, column=abs(self.row_limit - 3))
+        self.amount_return_btn = customtkinter.CTkButton(
+            self.window,
+            fg_color="transparent",
+            text="현금 반환",
+            border_width=2
+        )
+        self.amount_return_btn.grid(row=102, column=abs(self.row_limit - 3),
+            ipadx=self.btn_size)
 
         # 현금 결제를 위한 Drop-down 옵션
         # 자판기와 동일한 동작을 위해 화폐는 하나씩 투입하도록 설정
@@ -157,8 +165,14 @@ class UserApplication:
         self.amount_increase_combo['value'] = self.user_cash_list
         self.amount_increase_combo.current(0)
         self.amount_increase_combo.grid(row=101, column=abs(self.row_limit - 2))
-        self.amount_increase_btn_cash = Button(text="현금 투입", focusthickness=0, activebackground='gray', width=160)
-        self.amount_increase_btn_cash.grid(row=102, column=abs(self.row_limit - 2))
+        self.amount_increase_btn_cash = customtkinter.CTkButton(
+            self.window,
+            fg_color="transparent",
+            text="현금 투입",
+            border_width=2
+        )
+        self.amount_increase_btn_cash.grid(row=102, column=abs(self.row_limit - 2),
+            ipadx=self.btn_size)
 
         # 카드 결제를 위한 Drop-down 옵션
         # 카드를 투입 후 반환 전까지 카드의 잔액을 사용하여 결제
@@ -167,8 +181,14 @@ class UserApplication:
         self.cash_increase_combo['value'] = self.user_card_list
         self.cash_increase_combo.current(0)
         self.cash_increase_combo.grid(row=101, column=abs(self.row_limit - 1))
-        self.amount_increase_btn_card = Button(text="카드 투입", focusthickness=0, activebackground='gray', width=160)
-        self.amount_increase_btn_card.grid(row=102, column=abs(self.row_limit - 1))
+        self.amount_increase_btn_card = customtkinter.CTkButton(
+            self.window,
+            text="카드 투입",
+            fg_color="transparent",
+            border_width=2
+        )
+        self.amount_increase_btn_card.grid(row=102, column=abs(self.row_limit - 1),
+            ipadx=self.btn_size)
 
 
     def drink_buy_pay(self, drink_name, drink_price, user_seq):

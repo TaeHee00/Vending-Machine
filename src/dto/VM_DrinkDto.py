@@ -78,7 +78,7 @@ class VM_DrinkDto:
             self.select_img = img
 
         self.canvas = customtkinter.CTkLabel(window, image=self.select_img, text="")
-        self.state_btn = Button(window, text="●          판매중", width=9, fg='green', activebackground='gray')
+        self.state_btn = customtkinter.CTkButton(window, fg_color="transparent", border_width=2, text_color=("green", "green"), text="●          판매중")
         self.label = Label(window, text=label, font="Helvetica 12 bold")
         self.label_text = label
         # StringVar에 바로 값 초기화시 출력할 Frame이 설정되어있지 않아 오류 발생
@@ -107,25 +107,22 @@ class VM_DrinkDto:
         # TODO 구매 기능 추가
         self.vmController.drink_buy(drink_name, drink_price, user_seq)
 
-    # 구매시 재고 수정 이후 판매 상태 수정 함수
-    def state_change(self, state):
-        if state == "판매중":
-            self.state = "판매불가"
-            self.state_btn.config(text="○        구매불가", fg='red', activebackground='gray')
-        elif state == "판매불가":
-            self.state = "판매중"
-            self.state_btn.config(text="●        구매가능", fg='green', activebackground='gray')
-
     # 구매시 재고 수정 이후 판매 상태 수정 함수 (초기화 & 데이터 파일 수정)
     def state_init(self, state, amount):
         if state == "판매불가" or amount <= 0:
-            self.state_btn.config(text="○        구매불가", fg='red', activebackground='gray', disabledforeground='red',
-                                  bg='gray')
-            self.state_btn['state'] = 'disabled'
+            self.state_btn.configure(
+                text_color=("red", "red"),
+                text_color_disabled=("red", "red"),
+                text="○        구매불가",
+                state='disabled'
+            )
         elif state == "판매중":
-            self.state_btn.config(text="●        구매가능", fg='green', activebackground='gray')
-            self.state_btn['state'] = 'normal'
-
+            self.state_btn.configure(
+                text="●        구매가능",
+                text_color=("green", "green"),
+                text_color_disabled=("green", "green"),
+                state='normal'
+            )
     # 재고 수정 함수
     def set_stock_box(self, text):
         # TODO 유효성 검사
