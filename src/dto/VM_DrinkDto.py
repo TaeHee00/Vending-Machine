@@ -79,7 +79,12 @@ class VM_DrinkDto:
 
         self.canvas = customtkinter.CTkLabel(window, image=self.select_img, text="")
         self.state_btn = customtkinter.CTkButton(window, fg_color="transparent", border_width=2, text_color=("green", "green"), text="●          판매중")
-        self.label = Label(window, text=label, font="Helvetica 12 bold")
+        self.label = customtkinter.CTkLabel(
+            window,
+            text=label,
+            font=customtkinter.CTkFont(size=12, weight="bold"),
+            height=1
+        )
         self.label_text = label
         # StringVar에 바로 값 초기화시 출력할 Frame이 설정되어있지 않아 오류 발생
         # textvariable에 할당 후 값 초기화
@@ -90,7 +95,11 @@ class VM_DrinkDto:
         self.stock_box_text.set(stock)
         # 음료당 가격
         self.drink_price = price
-        self.price_label = Label(window, text=f"{price}원", font="Helvetica 12 bold")
+        self.price_label = customtkinter.CTkLabel(
+            window,
+            text=f"{price}원",
+            font=customtkinter.CTkFont(size=12, weight="bold")
+        )
         # Content 고유 ID
         self.id = content_id
         self.stock = stock

@@ -110,13 +110,13 @@ class UserApplication:
             self.drink_content[self.idx].state_btn.grid(row=self.row_cnt + 3, column=self.column_cnt, padx=15)
 
             self.column_cnt += 1
-            Label(text=" ").grid(row=self.row_cnt + 4, column=self.column_cnt)
-            Label(text=" ").grid(row=self.row_cnt + 5, column=self.column_cnt)
-            Label(text=" ").grid(row=self.row_cnt + 6, column=self.column_cnt)
+            customtkinter.CTkLabel(self.window, text=" ").grid(row=self.row_cnt + 4, column=self.column_cnt)
+            customtkinter.CTkLabel(self.window, text=" ").grid(row=self.row_cnt + 5, column=self.column_cnt)
+            # customtkinter.CTkLabel(self.window, text=" ").grid(row=self.row_cnt + 6, column=self.column_cnt)
             if self.column_cnt % self.row_limit == 0:
                 # 음료간의 간격 조정을 위해 빈 객체 생성, 배치
                 self.column_cnt = 0
-                self.row_cnt += 6
+                self.row_cnt += 5
             self.idx += 1
 
         # 자판기 사용 유저의 지갑
@@ -130,11 +130,11 @@ class UserApplication:
         # 자판기 실행시 manager_wallte['Temp_Card'] 내용 초기화
 
         # 자판기에 투입된 금액 표시
-        self.machine_amount_label = Label(text=f"투입된 금액:\t{self.temp_cash_cnt['total']}원", font="Helvetica 16 bold")
+        self.machine_amount_label = customtkinter.CTkLabel(self.window, text=f"투입된 금액:\t{self.temp_cash_cnt['total']}원", font=customtkinter.CTkFont(size=16, weight="bold"))
         # 가로로 진열할 음료의 개수가 2보다 적어도 오류가 발생하지 않도록 절대값을 사용
-        self.machine_amount_label.grid(row=99, column=abs(self.row_limit - 2), columnspan=3)
+        self.machine_amount_label.grid(row=99, column=abs(self.row_limit - 2))
 
-        Label(text=" ").grid(row=100, column=self.column_cnt)
+        customtkinter.CTkLabel(self.window, text=" ").grid(row=100, column=self.column_cnt)
         self.cash_list = list()
         for cash in self.user_cash:
             self.cash_list.append(f"{cash.getCashName()}원: {cash.getCashAmount()}개")
@@ -161,10 +161,14 @@ class UserApplication:
         # 현금 결제를 위한 Drop-down 옵션
         # 자판기와 동일한 동작을 위해 화폐는 하나씩 투입하도록 설정
         # 화폐 투입 전 구매 버튼 비활성화
-        self.amount_increase_combo = Combobox(self.window, width=15, state='readonly')
-        self.amount_increase_combo['value'] = self.user_cash_list
-        self.amount_increase_combo.current(0)
-        self.amount_increase_combo.grid(row=101, column=abs(self.row_limit - 2))
+        self.amount_increase_combo = customtkinter.CTkComboBox(
+            self.window,
+            width=162,
+            state='readonly',
+            values=self.user_cash_list
+        )
+        self.amount_increase_combo.set(self.user_cash_list[0])
+        self.amount_increase_combo.grid(row=101, column=abs(self.row_limit - 2), pady=(0, 3))
         self.amount_increase_btn_cash = customtkinter.CTkButton(
             self.window,
             fg_color="transparent",
@@ -177,10 +181,14 @@ class UserApplication:
         # 카드 결제를 위한 Drop-down 옵션
         # 카드를 투입 후 반환 전까지 카드의 잔액을 사용하여 결제
         # 카드 투입 전 구매 버튼 비활성화
-        self.cash_increase_combo = Combobox(self.window, width=15, state='readonly')
-        self.cash_increase_combo['value'] = self.user_card_list
-        self.cash_increase_combo.current(0)
-        self.cash_increase_combo.grid(row=101, column=abs(self.row_limit - 1))
+        self.cash_increase_combo = customtkinter.CTkComboBox(
+            self.window,
+            width=162,
+            state='readonly',
+            values=self.user_cash_list
+        )
+        self.cash_increase_combo.set(self.user_cash_list[0])
+        self.cash_increase_combo.grid(row=101, column=abs(self.row_limit - 1), pady=(0, 3))
         self.amount_increase_btn_card = customtkinter.CTkButton(
             self.window,
             text="카드 투입",
