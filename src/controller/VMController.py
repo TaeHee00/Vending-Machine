@@ -27,6 +27,9 @@ class VMController:
     def cashIncrease(self, drink_price):
         self.vmService.cashIncrease(drink_price)
 
+    def vmCashStock(self):
+        cash_stock = self.vmService.vmCashStock()
+        return cash_stock
 # # for drink in dc.drinkList():
 # #     print(drink, d)
 # uc = UserController()

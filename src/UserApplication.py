@@ -98,7 +98,7 @@ class UserApplication:
                 price=drink.getDrinkUserPrice(),
                 content_id=drink.getDrinkSeq()
             )
-            drinkDto.state_btn['command'] = lambda i=drinkDto.label_text, j=drinkDto.drink_price, k=self.user_seq: [drinkDto.drink_buy_event(i, j, k), self.drink_buy_pay(i, j, k)]
+            drinkDto.state_btn['command'] = lambda i=drinkDto.label_text, j=drinkDto.drink_price, k=self.user_seq: [self.drink_buy_pay(i, j, k)]
             self.drink_content.append(drinkDto)
 
             if drinkDto.label_text == '물':
@@ -229,10 +229,90 @@ class UserApplication:
             self.userController.bagDrinkIncrease(self.user_seq, drink_seq)
             # Manager_Bank에 잔액 추가
             self.vmController.cashIncrease(drink_price)
-            # TODO 구매 메세지 출력
+            # 구매 메세지 출력
             showinfo("결제 정보", f"음료명: {drink_name}\n가격: {drink_price}\n1개를 구매하셨습니다.\n\n{self.user_card[0].getCardName()} 잔액\n {int(self.user_card[0].getCardAmount()) + drink_price}원  ->  {self.user_card[0].getCardAmount()}원")
-            pass
         elif flag['flag'] == "cash":
+            # Cash일 경우
+            # TODO 일단 현금은 빠진 상태
+            # TODO UserApplication -> self.temp_cash_cnt['total']을 음료수 가격 만큼 감소
+            self.temp_cash_cnt['total'] -= drink_price
+            # # TODO UserApplication -> self.temp_cash_cnt 화폐 개수 수정
+            self.temp_cash_cnt['5000'] = 0
+            self.temp_cash_cnt['1000'] = 0
+            self.temp_cash_cnt['500'] = 0
+            self.temp_cash_cnt['100'] = 0
+            # 화폐 개수 수정) 전부 개수 0으로 변경 후 greedy algorithm을 사용하여 가장 반환에 가장 적합한 화폐 선정
+            # VM_Machine에 화폐가 부족할 경우 down-casting 하여 반환
+            # 가져온 다음 5000원 부터 반대로 내려오면 개수 선정 후 self.temp_cash_cnt에 저장
+            vm_cash_stock = self.vmController.vmCashStock() # manager cash list 가져오기
+
+            sd = self.temp_cash_cnt['total']
+            # 반환할 수 있는 화폐가 1개 이상 있는 경우
+            if vm_cash_stock['5000'] > 0:
+
+                if sd > 0:
+                    rt = int(sd / 5000)
+                    # 반환 할 수 있는 지폐가 충분한 경우
+                    if vm_cash_stock['5000'] >= rt:
+                        # 유저 cash목록에 저장
+                        self.temp_cash_cnt['5000'] = rt
+                        sd = int(sd % 5000)
+                    # 반환 할 수 있는 지폐가 부족한 경우
+                    else:
+                        # 재고의 cash잔고의 모든 재고를 이동
+                        self.temp_cash_cnt['5000'] = vm_cash_stock['5000']
+                        sd -= int(vm_cash_stock['5000'] * 5000)
+
+                if sd > 0:
+                    rt = int(sd / 1000)
+                    if vm_cash_stock['1000'] >= rt and sd > 0:
+                        # 유저 cash목록에 저장
+                        self.temp_cash_cnt['1000'] = rt
+                        sd = int(sd % 1000)
+                    # 반환 할 수 있는 지폐가 부족한 경우
+                    else:
+                        # 재고의 cash잔고의 모든 재고를 이동
+                        self.temp_cash_cnt['1000'] = vm_cash_stock['1000']
+                        sd -= int(vm_cash_stock['1000'] * 1000)
+
+                if sd > 0:
+                    rt = int(sd / 500)
+                    if vm_cash_stock['500'] >= rt and sd > 0:
+                        # 유저 cash목록에 저장
+                        self.temp_cash_cnt['500'] = rt
+                        sd = int(sd % 500)
+                    # 반환 할 수 있는 지폐가 부족한 경우
+                    else:
+                        # 재고의 cash잔고의 모든 재고를 이동
+                        self.temp_cash_cnt['500'] = vm_cash_stock['500']
+                        sd -= int(vm_cash_stock['500'] * 500)
+
+                if sd > 0:
+                    rt = int(sd / 100)
+                    if vm_cash_stock['100'] >= rt and sd > 0:
+                        # 유저 cash목록에 저장
+                        self.temp_cash_cnt['100'] = rt
+                        sd = int(sd % 100)
+                    # 반환 할 수 있는 지폐가 부족한 경우
+                    else:
+                        # 재고의 cash잔고의 모든 재고를 이동
+                        self.temp_cash_cnt['100'] = vm_cash_stock['100']
+                        sd -= int(vm_cash_stock['100'] * 100)
+
+                # VM_Machine에 화폐가 부족할 경우 알람 or Print문으로 경고
+                if sd > 0:
+                    # ERROR 현금 반환 재고 부족
+                    print("[ERROR]\t현금 잔액이 부족하여 반환에 실패하였습니다.")
+                    print(f"[ERROR]\t반환 실패 금액: {sd}원")
+
+            # TODO 각 화폐가 N개 이하(default = 20)로 떨어지면 경고
+
+            # TODO Interface의 Cash 투입 금액 수정
+            # 투입 금액을 self.temp_cash_cnt['total']로 수정
+            # drop-down value 전부 수정
+            # TODO VM drink 재고 감소
+            # TODO User Bag에 추가
+            # TODO 구매 메세지 출력
             pass
 
 
