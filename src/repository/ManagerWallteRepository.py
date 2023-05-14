@@ -25,6 +25,13 @@ class ManagerWallteRepository(Repository):
         self.result = self.cursor.fetchall()
         return self.result
 
+    def findCard(self):
+        self.query = "SELECT * FROM manager_wallte WHERE manager_wallte.flag = 'card'"
+        self.cursor.execute(self.query)
+        self.result = self.cursor.fetchone()
+        return self.result
+
+
     # def findUserCard(self, user_seq):
     #     self.query = "SELECT * FROM user_wallte WHERE user_wallte.user_seq = (%s) AND user_wallte.flag = 'card'"
     #     data = (user_seq)

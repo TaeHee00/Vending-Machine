@@ -126,8 +126,8 @@ class UserService:
                 self.cashRepository.increaseCash(cash_seq)
 
     def cardDecrease(self, drink_price, card_seq):
+        # print("UserService.cardDecrease", drink_price, card_seq)
         self.cardRepository.decreaseCard(card_seq, drink_price)
-        pass
 
     def bagDrinkIncrease(self, user_seq, drink_seq):
         # 유저의 가방에 들어있는 음료 리스트를 가져온다.

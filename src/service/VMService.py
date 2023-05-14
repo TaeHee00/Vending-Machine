@@ -97,5 +97,10 @@ class VMService:
         self.vmDrinkRepository.decreaseStock(drink_seq)
         return drink_seq
 
+    def cashIncrease(self, drink_price):
+        card_data = self.managerWallteRepository.findCard()
+        card_seq = card_data[2]
+        self.cardRepository.increaseCard(card_seq, drink_price)
+
 # vm = VMService()
 # vm.cashReturn(123)

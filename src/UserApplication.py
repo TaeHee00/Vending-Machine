@@ -213,7 +213,6 @@ class UserApplication:
         with open("flag.json", "r") as file:
             flag = json.load(file)
 
-        # TODO Card Decrease까지 구현
         # Card일 경우
         if flag['flag'] == "card":
             # Card 잔액 감소
@@ -228,7 +227,8 @@ class UserApplication:
             drink_seq = self.vmController.drinkStockDecrease(drink_name)
             # User Bag에 추가
             self.userController.bagDrinkIncrease(self.user_seq, drink_seq)
-            # TODO Manager_Bank에 잔액 추가
+            # Manager_Bank에 잔액 추가
+            self.vmController.cashIncrease(drink_price)
             # TODO 구매 메세지 출력
             pass
         elif flag['flag'] == "cash":

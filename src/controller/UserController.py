@@ -43,7 +43,6 @@ class UserController:
 
     def drinkBuyCard(self, drink_price, card_seq):
         self.userService.cardDecrease(drink_price, card_seq)
-        pass
 
     def bagDrinkIncrease(self, user_seq, drink_seq):
         self.userService.bagDrinkIncrease(user_seq, drink_seq)
