@@ -230,6 +230,7 @@ class UserApplication:
             # Manager_Bank에 잔액 추가
             self.vmController.cashIncrease(drink_price)
             # TODO 구매 메세지 출력
+            showinfo("결제 정보", f"음료명: {drink_name}\n가격: {drink_price}\n1개를 구매하셨습니다.\n\n{self.user_card[0].getCardName()} 잔액\n {int(self.user_card[0].getCardAmount()) + drink_price}원  ->  {self.user_card[0].getCardAmount()}원")
             pass
         elif flag['flag'] == "cash":
             pass
