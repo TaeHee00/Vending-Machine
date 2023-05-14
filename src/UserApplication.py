@@ -2,8 +2,10 @@ from tkinter import *
 from tkinter.ttk import *
 from tkinter.messagebox import *
 from tkmacosx import Button
+import customtkinter
 # Pillow 패키지 내부의 PIL라이브러리를 사용하여 이미지 사용
 from PIL import ImageTk
+from PIL import Image
 # 데이터 관리를 손쉽게 하기 위해 json라이브러리 사용
 import json
 from controller import DrinkController
@@ -54,7 +56,7 @@ class UserApplication:
         self.userController = UserController.UserController()
         self.vmController = VMController.VMController()
         # self.server = Server.Server()
-        self.window = Tk()
+        self.window = customtkinter.CTk()
         self.window.title("자판기")
         # 창의 초기 생성위치 설정
         self.window.config(padx=30, pady=20)
@@ -74,8 +76,12 @@ class UserApplication:
 
         # Canvas 내부에 들어갈 임시 이미지 크기
         self.img_size = 64
-        self.img = ImageTk.PhotoImage(file=r"../images/drink.png")
-        self.img_cola = ImageTk.PhotoImage(file=r"../images/cola.png")
+        self.img = customtkinter.CTkImage(light_image=Image.open(r"../images/drink.png"),
+                               dark_image=Image.open(r"../images/drink.png"),
+                               size=(64, 64))
+        self.img_cola = customtkinter.CTkImage(light_image=Image.open(r"../images/cola.png"),
+                               dark_image=Image.open(r"../images/cola.png"),
+                               size=(64, 64))
         self.img_water = ImageTk.PhotoImage(file=r"../images/water.png")
         self.img_cider = ImageTk.PhotoImage(file=r"../images/cider.png")
         self.img_mongo = ImageTk.PhotoImage(file=r"../images/mongo.png")
