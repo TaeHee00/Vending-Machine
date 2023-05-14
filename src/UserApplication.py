@@ -19,6 +19,9 @@ import subprocess
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 from dto import VM_DrinkDto
 
+customtkinter.set_appearance_mode("System")
+customtkinter.set_default_color_theme("dark-blue")
+
 
 # TODO 카드 구매기능 구현
 # TODO 구매시 src inventory에 저장하도록 구현
@@ -28,9 +31,11 @@ from dto import VM_DrinkDto
 # TODO 구매시 잔액 계산 후 나머지돈 Return
 # TODO 나머지돈을 화폐 재고에 맞게 Return
 # TODO 화폐 재고가 부족할 경우에도 구매 불가능하도록 설정
-class UserApplication:
+class UserApplication(customtkinter.CTk):
 
     def __init__(self, user_seq, user_id, user_name):
+        super().__init__()
+
         with open("flag.json", "r") as file:
             flag_data = json.load(file)
 
@@ -56,12 +61,11 @@ class UserApplication:
         self.userController = UserController.UserController()
         self.vmController = VMController.VMController()
         # self.server = Server.Server()
-        self.window = customtkinter.CTk()
-        self.window.title("자판기")
+        self.title("자판기")
         # 창의 초기 생성위치 설정
-        self.window.config(padx=30, pady=20)
-        self.window.geometry("+500+0")
-        self.window.resizable(False, False)
+        self.config(padx=30, pady=20)
+        self.geometry("+500+0")
+        self.resizable(False, False)
         # 가로 줄에 진열할 상품의 개수
         self.row_limit = 6
 
@@ -84,7 +88,7 @@ class UserApplication:
 
         for drink in vm_drink_list:
             drinkDto = VM_DrinkDto.VM_DrinkDto(
-                window=self.window,
+                window=self,
                 label=drink_list[drink.getDrinkSeq() - 1].getDrinkName(),
                 stock=drink.getAmount(),
                 state="판매불가",
@@ -110,8 +114,8 @@ class UserApplication:
             self.drink_content[self.idx].state_btn.grid(row=self.row_cnt + 3, column=self.column_cnt, padx=15)
 
             self.column_cnt += 1
-            customtkinter.CTkLabel(self.window, text=" ").grid(row=self.row_cnt + 4, column=self.column_cnt)
-            customtkinter.CTkLabel(self.window, text=" ").grid(row=self.row_cnt + 5, column=self.column_cnt)
+            customtkinter.CTkLabel(self, text=" ").grid(row=self.row_cnt + 4, column=self.column_cnt)
+            customtkinter.CTkLabel(self, text=" ").grid(row=self.row_cnt + 5, column=self.column_cnt)
             # customtkinter.CTkLabel(self.window, text=" ").grid(row=self.row_cnt + 6, column=self.column_cnt)
             if self.column_cnt % self.row_limit == 0:
                 # 음료간의 간격 조정을 위해 빈 객체 생성, 배치
@@ -130,27 +134,27 @@ class UserApplication:
         # 자판기 실행시 manager_wallte['Temp_Card'] 내용 초기화
 
         # 자판기에 투입된 금액 표시
-        self.machine_amount_label = customtkinter.CTkLabel(self.window, text=f"투입된 금액:\t{self.temp_cash_cnt['total']}원", font=customtkinter.CTkFont(size=16, weight="bold"))
+        self.machine_amount_label = customtkinter.CTkLabel(self, text=f"투입된 금액:\t{self.temp_cash_cnt['total']}원", font=customtkinter.CTkFont(size=16, weight="bold"))
         # 가로로 진열할 음료의 개수가 2보다 적어도 오류가 발생하지 않도록 절대값을 사용
         self.machine_amount_label.grid(row=99, column=abs(self.row_limit - 2))
 
-        customtkinter.CTkLabel(self.window, text=" ").grid(row=100, column=self.column_cnt)
+        customtkinter.CTkLabel(self, text=" ").grid(row=100, column=self.column_cnt)
         self.cash_list = list()
         for cash in self.user_cash:
             self.cash_list.append(f"{cash.getCashName()}원: {cash.getCashAmount()}개")
-        self.user_cash_list = list(self.cash_list)
+        self.user_cash_list = self.cash_list
 
         self.card_list = list()
         for card in self.user_card:
             self.card_list.append(f"{card.getCardName()}: {card.getCardAmount()}원")
-        self.user_card_list = list(self.card_list)
+        self.user_card_list = self.card_list
 
 
         self.btn_size = 11
         # 현금반환 기능 추가
         # 현금 반환시 구매버튼 모두 비활성화
         self.amount_return_btn = customtkinter.CTkButton(
-            self.window,
+            self,
             fg_color="transparent",
             text="현금 반환",
             border_width=2
@@ -162,15 +166,15 @@ class UserApplication:
         # 자판기와 동일한 동작을 위해 화폐는 하나씩 투입하도록 설정
         # 화폐 투입 전 구매 버튼 비활성화
         self.amount_increase_combo = customtkinter.CTkComboBox(
-            self.window,
-            width=162,
+            self,
             state='readonly',
-            values=self.user_cash_list
+            values=self.user_cash_list,
+            width=162
         )
-        self.amount_increase_combo.set(self.user_cash_list[0])
         self.amount_increase_combo.grid(row=101, column=abs(self.row_limit - 2), pady=(0, 3))
+        self.amount_increase_combo.set(self.user_cash_list[0])
         self.amount_increase_btn_cash = customtkinter.CTkButton(
-            self.window,
+            self,
             fg_color="transparent",
             text="현금 투입",
             border_width=2
@@ -182,15 +186,15 @@ class UserApplication:
         # 카드를 투입 후 반환 전까지 카드의 잔액을 사용하여 결제
         # 카드 투입 전 구매 버튼 비활성화
         self.cash_increase_combo = customtkinter.CTkComboBox(
-            self.window,
-            width=162,
+            self,
             state='readonly',
-            values=self.user_cash_list
+            values=self.user_cash_list,
+            width=162
         )
-        self.cash_increase_combo.set(self.user_cash_list[0])
         self.cash_increase_combo.grid(row=101, column=abs(self.row_limit - 1), pady=(0, 3))
+        self.cash_increase_combo.set(self.user_card_list[0])
         self.amount_increase_btn_card = customtkinter.CTkButton(
-            self.window,
+            self,
             text="카드 투입",
             fg_color="transparent",
             border_width=2
@@ -315,10 +319,7 @@ class UserApplication:
             showinfo("결제 정보", f"음료명: {drink_name}\n가격: {drink_price}\n1개를 구매하셨습니다.\n\n투입된 금액 잔액\n {int(self.temp_cash_cnt['total']) + drink_price}원  ->  {int(self.temp_cash_cnt['total'])}원")
 
 
-
-
-
-login_window = Tk()
+login_window = customtkinter.CTk()
 login_window.title("User Login System")
 # 창의 초기 생성위치 설정
 login_window.geometry("+500+200")
@@ -326,21 +327,21 @@ login_window.config(padx=30, pady=20)
 # 창 크기 조절 금지
 login_window.resizable(False, False)
 
-main_label = Label(text="Vending Machine", font=('Helvetica', 24, "bold"), padding=20)
-main_label.grid(row=0, column=0, columnspan=5)
+main_label = customtkinter.CTkLabel(login_window, text="  Vending Machine", font=customtkinter.CTkFont(size=20, weight="bold"))
+main_label.grid(row=0, column=2, columnspan=4)
+customtkinter.CTkLabel(login_window, text="").grid(row=1, column=0)
 
-id_label = Label(text="ID")
-pw_label = Label(text="PASSWORD")
-id_label.grid(row=2, column=1)
-pw_label.grid(row=3, column=1)
+id_label = customtkinter.CTkLabel(login_window, text="ID:  ", font=customtkinter.CTkFont(size=15))
+pw_label = customtkinter.CTkLabel(login_window, text="PW:  ", font=customtkinter.CTkFont(size=15))
+id_label.grid(row=2, column=0, columnspan=2, pady=10)
+pw_label.grid(row=3, column=0, columnspan=2, pady=20)
 
-id_input = Entry()
-id_input.grid(row=2, column=2, columnspan=2)
+id_input = customtkinter.CTkEntry(login_window, placeholder_text=" ID")
+id_input.grid(row=2, column=2, columnspan=6, ipadx=60)
 # Password 입력시 보이지 않도록 설정
-pw_input = Entry(show="*")
-pw_input.grid(row=3, column=2, columnspan=2)
-
-Label(text="").grid(row=4, column=0)
+pw_input = customtkinter.CTkEntry(login_window, placeholder_text=" PW", show="*")
+pw_input.grid(row=3, column=2, columnspan=6, ipadx=60)
+customtkinter.CTkLabel(login_window, text="").grid(row=4, column=0)
 
 
 # 로그인 함수
@@ -375,7 +376,7 @@ def login_check(*temp):
                 login_window.destroy()
                 ua = UserApplication(user_seq, user_id, user_name)
                 server = Server.Server(ua)
-                ua.window.mainloop()
+                ua.mainloop()
                 isLogin = True
                 break
         if not isLogin:
@@ -383,8 +384,8 @@ def login_check(*temp):
             showerror("로그인 오류!", "등록되지 않은 아이디이거나 아이디 또는 비밀번호를 잘못 입력했습니다.")
 
 
-login_btn = Button(text="로그인", width=300, command=login_check, focusthickness=0)
-login_btn['activebackground'] = 'grey'
+login_btn = customtkinter.CTkButton(login_window, fg_color="transparent", border_width=2, text_color=("gray10", "#DCE4EE"), text="로그인")
+login_btn.grid(row=5, column=1, columnspan=3, padx=20)
 
 
 # UserRegisterApplication 연결하기
@@ -393,11 +394,8 @@ def register_check():
     subprocess.Popen('python3 UserRegisterApplication.py', shell=True)
 
 
-register_btn = Button(text="회원가입", width=300, command=register_check, focusthickness=0)
-register_btn['activebackground'] = 'grey'
-login_btn.grid(row=5, column=0, columnspan=5)
-register_btn.grid(row=6, column=0, columnspan=5)
-Label(text="").grid(row=7, column=0)
+reg_btn = customtkinter.CTkButton(login_window, fg_color="transparent", border_width=2, text_color=("gray10", "#DCE4EE"), text="회원가입")
+reg_btn.grid(row=5, column=4, columnspan=3, padx=20)
 # 엔터로 로그인 함수 실행 기능
 login_window.bind("<Return>", login_check)
 
