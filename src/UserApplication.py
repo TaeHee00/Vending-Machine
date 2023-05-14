@@ -98,7 +98,7 @@ class UserApplication:
                 price=drink.getDrinkUserPrice(),
                 content_id=drink.getDrinkSeq()
             )
-            drinkDto.state_btn['command'] = lambda i=drinkDto.label_text, j=drinkDto.drink_price: [drinkDto.drink_buy_event(i, j)]
+            drinkDto.state_btn['command'] = lambda i=drinkDto.label_text, j=drinkDto.drink_price, k=self.user_seq: [drinkDto.drink_buy_event(i, j, k), self.drink_buy_pay(i, j, k)]
             self.drink_content.append(drinkDto)
 
             if drinkDto.label_text == '물':
@@ -206,6 +206,34 @@ class UserApplication:
         self.cash_increase_combo.grid(row=101, column=abs(self.row_limit - 1))
         self.amount_increase_btn_card = Button(text="카드 투입", focusthickness=0, activebackground='gray', width=160)
         self.amount_increase_btn_card.grid(row=102, column=abs(self.row_limit - 1))
+
+
+    def drink_buy_pay(self, drink_name, drink_price, user_seq):
+        # cash인지 card인지 확인
+        with open("flag.json", "r") as file:
+            flag = json.load(file)
+
+        # TODO Card Decrease까지 구현
+        # Card일 경우
+        if flag['flag'] == "card":
+            # Card 잔액 감소
+            self.userController.drinkBuyCard(drink_price, self.user_card[0].getCardSeq())
+            # Interface의 Card 잔액 수정
+            self.user_card[0].setCardAmount(self.user_card[0].getCardAmount() - drink_price)
+            self.machine_amount_label["text"] = f"카드 잔액:\t{self.user_card[0].getCardAmount()}원"
+            self.card_list[0] = f"{self.user_card[0].getCardName()}: {self.user_card[0].getCardAmount()}원"
+            self.cash_increase_combo.config(values=self.card_list)
+            self.cash_increase_combo.current(0)
+            # VM drink 재고 감소
+            drink_seq = self.vmController.drinkStockDecrease(drink_name)
+            # User Bag에 추가
+            self.userController.bagDrinkIncrease(self.user_seq, drink_seq)
+            # TODO Manager_Bank에 잔액 추가
+            # TODO 구매 메세지 출력
+            pass
+        elif flag['flag'] == "cash":
+            pass
+
 
 
 

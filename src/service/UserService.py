@@ -8,6 +8,7 @@ from repository import UserWallteRepository
 from repository import CardRepository
 from repository import CashRepository
 from repository import UserRepository
+from repository import UserBagRepository
 # from repository import UserBagRepository
 from dao import CardDao
 from dao import CashDao
@@ -17,6 +18,7 @@ class UserService:
 
     def __init__(self):
         self.userWallteRepository = UserWallteRepository.UserWallteRepository()
+        self.userBagRepository = UserBagRepository.UserBagRepository()
         self.cashRepository = CashRepository.CashRepository()
         self.cardRepository = CardRepository.CardRepository()
         self.userRepository = UserRepository.UserRepository()
@@ -123,5 +125,26 @@ class UserService:
             for _ in range(int(cash_list[cash])):
                 self.cashRepository.increaseCash(cash_seq)
 
+    def cardDecrease(self, drink_price, card_seq):
+        self.cardRepository.decreaseCard(card_seq, drink_price)
+        pass
+
+    def bagDrinkIncrease(self, user_seq, drink_seq):
+        # 유저의 가방에 들어있는 음료 리스트를 가져온다.
+        user_bag = self.userBagRepository.findUserDrink(user_seq)
+        # 가져온 리스트에 구매한 음료가 있을 경우 증가,
+        # 없을 경우 새롭게 데이터 생성
+        isDrink = False
+        for drink in user_bag:
+            # 같은 음료가 있음
+            if drink[1] == drink_seq:
+                isDrink = True
+                break
+
+        if isDrink:
+            self.userBagRepository.increaseStock(user_seq, drink_seq)
+        else:
+            self.userBagRepository.createStock(user_seq, drink_seq)
+#
 # us = UserService()
-# print(us.cashReturn(1, 0))
+# print(us.bagDrinkIncrease(1, 1))

@@ -11,6 +11,8 @@ from repository import ManagerWallteRepository
 from repository import CardRepository
 from repository import CashRepository
 from repository import UserRepository
+from repository import DrinkRepository
+from repository import VM_DrinkRepository
 # from repository import UserBagRepository
 from dao import CardDao
 from dao import CashDao
@@ -20,10 +22,12 @@ from src import Server
 class VMService:
 
     def __init__(self):
+        self.vmDrinkRepository = VM_DrinkRepository.VM_DrinkRepository()
         self.userWallteRepository = UserWallteRepository.UserWallteRepository()
         self.cashRepository = CashRepository.CashRepository()
         self.cardRepository = CardRepository.CardRepository()
         self.userRepository = UserRepository.UserRepository()
+        self.drinkRepository = DrinkRepository.DrinkRepository()
         self.managerRepository = ManagerRepository.ManagerRepository()
         self.managerWallteRepository = ManagerWallteRepository.ManagerWallteRepository()
 
@@ -87,6 +91,11 @@ class VMService:
             # TODO VM drink 재고 감소
             # TODO User Bag에 추가
             pass
-#
+
+    def drinkStockDecrease(self, drink_name):
+        drink_seq = self.drinkRepository.findDrink(drink_name)[0]
+        self.vmDrinkRepository.decreaseStock(drink_seq)
+        return drink_seq
+
 # vm = VMService()
 # vm.cashReturn(123)

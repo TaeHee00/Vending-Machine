@@ -13,6 +13,9 @@ class Server:
             # TODO
             # content.state_btn.config(command=)
 
+    def cash_decrease(self):
+        pass
+
     def cash_injection_event(self):
         # 결제 할 수단을 cash로 변경
         with open("flag.json", "r") as file:

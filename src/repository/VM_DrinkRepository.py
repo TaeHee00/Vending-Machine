@@ -17,6 +17,12 @@ class VM_DrinkRepository(Repository):
         self.result = self.cursor.fetchall()
         return self.result
 
+    def decreaseStock(self, drink_seq):
+        self.query = "UPDATE vm_drink SET vm_drink.amount = vm_drink.amount - 1 WHERE vm_drink.drink_seq = (%s)"
+        data = (drink_seq)
+        self.cursor.execute(self.query, data)
+        self.db.commit()
+
     # TODO 회원가입 기능
     def create(self):
         pass

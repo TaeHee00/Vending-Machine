@@ -17,6 +17,13 @@ class DrinkRepository(Repository):
         self.result = self.cursor.fetchall()
         return self.result
 
+    def findDrink(self, drink_name):
+        self.query = "SELECT * FROM drink WHERE drink.drink_name = (%s)"
+        data = (drink_name)
+        self.cursor.execute(self.query, data)
+        self.result = self.cursor.fetchone()
+        return self.result
+
     # TODO 회원가입 기능
     def create(self):
         pass

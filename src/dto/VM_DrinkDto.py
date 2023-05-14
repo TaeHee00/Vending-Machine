@@ -3,10 +3,12 @@ import json
 
 import sys
 import os
+
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 from controller import VMController
 
-# TODO 구매 가능 상태 텍스트 설정호
+
+# 구매 가능 상태 텍스트 설정
 class VM_DrinkDto:
 
     # 생성자
@@ -24,7 +26,8 @@ class VM_DrinkDto:
         # StringVar에 바로 값 초기화시 출력할 Frame이 설정되어있지 않아 오류 발생
         # textvariable에 할당 후 값 초기화
         self.stock_box_text = StringVar()
-        self.stock_box = Spinbox(window, textvariable=self.stock_box_text, from_=0, to=30, validate='none', width=11, state='readonly', increment=1)
+        self.stock_box = Spinbox(window, textvariable=self.stock_box_text, from_=0, to=30, validate='none', width=11,
+                                 state='readonly', increment=1)
         # StringVar 값 초기화
         self.stock_box_text.set(stock)
         # 음료당 가격
@@ -42,11 +45,9 @@ class VM_DrinkDto:
     def buy_flag(self):
         self.drink_buy_event()
 
-    def drink_buy_event(self, drink_name, drink_price):
+    def drink_buy_event(self, drink_name, drink_price, user_seq):
         # TODO 구매 기능 추가
-        print(drink_name, drink_price)
-        # self.vmController.drink_buy(self.label_text, self.drink_price)
-        # return self.drink_price
+        self.vmController.drink_buy(drink_name, drink_price, user_seq)
 
     # 구매시 재고 수정 이후 판매 상태 수정 함수
     def state_change(self, state):
