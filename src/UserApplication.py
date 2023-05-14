@@ -233,10 +233,10 @@ class UserApplication:
             showinfo("결제 정보", f"음료명: {drink_name}\n가격: {drink_price}\n1개를 구매하셨습니다.\n\n{self.user_card[0].getCardName()} 잔액\n {int(self.user_card[0].getCardAmount()) + drink_price}원  ->  {self.user_card[0].getCardAmount()}원")
         elif flag['flag'] == "cash":
             # Cash일 경우
-            # TODO 일단 현금은 빠진 상태
-            # TODO UserApplication -> self.temp_cash_cnt['total']을 음료수 가격 만큼 감소
+            # 현금은 빠진 상태
+            # UserApplication -> self.temp_cash_cnt['total']을 음료수 가격 만큼 감소
             self.temp_cash_cnt['total'] -= drink_price
-            # # TODO UserApplication -> self.temp_cash_cnt 화폐 개수 수정
+            # UserApplication -> self.temp_cash_cnt 화폐 개수 수정
             self.temp_cash_cnt['5000'] = 0
             self.temp_cash_cnt['1000'] = 0
             self.temp_cash_cnt['500'] = 0
@@ -309,11 +309,19 @@ class UserApplication:
 
             # TODO Interface의 Cash 투입 금액 수정
             # 투입 금액을 self.temp_cash_cnt['total']로 수정
+            self.machine_amount_label.config(text=f"투입된 금액:\t{self.temp_cash_cnt['total']}원")
             # drop-down value 전부 수정
-            # TODO VM drink 재고 감소
-            # TODO User Bag에 추가
-            # TODO 구매 메세지 출력
-            pass
+            # self.user_cash_list[0] = f"5000원: {self.temp_cash_cnt['5000']}개"
+            # self.user_cash_list[1] = f"1000원: {self.temp_cash_cnt['1000']}개"
+            # self.user_cash_list[2] = f"500원: {self.temp_cash_cnt['500']}개"
+            # self.user_cash_list[3] = f"100원: {self.temp_cash_cnt['100']}개"
+            # self.amount_increase_combo.config(values=self.user_cash_list)
+            # VM drink 재고 감소
+            drink_seq = self.vmController.drinkStockDecrease(drink_name)
+            # User Bag에 추가
+            self.userController.bagDrinkIncrease(self.user_seq, drink_seq)
+            # 구매 메세지 출력
+            showinfo("결제 정보", f"음료명: {drink_name}\n가격: {drink_price}\n1개를 구매하셨습니다.\n\n투입된 금액 잔액\n {int(self.temp_cash_cnt['total']) + drink_price}원  ->  {int(self.temp_cash_cnt['total'])}원")
 
 
 
