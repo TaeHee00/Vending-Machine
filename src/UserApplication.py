@@ -85,8 +85,11 @@ class UserApplication:
                 price=drink.getDrinkUserPrice(),
                 content_id=drink.getDrinkSeq()
             )
-            drinkDto.state_btn['command'] = lambda i=drinkDto.label_text, j=drinkDto.drink_price, k=self.user_seq: [
-                self.drink_buy_pay(i, j, k)]
+            drinkDto.state_btn.configure(
+                command= lambda i=drinkDto.label_text,
+                                j=drinkDto.drink_price,
+                                k=self.user_seq: [self.drink_buy_pay(i, j, k)]
+            )
             self.drink_content.append(drinkDto)
 
             # 객체 생성
@@ -206,10 +209,10 @@ class UserApplication:
             self.userController.drinkBuyCard(drink_price, self.user_card[0].getCardSeq())
             # Interface의 Card 잔액 수정
             self.user_card[0].setCardAmount(self.user_card[0].getCardAmount() - drink_price)
-            self.machine_amount_label["text"] = f"카드 잔액:\t{self.user_card[0].getCardAmount()}원"
+            self.machine_amount_label.configure(text=f"카드 잔액:\t{self.user_card[0].getCardAmount()}원")
             self.card_list[0] = f"{self.user_card[0].getCardName()}: {self.user_card[0].getCardAmount()}원"
             self.cash_increase_combo.configure(values=self.card_list)
-            self.cash_increase_combo.current(0)
+            self.cash_increase_combo.set(self.card_list[0])
             # VM drink 재고 감소
             drink_seq = self.vmController.drinkStockDecrease(drink_name)
             # User Bag에 추가
