@@ -5,9 +5,9 @@ class Server:
 
     def __init__(self, user_app):
         self.user_app = user_app
-        self.user_app.amount_increase_btn_cash.config(command=lambda: self.cash_injection_event())
-        self.user_app.amount_return_btn.config(command=lambda: self.cash_return_event())
-        self.user_app.amount_increase_btn_card.config(command=lambda: self.card_injection_event())
+        self.user_app.amount_increase_btn_cash.configure(command=lambda: self.cash_injection_event())
+        self.user_app.amount_return_btn.configure(command=lambda: self.cash_return_event())
+        self.user_app.amount_increase_btn_card.configure(command=lambda: self.card_injection_event())
 
         # for content in self.user_app.drink_content:
             # TODO
@@ -40,7 +40,7 @@ class Server:
                     self.user_app.user_cash_list[idx] = f"{cash_name}원: {int(select_cash[1]) - 1}개"
                     break
                 idx += 1
-            self.user_app.amount_increase_combo.config(values=self.user_app.user_cash_list)
+            self.user_app.amount_increase_combo.configure(values=self.user_app.user_cash_list)
             if "5000원" in self.user_app.amount_increase_combo.get():
                 self.user_app.amount_increase_combo.current(0)
                 self.user_app.machine_amount += 5000
