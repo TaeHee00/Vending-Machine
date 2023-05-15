@@ -28,22 +28,22 @@ class UserRegisterApplication:
         self.main_label.grid(row=0, column=0, columnspan=5, pady=(20, 40))
 
         self.id_label = customtkinter.CTkLabel(self.window, text="ID", font=customtkinter.CTkFont(size=13))
-        self.name_label = customtkinter.CTkLabel(self.window, text="NAME", font=customtkinter.CTkFont(size=13))
-        self.pw_label = customtkinter.CTkLabel(self.window, text="PASSWORD", font=customtkinter.CTkFont(size=13))
-        self.con_pw_label = customtkinter.CTkLabel(self.window, text="CONFIRM PASSWORD", font=customtkinter.CTkFont(size=13))
+        self.name_label = customtkinter.CTkLabel(self.window, text="Name", font=customtkinter.CTkFont(size=13))
+        self.pw_label = customtkinter.CTkLabel(self.window, text="Password", font=customtkinter.CTkFont(size=13))
+        self.con_pw_label = customtkinter.CTkLabel(self.window, text="Confirm Password", font=customtkinter.CTkFont(size=13))
         self.name_label.grid(row=2, column=1, pady=(0, 20))
         self.id_label.grid(row=3, column=1, pady=(0, 20))
         self.pw_label.grid(row=4, column=1, pady=(0, 20))
         self.con_pw_label.grid(row=5, column=1, pady=(0, 20))
 
-        self.name_input = customtkinter.CTkEntry(self.window, placeholder_text=" NAME")
+        self.name_input = customtkinter.CTkEntry(self.window, placeholder_text=" Name")
         self.name_input.grid(row=2 ,column=2, columnspan=2, pady=(0, 20), padx=(20, 0), ipadx=35)
         self.id_input = customtkinter.CTkEntry(self.window, placeholder_text=" ID")
         self.id_input.grid(row=3, column=2, columnspan=2, pady=(0, 20), padx=(20, 0), ipadx=35)
         # Password 입력시 보이지 않도록 설정
-        self.pw_input = customtkinter.CTkEntry(self.window, placeholder_text=" PASSWORD", show="*")
+        self.pw_input = customtkinter.CTkEntry(self.window, placeholder_text=" Password", show="*")
         self.pw_input.grid(row=4, column=2, columnspan=2, pady=(0, 20), padx=(20, 0), ipadx=35)
-        self.con_pw_input = customtkinter.CTkEntry(self.window, placeholder_text=" PASSWORD", show="*")
+        self.con_pw_input = customtkinter.CTkEntry(self.window, placeholder_text=" Confirm Password", show="*")
         self.con_pw_input.grid(row=5, column=2, columnspan=2, padx=(20, 0), pady=(0, 20), ipadx=35)
 
         customtkinter.CTkLabel(self.window, text="").grid(row=6, column=0)
@@ -56,7 +56,7 @@ class UserRegisterApplication:
             text_color=("gray10", "#DCE4EE"),
             command=self.register_btn_click,
         )
-        self.register_btn.grid(row=7, column=0, columnspan=5)
+        self.register_btn.grid(row=7, column=0, columnspan=5, ipadx=80)
         customtkinter.CTkLabel(self.window, text="").grid(row=8, column=0)
 
     def register_btn_click(self):
