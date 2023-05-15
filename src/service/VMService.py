@@ -16,7 +16,7 @@ from repository import VM_DrinkRepository
 # from repository import UserBagRepository
 from dao import CardDao
 from dao import CashDao
-from src import Server
+from Server import Server
 
 
 class VMService:
