@@ -55,7 +55,7 @@ class UserApplication:
         self.window.title("자판기")
         # 창의 초기 생성위치 설정
         self.window.configure(padx=30, pady=20)
-        self.window.geometry("+500+0")
+        self.window.geometry("+200+0")
         self.window.resizable(False, False)
         # 가로 줄에 진열할 상품의 개수
         self.row_limit = 6
@@ -168,18 +168,18 @@ class UserApplication:
             self.window,
             fg_color="transparent",
             text="현금 투입",
-            border_width=2
+            border_width=2,
+            command=self.cash_injection_event
         )
         self.amount_increase_btn_cash.grid(row=102, column=abs(self.row_limit - 2),
                                            ipadx=self.btn_size)
-
         # 카드 결제를 위한 Drop-down 옵션
         # 카드를 투입 후 반환 전까지 카드의 잔액을 사용하여 결제
         # 카드 투입 전 구매 버튼 비활성화
         self.cash_increase_combo = customtkinter.CTkComboBox(
             self.window,
             state='readonly',
-            values=self.user_cash_list,
+            values=self.user_card_list,
             width=162
         )
         self.cash_increase_combo.grid(row=101, column=abs(self.row_limit - 1), pady=(0, 3))
@@ -188,7 +188,8 @@ class UserApplication:
             self.window,
             text="카드 투입",
             fg_color="transparent",
-            border_width=2
+            border_width=2,
+            command=self.card_injection_event
         )
         self.amount_increase_btn_card.grid(row=102, column=abs(self.row_limit - 1),
                                            ipadx=self.btn_size)
@@ -206,7 +207,7 @@ class UserApplication:
             self.user_card[0].setCardAmount(self.user_card[0].getCardAmount() - drink_price)
             self.machine_amount_label["text"] = f"카드 잔액:\t{self.user_card[0].getCardAmount()}원"
             self.card_list[0] = f"{self.user_card[0].getCardName()}: {self.user_card[0].getCardAmount()}원"
-            self.cash_increase_combo.config(values=self.card_list)
+            self.cash_increase_combo.configure(values=self.card_list)
             self.cash_increase_combo.current(0)
             # VM drink 재고 감소
             drink_seq = self.vmController.drinkStockDecrease(drink_name)
@@ -295,7 +296,7 @@ class UserApplication:
 
             # TODO Interface의 Cash 투입 금액 수정
             # 투입 금액을 self.temp_cash_cnt['total']로 수정
-            self.machine_amount_label.config(text=f"투입된 금액:\t{self.temp_cash_cnt['total']}원")
+            self.machine_amount_label.configure(text=f"투입된 금액:\t{self.temp_cash_cnt['total']}원")
             # drop-down value 전부 수정
             # self.user_cash_list[0] = f"5000원: {self.temp_cash_cnt['5000']}개"
             # self.user_cash_list[1] = f"1000원: {self.temp_cash_cnt['1000']}개"
@@ -309,6 +310,146 @@ class UserApplication:
             # 구매 메세지 출력
             showinfo("결제 정보",
                      f"음료명: {drink_name}\n가격: {drink_price}\n1개를 구매하셨습니다.\n\n투입된 금액 잔액\n {int(self.temp_cash_cnt['total']) + drink_price}원  ->  {int(self.temp_cash_cnt['total'])}원")
+
+    def cash_injection_event(self):
+        # 결제 할 수단을 cash로 변경
+        with open("flag.json", "r") as file:
+            flag_data = json.load(file)
+
+        with open("flag.json", "w") as file:
+            flag_data['flag'] = 'cash'
+            flag_data['card_seq'] = ''
+            json.dump(flag_data, file, indent=4)
+        # DB 연결 후 실시간 데이터 받아오기
+        select_cash = self.amount_increase_combo.get().replace("원:", "").replace("개", "").split()
+        cash_name = select_cash[0]
+        # 선택한 지폐(화폐)가 1개 이상인지 확인
+        if int(select_cash[1]) > 0:
+            # User Cash decrease
+            self.userController.userCashDecrease(self.user_seq, select_cash[0])
+            # User Interface Cash decrease & Update
+            idx = 0
+            for user_cash in self.user_cash_list:
+                if cash_name + "원" in user_cash:
+                    self.user_cash_list[idx] = f"{cash_name}원: {int(select_cash[1]) - 1}개"
+                    break
+                idx += 1
+            self.amount_increase_combo.configure(values=self.user_cash_list)
+            if "5000원" in self.amount_increase_combo.get():
+                self.amount_increase_combo.set(self.user_cash_list[0])
+                self.machine_amount += 5000
+                self.temp_cash_cnt['total'] += 5000
+            elif "1000원" in self.amount_increase_combo.get():
+                self.amount_increase_combo.set(self.user_cash_list[1])
+                self.machine_amount += 1000
+                self.temp_cash_cnt['total'] += 1000
+            elif "500원" in self.amount_increase_combo.get():
+                self.amount_increase_combo.set(self.user_cash_list[2])
+                self.machine_amount += 500
+                self.temp_cash_cnt['total'] += 500
+            elif "100원" in self.amount_increase_combo.get():
+                self.amount_increase_combo.set(self.user_cash_list[3])
+                self.machine_amount += 100
+                self.temp_cash_cnt['total'] += 100
+
+            # temp_cash_cnt <- Cash Increase
+            self.temp_cash_cnt[cash_name] += 1
+
+            # VM Interface Cash Increase & Update
+            self.machine_amount_label.configure(text=f"투입된 금액:\t{self.temp_cash_cnt['total']}원",
+                                                      font=customtkinter.CTkFont(size=16, weight="bold"))
+            # Machine Cash Amount Increase
+            self.vmController.managerCashInjection(cash_name)
+            # 구매가능 음료 체크
+            # 구매가능 음료 상태 변경
+            for _drink in self.drink_content:
+                # TODO 판매 상태 세분화 ("재고 부족", "잔액 부족")
+                if _drink.stock <= 0 or _drink.drink_price > self.temp_cash_cnt['total']:
+                    _drink.state_btn.configure(
+                        text="○        구매불가",
+                        text_color=("red", "red"),
+                        text_color_disabled=("red", "red"),
+                        state='disabled'
+                   )
+                else:
+                    _drink.state_btn.configure(
+                        text="●        구매가능",
+                        text_color=("green", "green"),
+                        text_color_disabled=("green", "green"),
+                        state="normal"
+                    )
+
+
+    # 카드 삽입시 잔액에 따라 구매 가능한 음료만 판매 상태 변경
+    # 카드 삽입,제거시 투입된 금액 Label 변경
+    # TODO 구매시 카드 잔액 실시간 업데이트
+    # TODO 구매시 user_bag에 음료명: 개수 추가
+    # TODO Manager 통계에서 판매 수익 및 판매 음료 추가
+    def card_injection_event(self):
+        # 결제 할 수단을 card로 변경
+        with open("flag.json", "r") as file:
+            flag_data = json.load(file)
+
+        with open("flag.json", "w") as file:
+            flag_data['flag'] = 'card'
+            # TODO card_seq 가져오기
+            flag_data['card_seq'] = ''
+            json.dump(flag_data, file, indent=4)
+        # 카드 삽입
+        if self.amount_increase_btn_card.cget("text") == "카드 투입":
+            self.amount_increase_btn_card.configure(
+                text=f"{self.cash_increase_combo.get().replace(':', '').split()[0]} 투입됨",
+                text_color = ("green", "green"),
+                text_color_disabled = ("green", "green")
+            )
+
+            # TODO 카드잔액 코드 수정
+            self.machine_amount_label.configure(text=f"카드 잔액:\t{self.user_card[0].getCardAmount()}원")
+
+            for _drink in self.drink_content:
+                # TODO 판매 상태 세분화 ("재고 부족", "잔액 부족")
+                if _drink.stock <= 0 or _drink.drink_price > int(self.user_card[0].getCardAmount()):
+                    _drink.state_btn.configure(
+                        text="○        구매불가",
+                        text_color=("red", "red"),
+                        text_color_disabled=("red", "red"),
+                        state='disabled'
+                    )
+                else:
+                    _drink.state_btn.configure(
+                        text="●        구매가능",
+                        text_color=("green", "green"),
+                        text_color_disabled=("green", "green"),
+                        state="normal"
+                    )
+
+        else:
+            # 카드 제거
+            # 결제 할 수단을 cash로 변경
+            with open("flag.json", "r") as file:
+                flag_data = json.load(file)
+
+            with open("flag.json", "w") as file:
+                flag_data['flag'] = ''
+                flag_data['card_seq'] = ''
+                json.dump(flag_data, file, indent=4)
+            # TODO 카드 총 사용 내역 기능 추가 예정
+            self.amount_increase_btn_card.configure(
+                text="카드 투입",
+                text_color=("black", "white"),
+                text_color_disabled=("black", "white"),
+                state="normal"
+            )
+
+            for _drink in self.drink_content:
+                _drink.state_btn.configure(
+                    text="○        구매불가",
+                    text_color=("red", "red"),
+                    text_color_disabled=("red", "red"),
+                    state='disabled'
+                )
+
+            self.machine_amount_label.configure(text=f"투입된 금액:\t{self.temp_cash_cnt['total']}원")
 
 
 with open("/Users/mac/Vending-Machine/src/login_data.json", "r") as file:
