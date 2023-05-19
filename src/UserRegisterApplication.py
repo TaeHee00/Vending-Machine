@@ -79,8 +79,8 @@ class UserRegisterApplication:
         #     # ua = UserApplication()
         #     # ua.window.mainloop()
         else:
-            # TODO 중복처리
-            # TODO 회원가입
+            # 중복처리
+            # 회원가입
             userDao = UserDao(self.id_input.get(), self.pw_input.get(), self.name_input.get())
             res = self.userController.userRegister(userDao)
             if res == "성공":
