@@ -136,13 +136,15 @@ class UserApplication:
         customtkinter.CTkLabel(self.window, text=" ").grid(row=100, column=self.column_cnt)
         self.cash_list = list()
         for cash in self.user_cash:
+            if cash.getCashName() == "5000":
+                continue
             self.cash_list.append(f"{cash.getCashName()}원: {cash.getCashAmount()}개")
         self.user_cash_list = self.cash_list
+
 
         self.card_list = list()
         for card in self.user_card:
             self.card_list.append(f"{card.getCardName()}: {card.getCardAmount()}원")
-        self.user_card_list = self.card_list
 
         self.btn_size = 11
         # 현금반환 기능 추가
@@ -183,11 +185,11 @@ class UserApplication:
         self.cash_increase_combo = customtkinter.CTkComboBox(
             self.window,
             state='readonly',
-            values=self.user_card_list,
+            values=self.user_cash_list,
             width=162
         )
         self.cash_increase_combo.grid(row=101, column=abs(self.row_limit - 1), pady=(0, 3))
-        self.cash_increase_combo.set(self.user_card_list[0])
+        self.cash_increase_combo.set(self.user_cash_list[0])
         self.amount_increase_btn_card = customtkinter.CTkButton(
             self.window,
             text="카드 투입",
@@ -221,7 +223,11 @@ class UserApplication:
             self.vmController.cashIncrease(drink_price)
             # 구매 메세지 출력
             showinfo("결제 정보",
-                     f"음료명: {drink_name}\n가격: {drink_price}\n1개를 구매하셨습니다.\n\n{self.user_card[0].getCardName()} 잔액\n {int(self.user_card[0].getCardAmount()) + drink_price}원  ->  {self.user_card[0].getCardAmount()}원")
+                     f"음료명: {drink_name}\n"
+                     f"가격: {drink_price}\n"
+                     f"1개를 구매하셨습니다.\n\n"
+                     f"{self.user_card[0].getCardName()} 잔액\n "
+                     f"{int(self.user_card[0].getCardAmount()) + drink_price}원  ->  {self.user_card[0].getCardAmount()}원")
         elif flag['flag'] == "cash":
             # Cash일 경우
             # 현금은 빠진 상태
@@ -313,7 +319,9 @@ class UserApplication:
             self.userController.bagDrinkIncrease(self.user_seq, drink_seq)
             # 구매 메세지 출력
             showinfo("결제 정보",
-                     f"음료명: {drink_name}\n가격: {drink_price}\n1개를 구매하셨습니다.\n\n투입된 금액 잔액\n {int(self.temp_cash_cnt['total']) + drink_price}원  ->  {int(self.temp_cash_cnt['total'])}원")
+                     f"음료명: {drink_name}\n가격: {drink_price}\n"
+                     f"1개를 구매하셨습니다.\n\n투입된 금액 잔액\n "
+                     f"{int(self.temp_cash_cnt['total']) + drink_price}원  ->  {int(self.temp_cash_cnt['total'])}원")
 
     def cash_injection_event(self):
         # 결제 할 수단을 cash로 변경
@@ -339,20 +347,16 @@ class UserApplication:
                     break
                 idx += 1
             self.amount_increase_combo.configure(values=self.user_cash_list)
-            if "5000원" in self.amount_increase_combo.get():
+            if "1000원" in self.amount_increase_combo.get():
                 self.amount_increase_combo.set(self.user_cash_list[0])
-                self.machine_amount += 5000
-                self.temp_cash_cnt['total'] += 5000
-            elif "1000원" in self.amount_increase_combo.get():
-                self.amount_increase_combo.set(self.user_cash_list[1])
                 self.machine_amount += 1000
                 self.temp_cash_cnt['total'] += 1000
             elif "500원" in self.amount_increase_combo.get():
-                self.amount_increase_combo.set(self.user_cash_list[2])
+                self.amount_increase_combo.set(self.user_cash_list[1])
                 self.machine_amount += 500
                 self.temp_cash_cnt['total'] += 500
             elif "100원" in self.amount_increase_combo.get():
-                self.amount_increase_combo.set(self.user_cash_list[3])
+                self.amount_increase_combo.set(self.user_cash_list[2])
                 self.machine_amount += 100
                 self.temp_cash_cnt['total'] += 100
 
@@ -485,14 +489,19 @@ class UserApplication:
 
         # ComboBox Update
         self.amount_increase_combo.configure(values=self.user_cash_list)
-        if "5000" == select_cash_name:
+        if "1000" == select_cash_name:
             self.amount_increase_combo.set(self.user_cash_list[0])
-        elif "1000" == select_cash_name:
-            self.amount_increase_combo.set(self.user_cash_list[1])
         elif "500" == select_cash_name:
-            self.amount_increase_combo.set(self.user_cash_list[2])
+            self.amount_increase_combo.set(self.user_cash_list[1])
         elif "100" == select_cash_name:
-            self.amount_increase_combo.set(self.user_cash_list[3])
+            self.amount_increase_combo.set(self.user_cash_list[2])
+
+        showinfo("반환 정보",
+                 f"총 반환 금액: {self.temp_cash_cnt['total']}원\n\n"
+                 f"1000원\t{self.temp_cash_cnt['1000']}개\n"
+                 f"500원\t{self.temp_cash_cnt['500']}개\n"
+                 f"100원\t{self.temp_cash_cnt['100']}개")
+
         # self.temp_cash_cnt 초기화
         for _cash in self.temp_cash_cnt:
             self.temp_cash_cnt[_cash] = 0

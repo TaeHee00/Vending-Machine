@@ -1,96 +1,164 @@
-from tkinter import *
-import customtkinter
+import tkinter
 import tkinter.messagebox
+import customtkinter
 
-customtkinter.set_appearance_mode("System")
-customtkinter.set_default_color_theme("dark-blue")
-
-ctk_window = customtkinter.CTk()
-ctk_window.title("User Login System")
-ctk_window.geometry("+500+200")
-
-# 창의 초기 생성위치 설정
-ctk_window.config(padx=30, pady=20)
-# 창 크기 조절 금지
-ctk_window.resizable(False, False)
-
-main_label = customtkinter.CTkLabel(ctk_window, text="  Vending Machine", font=customtkinter.CTkFont(size=20, weight="bold"))
-main_label.grid(row=0, column=2, columnspan=4)
-customtkinter.CTkLabel(ctk_window, text="").grid(row=1, column=0)
-
-id_label = customtkinter.CTkLabel(ctk_window, text="ID:  ", font=customtkinter.CTkFont(size=15))
-pw_label = customtkinter.CTkLabel(ctk_window, text="PW:  ", font=customtkinter.CTkFont(size=15))
-id_label.grid(row=2, column=0, columnspan=2, pady=10)
-pw_label.grid(row=3, column=0, columnspan=2, pady=20)
-
-id_input = customtkinter.CTkEntry(ctk_window, placeholder_text=" ID")
-id_input.grid(row=2, column=2, columnspan=6, ipadx=60)
-# Password 입력시 보이지 않도록 설정
-pw_input = customtkinter.CTkEntry(ctk_window, placeholder_text=" PW", show="*")
-pw_input.grid(row=3, column=2, columnspan=6, ipadx=60)
-customtkinter.CTkLabel(ctk_window, text="").grid(row=4, column=0)
+customtkinter.set_appearance_mode("System")  # Modes: "System" (standard), "Dark", "Light"
+customtkinter.set_default_color_theme("dark-blue")  # Themes: "blue" (standard), "green", "dark-blue"
 
 
+class App(customtkinter.CTk):
+    def __init__(self):
+        super().__init__()
+
+        # configure window
+        self.title("CustomTkinter complex_example.py")
+        self.geometry(f"{1100}x{580}")
+
+        # configure grid layout (4x4)
+        self.grid_columnconfigure(1, weight=1)
+        self.grid_columnconfigure((2, 3), weight=0)
+        self.grid_rowconfigure((0, 1, 2), weight=1)
+
+        # create sidebar frame with widgets
+        self.sidebar_frame = customtkinter.CTkFrame(self, width=140, corner_radius=0)
+        self.sidebar_frame.grid(row=0, column=0, rowspan=4, sticky="nsew")
+        self.sidebar_frame.grid_rowconfigure(4, weight=1)
+        self.logo_label = customtkinter.CTkLabel(self.sidebar_frame, text="CustomTkinter", font=customtkinter.CTkFont(size=20, weight="bold"))
+        self.logo_label.grid(row=0, column=0, padx=20, pady=(20, 10))
+        self.sidebar_button_1 = customtkinter.CTkButton(self.sidebar_frame, command=self.sidebar_button_event)
+        self.sidebar_button_1.grid(row=1, column=0, padx=20, pady=10)
+        self.sidebar_button_2 = customtkinter.CTkButton(self.sidebar_frame, command=self.sidebar_button_event)
+        self.sidebar_button_2.grid(row=2, column=0, padx=20, pady=10)
+        self.sidebar_button_3 = customtkinter.CTkButton(self.sidebar_frame, command=self.sidebar_button_event)
+        self.sidebar_button_3.grid(row=3, column=0, padx=20, pady=10)
+        self.appearance_mode_label = customtkinter.CTkLabel(self.sidebar_frame, text="Appearance Mode:", anchor="w")
+        self.appearance_mode_label.grid(row=5, column=0, padx=20, pady=(10, 0))
+        self.appearance_mode_optionemenu = customtkinter.CTkOptionMenu(self.sidebar_frame, values=["Light", "Dark", "System"],
+                                                                       command=self.change_appearance_mode_event)
+        self.appearance_mode_optionemenu.grid(row=6, column=0, padx=20, pady=(10, 10))
+        self.scaling_label = customtkinter.CTkLabel(self.sidebar_frame, text="UI Scaling:", anchor="w")
+        self.scaling_label.grid(row=7, column=0, padx=20, pady=(10, 0))
+        self.scaling_optionemenu = customtkinter.CTkOptionMenu(self.sidebar_frame, values=["80%", "90%", "100%", "110%", "120%"],
+                                                               command=self.change_scaling_event)
+        self.scaling_optionemenu.grid(row=8, column=0, padx=20, pady=(10, 20))
+
+        # create main entry and button
+        self.entry = customtkinter.CTkEntry(self, placeholder_text="CTkEntry")
+        self.entry.grid(row=3, column=1, columnspan=2, padx=(20, 0), pady=(20, 20), sticky="nsew")
+
+        self.main_button_1 = customtkinter.CTkButton(master=self, fg_color="transparent", border_width=2, text_color=("gray10", "#DCE4EE"))
+        self.main_button_1.grid(row=3, column=3, padx=(20, 20), pady=(20, 20), sticky="nsew")
+
+        # create textbox
+        self.textbox = customtkinter.CTkTextbox(self, width=250)
+        self.textbox.grid(row=0, column=1, padx=(20, 0), pady=(20, 0), sticky="nsew")
+
+        # create tabview
+        self.tabview = customtkinter.CTkTabview(self, width=250)
+        self.tabview.grid(row=0, column=2, padx=(20, 0), pady=(20, 0), sticky="nsew")
+        self.tabview.add("CTkTabview")
+        self.tabview.add("Tab 2")
+        self.tabview.add("Tab 3")
+        self.tabview.tab("CTkTabview").grid_columnconfigure(0, weight=1)  # configure grid of individual tabs
+        self.tabview.tab("Tab 2").grid_columnconfigure(0, weight=1)
+
+        self.optionmenu_1 = customtkinter.CTkOptionMenu(self.tabview.tab("CTkTabview"), dynamic_resizing=False,
+                                                        values=["Value 1", "Value 2", "Value Long Long Long"])
+        self.optionmenu_1.grid(row=0, column=0, padx=20, pady=(20, 10))
+        self.combobox_1 = customtkinter.CTkComboBox(self.tabview.tab("CTkTabview"),
+                                                    values=["Value 1", "Value 2", "Value Long....."])
+        self.combobox_1.grid(row=1, column=0, padx=20, pady=(10, 10))
+        self.string_input_button = customtkinter.CTkButton(self.tabview.tab("CTkTabview"), text="Open CTkInputDialog",
+                                                           command=self.open_input_dialog_event)
+        self.string_input_button.grid(row=2, column=0, padx=20, pady=(10, 10))
+        self.label_tab_2 = customtkinter.CTkLabel(self.tabview.tab("Tab 2"), text="CTkLabel on Tab 2")
+        self.label_tab_2.grid(row=0, column=0, padx=20, pady=20)
+
+        # create radiobutton frame
+        self.radiobutton_frame = customtkinter.CTkFrame(self)
+        self.radiobutton_frame.grid(row=0, column=3, padx=(20, 20), pady=(20, 0), sticky="nsew")
+        self.radio_var = tkinter.IntVar(value=0)
+        self.label_radio_group = customtkinter.CTkLabel(master=self.radiobutton_frame, text="CTkRadioButton Group:")
+        self.label_radio_group.grid(row=0, column=2, columnspan=1, padx=10, pady=10, sticky="")
+        self.radio_button_1 = customtkinter.CTkRadioButton(master=self.radiobutton_frame, variable=self.radio_var, value=0)
+        self.radio_button_1.grid(row=1, column=2, pady=10, padx=20, sticky="n")
+        self.radio_button_2 = customtkinter.CTkRadioButton(master=self.radiobutton_frame, variable=self.radio_var, value=1)
+        self.radio_button_2.grid(row=2, column=2, pady=10, padx=20, sticky="n")
+        self.radio_button_3 = customtkinter.CTkRadioButton(master=self.radiobutton_frame, variable=self.radio_var, value=2)
+        self.radio_button_3.grid(row=3, column=2, pady=10, padx=20, sticky="n")
+
+        # create slider and progressbar frame
+        self.slider_progressbar_frame = customtkinter.CTkFrame(self, fg_color="transparent")
+        self.slider_progressbar_frame.grid(row=1, column=1, padx=(20, 0), pady=(20, 0), sticky="nsew")
+        self.slider_progressbar_frame.grid_columnconfigure(0, weight=1)
+        self.slider_progressbar_frame.grid_rowconfigure(4, weight=1)
+        self.seg_button_1 = customtkinter.CTkSegmentedButton(self.slider_progressbar_frame)
+        self.seg_button_1.grid(row=0, column=0, padx=(20, 10), pady=(10, 10), sticky="ew")
+        self.progressbar_1 = customtkinter.CTkProgressBar(self.slider_progressbar_frame)
+        self.progressbar_1.grid(row=1, column=0, padx=(20, 10), pady=(10, 10), sticky="ew")
+        self.progressbar_2 = customtkinter.CTkProgressBar(self.slider_progressbar_frame)
+        self.progressbar_2.grid(row=2, column=0, padx=(20, 10), pady=(10, 10), sticky="ew")
+        self.slider_1 = customtkinter.CTkSlider(self.slider_progressbar_frame, from_=0, to=1, number_of_steps=4)
+        self.slider_1.grid(row=3, column=0, padx=(20, 10), pady=(10, 10), sticky="ew")
+        self.slider_2 = customtkinter.CTkSlider(self.slider_progressbar_frame, orientation="vertical")
+        self.slider_2.grid(row=0, column=1, rowspan=5, padx=(10, 10), pady=(10, 10), sticky="ns")
+        self.progressbar_3 = customtkinter.CTkProgressBar(self.slider_progressbar_frame, orientation="vertical")
+        self.progressbar_3.grid(row=0, column=2, rowspan=5, padx=(10, 20), pady=(10, 10), sticky="ns")
+
+        # create scrollable frame
+        self.scrollable_frame = customtkinter.CTkScrollableFrame(self, label_text="CTkScrollableFrame")
+        self.scrollable_frame.grid(row=1, column=2, padx=(20, 0), pady=(20, 0), sticky="nsew")
+        self.scrollable_frame.grid_columnconfigure(0, weight=1)
+        self.scrollable_frame_switches = []
+        for i in range(100):
+            switch = customtkinter.CTkSwitch(master=self.scrollable_frame, text=f"CTkSwitch {i}")
+            switch.grid(row=i, column=0, padx=10, pady=(0, 20))
+            self.scrollable_frame_switches.append(switch)
+
+        # create checkbox and switch frame
+        self.checkbox_slider_frame = customtkinter.CTkFrame(self)
+        self.checkbox_slider_frame.grid(row=1, column=3, padx=(20, 20), pady=(20, 0), sticky="nsew")
+        self.checkbox_1 = customtkinter.CTkCheckBox(master=self.checkbox_slider_frame)
+        self.checkbox_1.grid(row=1, column=0, pady=(20, 0), padx=20, sticky="n")
+        self.checkbox_2 = customtkinter.CTkCheckBox(master=self.checkbox_slider_frame)
+        self.checkbox_2.grid(row=2, column=0, pady=(20, 0), padx=20, sticky="n")
+        self.checkbox_3 = customtkinter.CTkCheckBox(master=self.checkbox_slider_frame)
+        self.checkbox_3.grid(row=3, column=0, pady=20, padx=20, sticky="n")
+
+        # set default values
+        self.sidebar_button_3.configure(state="disabled", text="Disabled CTkButton")
+        self.checkbox_3.configure(state="disabled")
+        self.checkbox_1.select()
+        self.scrollable_frame_switches[0].select()
+        self.scrollable_frame_switches[4].select()
+        self.radio_button_3.configure(state="disabled")
+        self.appearance_mode_optionemenu.set("Dark")
+        self.scaling_optionemenu.set("100%")
+        self.optionmenu_1.set("CTkOptionmenu")
+        self.combobox_1.set("CTkComboBox")
+        self.slider_1.configure(command=self.progressbar_2.set)
+        self.slider_2.configure(command=self.progressbar_3.set)
+        self.progressbar_1.configure(mode="indeterminnate")
+        self.progressbar_1.start()
+        self.textbox.insert("0.0", "CTkTextbox\n\n" + "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.\n\n" * 20)
+        self.seg_button_1.configure(values=["CTkSegmentedButton", "Value 2", "Value 3"])
+        self.seg_button_1.set("Value 2")
+
+    def open_input_dialog_event(self):
+        dialog = customtkinter.CTkInputDialog(text="Type in a number:", title="CTkInputDialog")
+        print("CTkInputDialog:", dialog.get_input())
+
+    def change_appearance_mode_event(self, new_appearance_mode: str):
+        customtkinter.set_appearance_mode(new_appearance_mode)
+
+    def change_scaling_event(self, new_scaling: str):
+        new_scaling_float = int(new_scaling.replace("%", "")) / 100
+        customtkinter.set_widget_scaling(new_scaling_float)
+
+    def sidebar_button_event(self):
+        print("sidebar_button click")
 
 
-# 로그인 함수
-# 엔터로 로그인 함수 실행 시 event인자가 들어오는데 이경우 에러가 발생하기 때문에
-# *temp <- 가변인자를 사용하여 처리
-# def login_check(*temp):
-#     userController = UserController.UserController()
-#     user_list = userController.userList()
-#
-#     if id_input.get() == "":
-#         showerror("입력 오류!", "아이디를 입력해주세요!")
-#     elif pw_input.get() == "":
-#         showerror("입력 오류!", "비밀번호를 입력해주세요!")
-#     # TODO 데이터 가져와서 계정 확인 후 로그인
-#     # TODO 총 음료 판매 개수 및 수익 재고 경고 목록 띄우기
-#     # TODO 재고 경고 선택 가능하게 만들기
-#     else:
-#         # TODO 로그인 성공 & 실패
-#         user_seq = ""
-#         user_id = ""
-#         user_name = ""
-#         isLogin = False
-#         for user in user_list:
-#             # 로그인 성공
-#             if id_input.get() == user[1] and pw_input.get() == user[2]:
-#                 user_seq = user[0]
-#                 user_id = user[1]
-#                 user_name = user[3]
-#                 # print(user_seq, user_id, user_name)
-#                 showinfo("환영합니다!", f"어서오세요 {user_name}님!")
-#                 # 원래 있던 창을 파괴 후 새로운 창 생성
-#                 login_window.destroy()
-#                 ua = UserApplication(user_seq, user_id, user_name)
-#                 server = Server.Server(ua)
-#                 ua.window.mainloop()
-#                 isLogin = True
-#                 break
-#         if not isLogin:
-#             # 로그인 실패
-#             showerror("로그인 오류!", "등록되지 않은 아이디이거나 아이디 또는 비밀번호를 잘못 입력했습니다.")
-
-login_btn = customtkinter.CTkButton(ctk_window, fg_color="transparent", border_width=2, text_color=("gray10", "#DCE4EE"), text="로그인")
-login_btn.grid(row=5, column=1, columnspan=3, padx=20)
-reg_btn = customtkinter.CTkButton(ctk_window, fg_color="transparent", border_width=2, text_color=("gray10", "#DCE4EE"), text="회원가입")
-reg_btn.grid(row=5, column=4, columnspan=3, padx=20)
-# login_btn = Button(text="로그인", width=300, command=login_check, focusthickness=0)
-# login_btn['activebackground'] = 'grey'
-
-
-# # UserRegisterApplication 연결하기
-# def register_check():
-#     login_window.destroy()
-#     subprocess.Popen('python3 UserRegisterApplication.py', shell=True)
-
-
-# register_btn = Button(text="회원가입", width=300, command=register_check, focusthickness=0)
-# register_btn['activebackground'] = 'grey'
-# register_btn.grid(row=6, column=0, columnspan=5)
-# Label(text="").grid(row=7, column=0)
-# # 엔터로 로그인 함수 실행 기능
-# login_window.bind("<Return>", login_check)
-
-ctk_window.mainloop()
+if __name__ == "__main__":
+    app = App()
+    app.mainloop()

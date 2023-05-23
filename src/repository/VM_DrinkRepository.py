@@ -23,6 +23,12 @@ class VM_DrinkRepository(Repository):
         self.cursor.execute(self.query, data)
         self.db.commit()
 
+    def increaseStock(self, drink_seq, drink_num):
+        self.query = "UPDATE vm_drink SET vm_drink.amount = CONCAT(vm_drink.amount + (%s)) WHERE vm_drink.drink_seq = (%s)"
+        data = (drink_num, drink_seq)
+        self.cursor.execute(self.query, data)
+        self.db.commit()
+
     # TODO 회원가입 기능
     def create(self):
         pass
@@ -34,3 +40,6 @@ class VM_DrinkRepository(Repository):
     # TODO 유저 정보 삭제
     def delete(self):
         pass
+#
+# vd = VM_DrinkRepository()
+# vd.increaseStock(1, 1)

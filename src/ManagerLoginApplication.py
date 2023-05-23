@@ -29,7 +29,7 @@ ctk_window.config(padx=30, pady=20)
 # 창 크기 조절 금지
 ctk_window.resizable(False, False)
 
-main_label = customtkinter.CTkLabel(ctk_window, text="             Manager", font=customtkinter.CTkFont(size=20, weight="bold"))
+main_label = customtkinter.CTkLabel(ctk_window, text="      Manager", font=customtkinter.CTkFont(size=20, weight="bold"))
 main_label.grid(row=0, column=2, columnspan=4)
 customtkinter.CTkLabel(ctk_window, text="").grid(row=1, column=0)
 
@@ -51,7 +51,6 @@ customtkinter.CTkLabel(ctk_window, text="").grid(row=4, column=0)
 
 def login_check(*temp):
     managerController = ManagerController.ManagerController()
-    user_list = userController.userList()
 
     if id_input.get() == "":
         showerror("입력 오류!", "아이디를 입력해주세요!")
@@ -65,7 +64,7 @@ def login_check(*temp):
         isLogin = False
         if id_input.get() == "manager" and pw_input.get() == "manager":
             showinfo("환영합니다!", f"어서오세요 매니저님!")
-            login_window.destroy()
+            ctk_window.destroy()
             subprocess.Popen('python3 ManagerApplication.py', shell=True)
             isLogin = True
         if not isLogin:
